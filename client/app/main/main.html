@@ -1,0 +1,31 @@
+<div class="d" data-ng-init="init()">
+  <div class="mainContainer">
+    <div id="canvasContainer" class="canvasContainer">
+      <canvas id="canvas">
+        Your browser does not support the canvas element.
+      </canvas>
+    </div>
+    <div class="toolbox">
+      <div class="toolset">
+        <ul>
+          <li><a href="" ng-click="shape.toolName = 'pencil'" class="pencil"> Pencil </a> </li>
+          <li><a href="" ng-click="shape.toolName = 'line'" class="line"> Line </a> </li>
+          <li><a href="" ng-click="shape.toolName = 'rectangle'" class="rectangle"> Rectangle </a></li>
+          <li><a href="" ng-click="shape.toolName = 'circle'" class="circle"> Circle </a></li>
+          <ul>
+            <li><a href="" ng-click="undo()" class="undo"> Undo </a></li>
+            <li><a href="" ng-click="resetDraw()" class="reset"> Reset </a></li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<footer class="footer">
+  <div class="container">
+    <p>Bach. Michael De Abreu </p>
+    <p>Bach. Jose Seijas </p>
+  </div>
+</footer>
