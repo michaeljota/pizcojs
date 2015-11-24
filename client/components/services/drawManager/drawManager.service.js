@@ -3,17 +3,23 @@
 angular.module('tesisApp')
     .factory('drawManager', function (socket) {
 
+        var Colors = {
+            TRANSPARENT: 'rgba(0, 0, 0, 0)',
+            BLACK:       'rgba(0, 0, 0, 1)',
+            GREY:        'rgba(180, 180, 180, 1)'
+        };
+
         var Tool = {
-            PENCIL : 1,
-            LINE : 2,
-            RECTANGLE : 3,
-            CIRCLE : 4,
+            PENCIL : 0,
+            LINE : 1,
+            RECTANGLE : 2,
+            CIRCLE : 3,
 
             properties : {
-                1: {name: 'pencil', value: 1, code: 'P'},
-                2: {name: 'line', value: 2, code: 'L'},
-                3: {name: 'rectangle', value: 3, code: 'R'},
-                4: {name: 'circle', value: 4, code: 'C'}
+                0: {name: 'pencil', value: 0, code: 'P'},
+                1: {name: 'line', value: 1, code: 'L'},
+                2: {name: 'rectangle', value: 2, code: 'R'},
+                3: {name: 'circle', value: 3, code: 'C'}
             }
         };
 
@@ -32,7 +38,7 @@ angular.module('tesisApp')
             this.isStroked  = shape.isStroked;
             this.Points     = [];
             this.addPoint   = function (point) {
-                if (this.ToolName !== Tool.properties[Tool.PENCIL].name && this.Points.length > 1) {
+                if (this.ToolName !== Tool.PENCIL && this.Points.length > 1) {
                     this.Points.pop();
                 }
                 this.Points.push(point)
@@ -56,23 +62,23 @@ angular.module('tesisApp')
                 context.beginPath();
                 context.lineWidth = shape.LineWidth;
                 context.lineCap = shape.LineCap;
-                context.strokeStyle = shape.isStroked ? shape.LineColor : 'rgba(0, 0, 0, 0)';
-                context.fillStyle = shape.isFilled ? shape.FillStyle : 'rgba(0, 0, 0, 0)';
+                context.strokeStyle = shape.isStroked ? shape.LineColor : Colors.TRANSPARENT;
+                context.fillStyle = shape.isFilled ? shape.FillStyle : Colors.TRANSPARENT;
                 switch (shape.ToolName){
-                    case 'pencil':
+                    case Tool.PENCIL:
                         pencil(shape);
                         break;
-                    case 'line':
+                    case Tool.LINE:
                         line(shape);
                         break;
-                    case 'rectangle':
+                    case Tool.RECTANGLE:
                         rectangle(shape);
                         break;
-                    case 'circle':
+                    case Tool.CIRCLE:
                         circle(shape);
                         break;
                     default:
-                        console.log('ERR! ToolName undefined or invalid');
+                        console.log('ERR! ToolName: '+ shape.ToolName +' is invalid');
                         resetTmpShape();
                         break;
                 }
@@ -121,16 +127,16 @@ angular.module('tesisApp')
 
             continueDrawing = function () {
                 if (tmpShape) {
-                    var point = (event.touches) ?
+                    var point = (window.event.touches) ?
                     {
-                        x: (event.touches[0].pageX - event.target.offsetLeft),
-                        y: (event.touches[0].pageY - event.target.offsetTop)
+                        x: (window.event.touches[0].pageX - window.event.target.offsetLeft),
+                        y: (window.event.touches[0].pageY - window.event.target.offsetTop)
                     } :
                     {
-                        x: (event.pageX - event.target.offsetLeft),
-                        y: (event.pageY - event.target.offsetTop)
+                        x: (window.event.pageX - window.event.target.offsetLeft),
+                        y: (window.event.pageY - window.event.target.offsetTop)
                     };
-                    if(tmpShape.ToolName !== 'pencil'){
+                    if(tmpShape.ToolName !== Tool.PENCIL){
                         socket.socket.emit('renderShapeStorage');
                     }
                     tmpShape.addPoint(point);

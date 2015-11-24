@@ -8,14 +8,16 @@ var config = require('./environment');
 
 var Client = function(address){
     this.name = "";
-    this.address = address !== null ?
+    this.address = address !== null || address !== undefined ?
         address.address + ':' + address.port :
         process.env.DOMAIN;
     this.connectionDate = new Date();
     this.room = "/";
 };
 
-var rooms = [];
+var rooms = {
+    room : 'room'
+};
 
 var SketchpadManager = function(){
     this.clients = {};
@@ -30,8 +32,8 @@ var SketchpadManager = function(){
     this.resetStorage = function(room){
         this.storage = [];
         this.drawing = false;
-        room.emit('remoteDrawing', remoteDrawing);
-        room.emit('syncShapeStorage', shapeStorage);
+        room.emit('remoteDrawing', this.drawing);
+        room.emit('syncShapeStorage', this.storage);
         room.emit('cancelDraw');
     }
 
@@ -72,43 +74,45 @@ module.exports = function (io) {
     // }));
 
     io.on('connection', function (socket) {
-        var client = new Client(socket.handshake.address);
-
         // Call onConnect.
         onConnect(socket);
-        console.info('[%s] CONNECTED', client.address);
+
+        var client = new Client(socket.handshake.address);
+        client.room = rooms[rooms.room];
+        socket.join(rooms.room);
+
+        console.info('[%s] CONNECTED TO ROOM: %s', client.address, client.room);
 
         // Call onDisconnect.
         socket.on('disconnect', function () {
             onDisconnect(socket);
-            console.info('[%s] DISCONNECTED', client.address);
+            console.info('[%s] DISCONNECTED (ROOM: %s)', client.address, client.room);
         });
 
         socket.on('draw', function(shape){
-            console.info('[%s] DRAWING', client.address);
+            //socket.emit('draw', shape);
             io.sockets.in(client.room).emit('draw', shape);
         });
 
         socket.on('saveShape', function(shape){
             sketchpad.storage.push(shape);
-            socket.broadcast.emit('syncShapeStorage', sketchpad.storage);
+            io.sockets.in(client.room).emit('syncShapeStorage', sketchpad.storage);
         });
 
         socket.on('renderShapeStorage', function(){
-            console.log('[%s] RENDERING', client.address);
-            socket.broadcast.emit('renderShapeStorage');
+            io.sockets.in(client.room).emit('renderShapeStorage');
         });
 
         socket.on('resetShapeStorage', function(){
-            sketchpad.resetStorage(socket.to(client.room));
+            sketchpad.resetStorage(io.sockets.in(client.room));
         });
 
         socket.on('remoteDrawing', function(active) {
-            sketchpad.drawing = true;
-            socket.broadcast.emit('remoteDrawing', sketchpad.drawing);
+            sketchpad.drawing = active;
+            io.sockets.in(client.room).emit('remoteDrawing', sketchpad.drawing);
         });
 
-        socket.broadcast.emit('syncShapeStorage', sketchpad.storage);
-        socket.broadcast.emit('remoteDrawing', sketchpad.drawing);
+        io.sockets.in(client.room).emit('syncShapeStorage', sketchpad.storage);
+        io.sockets.in(client.room).emit('remoteDrawing', sketchpad.drawing);
     });
 };
