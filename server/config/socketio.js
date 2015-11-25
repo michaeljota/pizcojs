@@ -15,10 +15,6 @@ var Client = function(address){
     this.room = "/";
 };
 
-var rooms = {
-    room : 'room'
-};
-
 var SketchpadManager = function(){
     this.clients = {};
     this.storage = [];
@@ -29,7 +25,7 @@ var SketchpadManager = function(){
     };
     this.drawing = false;
 
-    this.resetStorage = function(room){
+    this.ResetStorage = function(room){
         this.storage = [];
         this.drawing = false;
         room.emit('remoteDrawing', this.drawing);
@@ -51,18 +47,28 @@ var SketchpadManager = function(){
     };
 
     this.Start = function(room){
-        room.emit('syncShapeStorage', sketchpad.storage);
-        room.emit('remoteDrawing', sketchpad.drawing);
+        room.emit('syncShapeStorage', this.storage);
+        room.emit('remoteDrawing', this.drawing);
     };
 
     this.RemoteDrawing = function(room, active) {
         this.drawing = active;
-        room.emit('remoteDrawing', sketchpad.drawing);
+        room.emit('remoteDrawing', this.drawing);
     };
 
 };
 
-var sketchpad = new SketchpadManager();
+var Room = function(name){
+    this.name = name;
+    this.sketchpad = new SketchpadManager();
+};
+
+var rooms = [];
+
+rooms.push(new Room('room'));
+
+console.log(JSON.stringify(rooms));
+
 
 // When the user disconnects.. perform this
 function onDisconnect(socket, client) {
@@ -100,8 +106,12 @@ module.exports = function (io) {
 
     io.on('connection', function (socket) {
         var client = new Client(socket.handshake.address);
-        client.room = rooms[rooms.room];
-        socket.join(rooms.room);
+        var sketchpad;
+
+
+        client.room = rooms[0].name;
+        sketchpad = rooms[0].sketchpad;
+        socket.join(client.room);
 
         sketchpad.Start(io.sockets.in(client.room));
 
@@ -126,17 +136,40 @@ module.exports = function (io) {
         });
 
         socket.on('resetShapeStorage', function (){
-            sketchpad.resetStorage(io.sockets.in(client.room));
+            sketchpad.ResetStorage(io.sockets.in(client.room));
         });
 
         socket.on('remoteDrawing', function (active) {
             sketchpad.RemoteDrawing(io.sockets.in(client.room), active);
         });
 
+        socket.on('syncPlease', function(){
+            socket.emit('syncShapeStorage', sketchpad.storage);
+        });
+
         socket.on('updateUser', function (user){
+            for(var i=0; i<rooms.length; i++){
+                if(user.Room == rooms[i].name){
+                    console.log('User: '+user.Name+' joined: '+user.Room);
+                    sketchpad = rooms[i].sketchpad;
+                    client.name = user.Name;
+                    socket.leave(client.room);
+                    client.room = user.Room;
+                    socket.join(client.room);
+                    socket.emit('userUpdated');
+                    sketchpad.Start(io.sockets.in(client.room));
+                    return;
+                }
+            }
+            console.log('User: '+user.Name+' created: '+user.Room);
+            var j = rooms.push (new Room(user.Room));
+            sketchpad = rooms[j-1].sketchpad;
             client.name = user.Name;
+            socket.leave(client.room);
             client.room = user.Room;
+            socket.join(client.room);
             socket.emit('userUpdated');
+            sketchpad.Start(io.sockets.in(client.room));
         });
     });
 };
