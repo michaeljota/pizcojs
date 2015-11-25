@@ -12,5 +12,6 @@ angular.module('tesisApp')
         $scope.submit = function (){
             $log.info('Name: '+$scope.Name+'. Room: '+$scope.Room);
             socket.socket.emit('updateUser', {Name: $scope.Name, Room: $scope.Room});
+            
         }
     });

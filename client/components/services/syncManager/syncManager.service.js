@@ -57,6 +57,10 @@ angular.module('tesisApp')
             _undo = function () {
                 drawManager.undo();
                 socket.socket.emit('undo');
+            },
+
+            _requestSync = function () {
+                socket.socket.emit('syncPlease');
             };
 
         //Sync
@@ -108,6 +112,10 @@ angular.module('tesisApp')
 
             undo : function () {
                 _undo();
+            },
+
+            requestSync : function () {
+                _requestSync();
             }
         };
     });

@@ -47,7 +47,6 @@ angular.module('tesisApp')
         //Funcions
 
         $scope.init = function () {
-            console.log('Starting');
             $scope.shape = {
                 ToolName   : Tool.PENCIL,
                 LineColor  : Colors.BLACK,
@@ -62,6 +61,8 @@ angular.module('tesisApp')
             canvas.width  = _drawManager.CANVAS_SIZE;
             canvas.height = _drawManager.CANVAS_SIZE;
             _drawManager.setContext(canvas.getContext('2d'));
+
+            syncManager.requestSync();
 
             canvas.ontouchstart =
                 canvas.onmousedown = function () {

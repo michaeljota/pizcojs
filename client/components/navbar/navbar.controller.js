@@ -7,12 +7,12 @@ angular.module('tesisApp')
 
         $scope.menu = [
             {
-                'title': 'Home',
+                'title': 'Login',
                 'link': '/'
             },
             {
-                'title': 'Login',
-                'link' : '/login'
+                'title': 'Sketchpad',
+                'link' : '/sketchpad'
             }
         ];
 
