@@ -1,8 +1,9 @@
 .footer {
     text-align: center;
-    padding: 30px 0;
-    margin-top: 70px;
-    border-top: 1px solid #E5E5E5;
+    padding: 10px 0;
+    margin-top: 0px;
+   font-style: white;
+  background-color: black;
 }
 
 .navbar-text {
@@ -10,6 +11,7 @@
 }
 
 .mainContainer {
+  text-align: center;
   margin: 0 auto;
   padding: 5px;
   background-color: #bdc3c7;
@@ -27,6 +29,7 @@ canvas {
 }
 
 .toolbox {
+  text-align: center;
   border-style: solid;
   border-radius: 5px;
   border-color: white;
