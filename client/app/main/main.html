@@ -1,5 +1,3 @@
-<div ng-include="'components/others/navbar/navbar.html'"></div>
-
 <div class="d" data-ng-init="init()">
     <div class="mainContainer">
 
@@ -11,17 +9,17 @@
         <div class="toolbox">
             <div class="toolset">
                 <ul>
-                    <li><a href="" data-ng-click="shape.ToolName = 0" class="pencil"> Pencil </a> </li>
-                    <li><a href="" data-ng-click="shape.ToolName = 1" class="line"> Line </a> </li>
-                    <li><a href="" data-ng-click="shape.ToolName = 2" class="rectangle"> Rectangle </a></li>
-                    <li><a href="" data-ng-click="shape.ToolName = 3" class="circle"> Circle </a></li>
+                    <li><a href="" data-ng-click="shape.ToolName = 0" class="pencil tool"> Pencil </a> </li>
+                    <li><a href="" data-ng-click="shape.ToolName = 1" class="line tool"> Line </a> </li>
+                    <li><a href="" data-ng-click="shape.ToolName = 2" class="rectangle tool"> Rectangle </a></li>
+                    <li><a href="" data-ng-click="shape.ToolName = 3" class="circle tool"> Circle </a></li>
                     <ul>
-                        <li><a href="" data-ng-click="undo()" class="undo"> Undo </a></li>
-                        <li><a href="" data-ng-click="resetDraw()" class="reset"> Reset </a></li>
-                        <li>Line Color: <input type="color" data-ng-model="shape.LineColor">
-                        <li>Fill Color: <input type="color" data-ng-model="shape.FillStyle"></li>
-                        <li>Stroked: <input type="checkbox" data-ng-model="shape.isStroked"></li>
-                        <li>Filled: <input type="checkbox" data-ng-model="shape.isFilled"></li>
+                        <li><a href="" data-ng-click="undo()" class="undo tool"> Undo </a></li>
+                        <li><a href="" data-ng-click="resetDraw()" class="reset tool"> Reset </a></li>
+                        <li><div class="tool">Line Color:</div> <input type="color" data-ng-model="shape.LineColor">
+                        <li><div class="tool">Fill Color:</div> <input type="color" data-ng-model="shape.FillStyle"></li>
+                        <li><div class="tool">Stroked:</div> <input type="checkbox" data-ng-model="shape.isStroked"></li>
+                        <li><div class="tool">Filled:</div> <input type="checkbox" data-ng-model="shape.isFilled"></li>
                     </ul>
                 </ul>
             </div>

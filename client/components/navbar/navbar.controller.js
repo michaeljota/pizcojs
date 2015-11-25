@@ -1,15 +1,24 @@
 'use strict';
 
 angular.module('tesisApp')
-  .controller('NavbarCtrl', function ($scope, $location) {
-    $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
-    }];
+    .controller('NavbarCtrl', function ($scope, $location, User) {
 
-    $scope.isCollapsed = true;
+        $scope.User = User;
 
-    $scope.isActive = function(route) {
-      return route === $location.path();
-    };
-  });
+        $scope.menu = [
+            {
+                'title': 'Home',
+                'link': '/'
+            },
+            {
+                'title': 'Login',
+                'link' : '/login'
+            }
+        ];
+
+        $scope.isCollapsed = true;
+
+        $scope.isActive = function(route) {
+            return route === $location.path();
+        };
+    });

@@ -9,10 +9,6 @@ angular.module('tesisApp')
             GREY:        'rgba(180, 180, 180, 1)'
         };
 
-        var _drawManager;
-
-
-        //TODO: Cambiar todos los usos de Tool.Name por el value.
         var Tool = {
             PENCIL : 0,
             LINE : 1,
@@ -27,6 +23,7 @@ angular.module('tesisApp')
             }
         };
 
+        var _drawManager;
         var canvas;
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
@@ -101,13 +98,13 @@ angular.module('tesisApp')
         };
 
         $scope.$watch('shape.ToolName', function () {
-            if(shape.ToolName === Tool.PENCIL && shape.isFilled){
-                shape.isFilled = false;
+            if($scope.shape.ToolName === Tool.PENCIL){
+                $scope.shape.isFilled = false;
             }
         });
 
         $scope.$watch('shape.isFilled', function () {
-            if(shape.isFilled){
+            if(($scope.shape.ToolName === Tool.PENCIL || $scope.shape.ToolName === Tool.LINE)&& $scope.shape.isFilled){
                 $scope.shape.ToolName = Tool.RECTANGLE;
             }
         });
