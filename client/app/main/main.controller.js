@@ -1,13 +1,15 @@
 'use strict';
 
 angular.module('tesisApp')
-    .controller('MainCtrl', function ($scope, $http, drawManager) {
+    .controller('MainCtrl', function ($log, $scope, $http, syncManager) {
 
         var Colors = {
             TRANSPARENT: 'rgba(0, 0, 0, 0)',
             BLACK:       'rgba(0, 0, 0, 1)',
             GREY:        'rgba(180, 180, 180, 1)'
         };
+
+        var _drawManager;
 
 
         //TODO: Cambiar todos los usos de Tool.Name por el value.
@@ -32,56 +34,58 @@ angular.module('tesisApp')
                 width : container.clientWidth,
                 height : window.innerHeight * 0.70
             };
-            drawManager.setScaleFrom(preSize);
+            _drawManager.setScaleFrom(preSize);
 
-            canvas.width  = drawManager.CANVAS_SIZE * drawManager.getScale();
-            canvas.height = drawManager.CANVAS_SIZE * drawManager.getScale();
+            canvas.width  = _drawManager.CANVAS_SIZE * _drawManager.getScale();
+            canvas.height = _drawManager.CANVAS_SIZE * _drawManager.getScale();
 
             canvas.width = 500;
             canvas.height = 500;
-            drawManager.renderShapeStorage();
+            _drawManager.renderShapeStorage();
         };
 
         //Bindings
-        $scope.shape = {
-            ToolName   : Tool.PENCIL,
-            LineColor  : Colors.BLACK,
-            LineWidth  : 1,
-            LineCap    : 'round',
-            FillStyle  : Colors.GREY,
-            isFilled   : false,
-            isStroked  : true
-        };
+        $scope.shape = {};
 
         //Funcions
 
         $scope.init = function () {
             console.log('Starting');
+            $scope.shape = {
+                ToolName   : Tool.PENCIL,
+                LineColor  : Colors.BLACK,
+                LineWidth  : 1,
+                LineCap    : 'round',
+                FillStyle  : Colors.GREY,
+                isFilled   : false,
+                isStroked  : true
+            };
+            _drawManager = syncManager.DrawManager();
             canvas = document.getElementById('canvas');
-            canvas.width  = drawManager.CANVAS_SIZE;
-            canvas.height = drawManager.CANVAS_SIZE;
-            drawManager.setContext(canvas.getContext('2d'));
+            canvas.width  = _drawManager.CANVAS_SIZE;
+            canvas.height = _drawManager.CANVAS_SIZE;
+            _drawManager.setContext(canvas.getContext('2d'));
 
             canvas.ontouchstart =
                 canvas.onmousedown = function () {
-                    drawManager.setTmpShape($scope.shape);
-                    drawManager.startDrawing();
+                    _drawManager.setTmpShape($scope.shape);
+                    syncManager.startDrawing();
                 };
 
             canvas.ontouchmove = function () {
                 event.preventDefault();
-                drawManager.continueDrawing ();
+                syncManager.continueDrawing ();
             };
 
             canvas.onmousemove = function () {
-                drawManager.continueDrawing ();
+                syncManager.continueDrawing ();
             };
 
             canvas.ontouchend =
                 canvas.ontouchcancel =
                     canvas.onmouseleave =
                         canvas.onmouseup = function () {
-                            drawManager.endDrawing();
+                            syncManager.endDrawing();
                         };
 
             window.addEventListener('resize', resizeCanvas);
@@ -89,11 +93,11 @@ angular.module('tesisApp')
         };
 
         $scope.resetDraw = function (){
-            drawManager.resetDraw();
+            syncManager.resetDraw();
         };
 
         $scope.undo = function () {
-            drawManager.undo();
+            syncManager.undo();
         };
 
         $scope.$watch('shape.ToolName', function () {

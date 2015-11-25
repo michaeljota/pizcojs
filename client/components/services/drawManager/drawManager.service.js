@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tesisApp')
-    .factory('drawManager', function (socket) {
+    .factory('drawManager', function () {
 
         var Colors = {
             TRANSPARENT: 'rgba(0, 0, 0, 0)',
@@ -52,13 +52,12 @@ angular.module('tesisApp')
             context,
             shapeStorage = [],
             tmpShape,
-            remoteDrawing = false,
             scale,
             offset,
 
         //Functions
 
-            renderShape = function(shape){
+            _renderShape = function(shape){
                 context.beginPath();
                 context.lineWidth = shape.LineWidth;
                 context.lineCap = shape.LineCap;
@@ -66,66 +65,58 @@ angular.module('tesisApp')
                 context.fillStyle = shape.isFilled ? shape.FillStyle : Colors.TRANSPARENT;
                 switch (shape.ToolName){
                     case Tool.PENCIL:
-                        pencil(shape);
+                        _pencil(shape);
                         break;
                     case Tool.LINE:
-                        line(shape);
+                        _line(shape);
                         break;
                     case Tool.RECTANGLE:
-                        rectangle(shape);
+                        _rectangle(shape);
                         break;
                     case Tool.CIRCLE:
-                        circle(shape);
+                        _circle(shape);
                         break;
                     default:
                         console.log('ERR! ToolName: '+ shape.ToolName +' is invalid');
-                        resetTmpShape();
+                        _setTmpShape(null);
                         break;
                 }
                 context.fill();
                 context.stroke();
             },
 
-            pencil = function(shape){
+            _pencil = function(shape){
                 context.moveTo(shape.Points[0].x, shape.Points[0].y);
                 for (var i = 0; i < shape.Points.length; i++) {
                     context.lineTo(shape.Points[i].x, shape.Points[i].y);
                 }
             },
 
-            line = function(shape){
+            _line = function(shape){
                 context.moveTo(shape.Points[0].x, shape.Points[0].y);
                 context.lineTo(shape.Points[1].x, shape.Points[1].y);
             },
 
-            rectangle = function(shape){
+            _rectangle = function(shape){
                 var width, height;
                 width = shape.Points[1].x - shape.Points[0].x;
                 height = shape.Points[1].y - shape.Points[0].y;
                 context.rect(shape.Points[0].x, shape.Points[0].y, width, height);
             },
 
-            circle = function(shape){
+            _circle = function(shape){
                 var radius = (Math.abs(shape.Points[1].x - shape.Points[0].x) + (Math.abs(shape.Points[1].y - shape.Points[0].y)) / 2);
                 context.arc(shape.Points[1].x, shape.Points[1].y, radius, 0, Math.PI * 2, false);
             },
 
-            renderShapeStorage = function() {
+            _renderShapeStorage = function() {
                 context.clearRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
                 for (var i = 0; i < shapeStorage.length; i++) {
-                    renderShape(shapeStorage[i]);
+                    _renderShape(shapeStorage[i]);
                 }
             },
 
-            startDrawing = function () {
-                if (remoteDrawing) {
-                    resetTmpShape();
-                } else {
-                    socket.socket.emit('remoteDrawing', true);
-                }
-            },
-
-            continueDrawing = function () {
+            _continueDrawing = function () {
                 if (tmpShape) {
                     var point = (window.event.touches) ?
                     {
@@ -136,112 +127,104 @@ angular.module('tesisApp')
                         x: (window.event.pageX - window.event.target.offsetLeft),
                         y: (window.event.pageY - window.event.target.offsetTop)
                     };
-                    if(tmpShape.ToolName !== Tool.PENCIL){
-                        socket.socket.emit('renderShapeStorage');
-                    }
                     tmpShape.addPoint(point);
                     if(tmpShape.Points.length > 1){
-                        socket.socket.emit('draw', tmpShape);
-                        renderShape(tmpShape);
+                        //socket.socket.emit('draw', tmpShape);
+                        //renderShape(tmpShape);
                     }
                 }
             },
 
-            endDrawing = function () {
+            _endDrawing = function () {
                 if(tmpShape){
-                    if(tmpShape.Points.length > 1){
-                        socket.socket.emit('saveShape', tmpShape);
-                    }
-                    renderShapeStorage();
-                    resetTmpShape();
-                    socket.socket.emit('remoteDrawing', false);
+                    _renderShapeStorage();
+                    _setTmpShape(null);
                 }
             },
 
-            resetTmpShape = function() {
-                tmpShape = null;
-            },
-
-            setScaleFrom = function(preSize) {
+            _setScaleFrom = function(preSize) {
                 var factor;
                 factor = preSize.height < preSize.width ? preSize.height : preSize.width;
                 scale = factor/CANVAS_SIZE;
                 context.scale(scale, scale);
+            },
+
+            _setTmpShape = function(shape){
+                if(shape){
+                    tmpShape = new Shape(shape);
+                }else{
+                    tmpShape = null;
+                }
+            },
+
+            _setShapeStorage = function(storage){
+                if(!storage){
+                    shapeStorage = [];
+                }else{
+                    shapeStorage = storage;
+                }
             }
             ;
 
-        //Sync
-
-        socket.socket.on('draw', function(shape) {
-            console.log('Drawing');
-            if(!tmpShape){
-                renderShape(shape);
-            }
-        });
-
-        socket.socket.on('renderShapeStorage', function() {
-            renderShapeStorage();
-        });
-
-        socket.socket.on('syncShapeStorage', function(ss) {
-            shapeStorage = ss;
-            renderShapeStorage();
-        });
-
-        socket.socket.on('remoteDrawing', function(active) {
-            remoteDrawing = active;
-        });
-
-        socket.socket.on('cancelDraw', function(){
-            resetTmpShape();
-        });
-
         return {
 
-            setTmpShape : function (shape) {
-                tmpShape = new Shape(shape);
+            getTmpShape : function(){
+                return tmpShape;
+            },
+
+            setTmpShape : function(shape){
+                _setTmpShape(shape);
             },
 
             startDrawing : function () {
-                startDrawing();
+
             },
 
             continueDrawing : function () {
-                continueDrawing();
+                _continueDrawing();
             },
 
             endDrawing : function () {
-                endDrawing();
+                _endDrawing();
             },
 
             setContext : function (ctx) {
                 context = ctx;
             },
 
-            CANVAS_SIZE : CANVAS_SIZE,
+            CANVAS_SIZE : function(){
+                return CANVAS_SIZE
+            },
 
             resetDraw : function () {
                 context.translate(0,0);
-                socket.socket.emit('resetShapeStorage');
-                resetTmpShape();
+                _setTmpShape(null);
             },
 
             undo : function () {
                 shapeStorage.pop();
-                renderShapeStorage();
-                resetTmpShape();
+                _renderShapeStorage();
+                _setTmpShape(null);
             },
 
             renderShapeStorage : function () {
-                renderShapeStorage();
+                _renderShapeStorage();
+            },
+
+            renderShape : function(shape){
+                _renderShape(shape);
             },
 
             setScaleFrom : function (preSize) {
-                setScaleFrom(preSize);
+                _setScaleFrom(preSize);
             },
 
             getScale : function(){
                 return scale;
+            },
+
+            setShapeStorage : function(storage){
+                _setShapeStorage(storage);
             }
 
         };
