@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('tesisApp')
-    .factory('User', function () {
-
+  .service('User', function () {
+    // AngularJS will instantiate a singleton by calling "new" on this function
         var _name;
         var _room;
 
         // Public API here
         return {
+
             getName : function () {
                 return _name;
             },
@@ -19,6 +20,9 @@ angular.module('tesisApp')
             },
             setRoom : function (room){
                 _room = room;
+            },
+            isReady : function () {
+                return (_name && _room);
             }
         };
-    });
+  });

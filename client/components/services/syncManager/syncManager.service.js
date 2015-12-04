@@ -1,21 +1,7 @@
 'use strict';
 
 angular.module('tesisApp')
-    .factory('syncManager', function ($log, drawManager, socket, User) {
-
-        var Tool = {
-            PENCIL : 0,
-            LINE : 1,
-            RECTANGLE : 2,
-            CIRCLE : 3,
-
-            properties : {
-                0: {name: 'pencil', value: 0, code: 'P'},
-                1: {name: 'line', value: 1, code: 'L'},
-                2: {name: 'rectangle', value: 2, code: 'R'},
-                3: {name: 'circle', value: 3, code: 'C'}
-            }
-        };
+    .factory('syncManager', function ($log, drawManager, socket, User, Enums) {
 
         var
             remoteDrawing = false;
@@ -32,7 +18,7 @@ angular.module('tesisApp')
             _continueDrawing = function () {
                 if(!drawManager.getTmpShape()) return;
                 drawManager.continueDrawing();
-                if(drawManager.getTmpShape().ToolName !== Tool.PENCIL){
+                if(drawManager.getTmpShape().ToolName !== Enums.TOOLS.PENCIL){
                     socket.socket.emit('renderShapeStorage');
                 }
                 if(drawManager.getTmpShape().Points.length > 1){

@@ -1,18 +1,18 @@
 'use strict';
 
-describe('Service: User', function () {
+describe('Service: Enums', function () {
 
   // load the service's module
   beforeEach(module('tesisApp'));
 
   // instantiate service
-  var user;
-  beforeEach(inject(function (_user_) {
-    user = _user_;
+  var Enums;
+  beforeEach(inject(function (_Enums_) {
+    Enums = _Enums_;
   }));
 
   it('should do something', function () {
-    expect(!!user).toBe(true);
+    expect(!!Enums).toBe(true);
   });
 
 });
