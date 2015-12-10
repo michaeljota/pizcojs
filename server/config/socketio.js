@@ -16,21 +16,22 @@ var Client = function(address){
 };
 
 var SketchpadManager = function(){
-    this.clients = {};
-    this.storage = [];
-    this.config = {
-        share : false,
-        collaborate : false,
-        localstorage : false
+    this._clients = {};
+    this._storage = [];
+    this._drawing = false;
+    this._config = {
+        Share : false,
+        Collaborate : false,
+        LocalStorage : false
     };
-    this.drawing = false;
 
     this.ResetStorage = function(room){
-        this.storage = [];
-        this.drawing = false;
-        room.emit('remoteDrawing', this.drawing);
-        room.emit('syncShapeStorage', this.storage);
+        this._storage = [];
+        this._drawing = false;
+        room.emit('remoteDrawing', this._drawing);
+        room.emit('syncStorage', this._storage);
         room.emit('cancelDraw');
+        room.emit('renderStorage');
     };
 
     this.Draw = function(room, shape){
@@ -38,23 +39,27 @@ var SketchpadManager = function(){
     };
 
     this.SaveShape = function(room, shape){
-        this.storage.push(shape);
-        room.emit('syncShapeStorage', this.storage);
+        this._storage.push(shape);
+        room.emit('syncStorage', this._storage);
     };
 
-    this.RenderShapeStorage = function(room){
-        room.emit('renderShapeStorage');
+    this.RenderStorage = function(room){
+        room.emit('renderStorage');
     };
 
-    this.Start = function(room){
-        room.emit('syncShapeStorage', this.storage);
-        room.emit('remoteDrawing', this.drawing);
+    this.SyncStorage = function(room){
+        room.emit('syncStorage', this._storage);
+        room.emit('remoteDrawing', this._drawing);
     };
 
     this.RemoteDrawing = function(room, active) {
-        this.drawing = active;
-        room.emit('remoteDrawing', this.drawing);
+        this._drawing = active;
+        room.emit('remoteDrawing', this._drawing);
     };
+
+    this.Refresh = function(room) {
+        room.emit('refresh');
+    }
 
 };
 
@@ -66,8 +71,6 @@ var Room = function(name){
 var rooms = [];
 
 rooms.push(new Room('room'));
-
-console.log(JSON.stringify(rooms));
 
 
 // When the user disconnects.. perform this
@@ -108,12 +111,9 @@ module.exports = function (io) {
         var client = new Client(socket.handshake.address);
         var sketchpad;
 
-
         client.room = rooms[0].name;
         sketchpad = rooms[0].sketchpad;
         socket.join(client.room);
-
-        sketchpad.Start(io.sockets.in(client.room));
 
         // Call onConnect.
         onConnect(socket, client);
@@ -127,12 +127,16 @@ module.exports = function (io) {
             sketchpad.Draw(io.sockets.in(client.room), shape);
         });
 
+        socket.on('refresh', function(){
+            sketchpad.Refresh(io.sockets.in(client.room));
+        });
+
         socket.on('saveShape', function (shape){
             sketchpad.SaveShape(io.sockets.in(client.room), shape);
         });
 
-        socket.on('renderShapeStorage', function (){
-            sketchpad.RenderShapeStorage(io.sockets.in(client.room));
+        socket.on('renderStorage', function (){
+            sketchpad.RenderStorage(io.sockets.in(client.room));
         });
 
         socket.on('resetShapeStorage', function (){
@@ -144,7 +148,8 @@ module.exports = function (io) {
         });
 
         socket.on('syncPlease', function(){
-            socket.emit('syncShapeStorage', sketchpad.storage);
+            socket.emit('syncStorage', sketchpad._storage);
+            socket.emit('renderStorage');
         });
 
         socket.on('updateUser', function (user){
@@ -157,7 +162,6 @@ module.exports = function (io) {
                     client.room = user.Room;
                     socket.join(client.room);
                     socket.emit('userUpdated');
-                    sketchpad.Start(io.sockets.in(client.room));
                     return;
                 }
             }
@@ -169,7 +173,6 @@ module.exports = function (io) {
             client.room = user.Room;
             socket.join(client.room);
             socket.emit('userUpdated');
-            sketchpad.Start(io.sockets.in(client.room));
         });
     });
 };

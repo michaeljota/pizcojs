@@ -8,7 +8,6 @@ angular.module('tesisApp')
 
         // Public API here
         return {
-
             getName : function () {
                 return _name;
             },
