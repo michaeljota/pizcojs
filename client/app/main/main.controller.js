@@ -3,22 +3,19 @@
 angular.module('tesisApp')
     .controller('MainCtrl', function ($scope, $http, Syncer, Enums) {
 
-        var _syncer = new Syncer();
+        var _syncer = new Syncer(document.getElementById('canvasContainer'));
         var canvas;
         var resizeCanvas = function () {
-            //var container = document.getElementById('canvasContainer');
-            /*var preSize = {
-             width : container.clientWidth,
-             height : window.innerHeight * 0.70
-             };
-
-             canvas.width  = _drawManager.getCanvasSize;
-             canvas.height = _drawManager.getCanvasSize;*/
-
-            _syncer.getDrawer().setCanvasSize(600);
-            canvas.height = _syncer.getDrawer().getCanvasSize();
-            canvas.width = _syncer.getDrawer().getCanvasSize();
-            _syncer.getDrawer().renderShapeStorage();
+            var container = document.getElementById('canvasContainer');
+            var wid = container.clientWidth;
+            var hei = window.innerHeight * 0.70;
+            if(wid>hei){
+                wid = hei;
+            }else{
+                hei = wid;
+            }
+            _syncer.getDrawer().setCanvasSize(wid,hei);
+            _syncer.requestSync();
         };
 
         var newPoint = function (event) {
@@ -47,15 +44,12 @@ angular.module('tesisApp')
                 Filled     : false,
                 Stroked    : true
             };
-            canvas = document.getElementById('canvas');
-            _syncer.getDrawer().setContext(canvas.getContext('2d'));
-            resizeCanvas();
-            _syncer.requestSync();
+
+            canvas = _syncer.getDrawer().getCanvas();
 
             canvas.ontouchstart =
                 canvas.onmousedown = function () {
-                    //It's expected to a new Shape to be created. Creating a new one here, would be desire, but unnecessary.
-                    _syncer.startDrawing(JSON.stringify($scope.shape));
+                    _syncer.startDrawing($scope.shape);
                 };
 
             canvas.ontouchmove = function (event) {
@@ -85,7 +79,7 @@ angular.module('tesisApp')
                 _syncer.getDrawer().cancelDraw();
             };
 
-            window.addEventListener('resize', resizeCanvas());
+            window.addEventListener('resize', resizeCanvas);
             window.addEventListener('load', resizeCanvas());
         };
 

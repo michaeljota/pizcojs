@@ -1,124 +1,121 @@
 'use strict';
 
-angular.module('tesisApp')  .factory('Shape', function (Enums) {
+angular.module('tesisApp')
+    .factory('Shape', function (Enums) {
 
-    function Shape(shape) {
-        if (shape instanceof Shape) {
-            this._toolName = shape.getToolName();
-            this._lineColor = shape.getLineColor();
-            this._lineWidth = shape.getLineWidth();
-            this._lineCap = shape.getLineCap();
-            this._fillStyle = shape.getFillStyle();
-            this._filled = shape.isFilled();
-            this._stroked = shape.isStroked();
-            this._points = shape.getPoints().length > 1 ? shape.getPoints() : [];
-        }else if (typeof shape === 'string') {
-            try {
-                var s = JSON.parse(shape);
-                this._toolName = s.ToolName;
-                this._lineColor = s.LineColor;
-                this._lineWidth = s.LineWidth;
-                this._lineCap = s.LineCap;
-                this._fillStyle = s.FillStyle;
-                this._filled = s.Filled;
-                this._stroked = s.Stroked;
-                this._points = s.Points ? s.Points : [];
-            }catch(err){
-                console.error('Error: Shape could not be created. Invalid JSON.');
+        function Vector2(x,y){
+            this.x = x;
+            this.y = y;
+        }
+
+        function Shape(shape) {
+            var _toolName = shape.ToolName;
+            var _lineColor = shape.LineColor;
+            var _lineWidth = shape.LineWidth;
+            var _lineCap = shape.LineCap;
+            var _fillStyle = shape.FillStyle;
+            var _filled = shape.Filled;
+            var _stroked = shape.Stroked;
+            var _points = shape.Points ? shape.Points : [];
+
+            //#region GettersAndSetters
+            this.getToolName = function () {
+                return _toolName;
+            };
+
+            this.setToolName = function (toolName) {
+                _toolName = toolName;
+            };
+
+            this.getLineColor = function () {
+                return _lineColor;
+            };
+
+            this.setLineColor = function (lineColor) {
+                _lineColor = lineColor;
+            };
+
+            this.getLineWidth = function () {
+                return _lineWidth;
+            };
+
+            this.setLineWidth = function (lineWidth) {
+                _lineWidth = lineWidth;
+            };
+
+            this.getLineCap = function () {
+                return _lineCap;
+            };
+
+            this.setLineCap = function (lineCap) {
+                _lineCap = lineCap;
+            };
+
+            this.getFillStyle = function () {
+                return _fillStyle;
+            };
+
+            this.setFillStyle = function (fillStyle) {
+                _fillStyle = fillStyle;
+            };
+
+            this.isFilled = function () {
+                return _filled;
+            };
+
+            this.setFilled = function (filled) {
+                _filled = filled;
+            };
+
+            this.isStroked = function () {
+                return _stroked;
+            };
+
+            this.setStroked = function (stroked) {
+                _stroked = stroked;
+            };
+
+            this.getPoints = function () {
+                return _points;
+            };
+
+            this.setPoints = function (points) {
+                _points = points;
+            };
+            //#endregion
+
+            //#region Public Functions
+            this.addPoint = function (point) {
+                if (_toolName !== Enums.TOOLS.PENCIL && _points.length > 1) {
+                    _points.pop();
+                }
+                _points.push(point);
+            };
+
+            this.toJSON = function () {
+                return {
+                    ToolName: _toolName,
+                    LineColor: _lineColor,
+                    LineWidth: _lineWidth,
+                    LineCap: _lineCap,
+                    FillStyle: _fillStyle,
+                    Filled: _filled,
+                    Stroked: _stroked,
+                    Points: _points
+                };
+            };
+            //#endregion
+        }
+
+        Shape.clone = function (shape) {
+            if ((!shape instanceof Shape)) {
+                throw new Error('Can\'t clone shape');
             }
-        }else{
-            console.error('Error: Shape could not be created. Invalid data.');
-        }
-    }
-
-    Shape.prototype.getToolName = function () {
-        return this._toolName;
-    };
-
-    Shape.prototype.setToolName = function (toolName) {
-        this._toolName = toolName;
-    };
-
-    Shape.prototype.getLineColor = function () {
-        return this._lineColor;
-    };
-
-    Shape.prototype.setLineColor = function (lineColor) {
-        this._lineColor = lineColor;
-    };
-
-    Shape.prototype.getLineWidth = function () {
-        return this._lineWidth;
-    };
-
-    Shape.prototype.setLineWidth = function (lineWidth) {
-        this._lineWidth = lineWidth;
-    };
-
-    Shape.prototype.getLineCap = function () {
-        return this._lineCap;
-    };
-
-    Shape.prototype.setLineCap = function (lineCap) {
-        this._lineCap = lineCap;
-    };
-
-    Shape.prototype.getFillStyle = function () {
-        return this._fillStyle;
-    };
-
-    Shape.prototype.setFillStyle = function (fillStyle) {
-        this._fillStyle = fillStyle;
-    };
-
-    Shape.prototype.isFilled = function () {
-        return this._filled;
-    };
-
-    Shape.prototype.setFilled = function (filled) {
-        this._filled = filled;
-    };
-
-    Shape.prototype.isStroked = function () {
-        return this._stroked;
-    };
-
-    Shape.prototype.setStroked = function (stroked) {
-        this._stroked = stroked;
-    };
-
-    Shape.prototype.getPoints = function () {
-        return this._points;
-    };
-
-    Shape.prototype.setPoints = function (points) {
-        this._points = points;
-    };
-
-    Shape.prototype.addPoint = function (point) {
-        if (this._toolName !== Enums.TOOLS.PENCIL && this._points.length > 1) {
-            this._points.pop();
-        }
-        this._points.push(point);
-    };
-
-    Shape.prototype.toJSON = function () {
-        return {
-            ToolName: this._toolName,
-            LineColor: this._lineColor,
-            LineWidth: this._lineWidth,
-            LineCap: this._lineCap,
-            FillStyle: this._fillStyle,
-            Filled: this._filled,
-            Stroked: this._stroked,
-            Points: this._points
+            return new Shape(shape.toJSON());
         };
-    };
 
-    Shape.fromJSON = function (json) {
-        return new Shape(json);
-    };
+        Shape.Vector2 = Vector2;
 
-    // Public API here
-    return Shape;
-});
+        // Public API here
+        return Shape;
+    });

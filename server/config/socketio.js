@@ -144,7 +144,7 @@ module.exports = function (io) {
         });
 
         socket.on('remoteDrawing', function (active) {
-            sketchpad.RemoteDrawing(io.sockets.in(client.room), active);
+            sketchpad.RemoteDrawing(socket.broadcast.in(client.room), active);
         });
 
         socket.on('syncPlease', function(){
