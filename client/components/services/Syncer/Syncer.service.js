@@ -15,7 +15,7 @@ angular.module('tesisApp')
             });
 
             socket.socket.on('renderStorage', function() {
-                _drawer.renderShapeStorage();
+                _drawer.renderStorage();
             });
 
             socket.socket.on('syncStorage', function(shapeStorage) {
@@ -24,7 +24,7 @@ angular.module('tesisApp')
 
             socket.socket.on('refresh', function() {
                 if(_remoteDrawing){
-                    _drawer.renderShapeStorage();
+                    _drawer.renderStorage();
                 }else{
                     _drawer.refresh();
                 }
@@ -54,12 +54,10 @@ angular.module('tesisApp')
             //#endregion
 
             this.startDrawing = function (tmpShape) {
-                if (_remoteDrawing) {
-                    //Resetting the Temporal Shape
-                    _drawer.resetTmpShape();
-                } else {
+                if (!_remoteDrawing) {
                     //socket.socket.emit('updateTmpShape', tmpShape);
                     _drawer.setTmpShape(tmpShape);
+                    _drawer.setDrawing(true);
                     socket.socket.emit('remoteDrawing', true);
                 }
             };

@@ -4,16 +4,33 @@ angular.module('tesisApp')
     .factory('Drawer', function (Shape, Enums) {
 
         //#region PrivateClasses
-        function Config (config) {
-            //TODO: Check if config is NaN
-            var originalSize = 500;
-            this.width = config.width || originalSize;
-            this.height = config.height || originalSize;
-            this.aspectRatio = config.aspectRatio || this.height/this.width;
-            this.scale = this.height/originalSize;
+        /**@name SizeSetting
+         *
+         * @param {number} width
+         * @param {number} height
+         * @constructor
+         */
+        function SizeSetting (width, height) {
+            var StandardSize = 500;
+            /*Check if the exist and it's valid. If exist, but is NaN or less than 1, we set the default value*/
+            if(width && (isNaN(width) || width <1)) {
+                width = StandardSize;
+            }
+            if (height && (isNaN(height) || height <1)) {
+                height = StandardSize;
+            }
+            this.width = width;
+            this.height = height;
+            this.aspectRatio = this.height/this.width;
+            this.scale = this.height/StandardSize;
         }
         //#endregion
 
+        /**@name Drawer
+         *
+         * @param container
+         * @constructor
+         */
         function Drawer (container) {
             if(!container){
                 throw new Error('Drawer must be initialized with a container');
@@ -23,55 +40,68 @@ angular.module('tesisApp')
             var _context;
             var _storage = [];
             var _undos = [];
-            var _tmpShape = null;
+            var _tmpShape;
+            var _drawing = false;
 
             //Adding the canvas to the container
             container.appendChild(_canvas);
             _context = _canvas.getContext('2d');
 
             //#region Functions
-            var pencil = function (shape) {
+            var pencil = function (points) {
                 //Todo: Reduce the lenght of the Points array by using trigonometric functions.
-                _context.moveTo(shape.getPoints()[0].x, shape.getPoints()[0].y);
-                for (var i = 0; i < shape.getPoints().length; i++) {
-                    _context.lineTo(shape.getPoints()[i].x, shape.getPoints()[i].y);
+                _context.moveTo(points[0].x, points[0].y);
+                for (var i = 0; i < points.length; i++) {
+                    _context.lineTo(points[i].x, points[i].y);
                 }
             };
 
-            var line = function(shape){
-                _context.moveTo(shape.getPoints()[0].x, shape.getPoints()[0].y);
-                _context.lineTo(shape.getPoints()[1].x, shape.getPoints()[1].y);
+            var line = function(points){
+                _context.moveTo(points[0].x, points[0].y);
+                _context.lineTo(points[1].x, points[1].y);
             };
 
-            var rectangle = function(shape){
+            var rectangle = function(points){
                 var width, height;
-                width = shape.getPoints()[1].x - shape.getPoints()[0].x;
-                height = shape.getPoints()[1].y - shape.getPoints()[0].y;
-                _context.rect(shape.getPoints()[0].x, shape.getPoints()[0].y, width, height);
+                width = points[1].x - points[0].x;
+                height = points[1].y - points[0].y;
+                _context.rect(points[0].x, points[0].y, width, height);
             };
 
-            var circle = function(shape){
-                var radius = (Math.abs(shape.getPoints()[1].x - shape.getPoints()[0].x) + (Math.abs(shape.getPoints()[1].y - shape.getPoints()[0].y)) / 2);
-                _context.arc(shape.getPoints()[1].x, shape.getPoints()[1].y, radius, 0, Math.PI * 2, false);
+            var circle = function(points){
+                var radius = (Math.abs(points[1].x - points[0].x) + (Math.abs(points[1].y - points[0].y)) / 2);
+                _context.arc(points[1].x, points[1].y, radius, 0, Math.PI * 2, false);
+            };
+
+            var canvasToScreen = function (point){
+                point.x *= _size.scale;
+                point.y *= _size.scale;
             };
 
             /**
-             * Since the points are related to the Canvas standard size, they have to be normalized to the device canvas size.
-             * @param {*|Vector2} point
-             * @returns {*|Vector2}
+             * @description
+             * Since the points are related to the canvas standard ize, they have to be transform it to the device canvas screen size.
+             * @param {*|[Vector2]} points
              */
-            var normalizePoint = function (point){
-                return new Shape.Vector2(point.x * _size.scale, point.y * _size.scale);
+            var canvasToScreenAll = function(points){
+                points = points || [];
+                points.forEach(function(point){
+                    canvasToScreen(point);
+                });
             };
 
-            var normalizeAllPoints = function(points){
-                points = points || [];
-                var pnts = [];
-                points.forEach(function(point){
-                    pnts.push(normalizePoint(point));
-                }, this);
-                return pnts;
+            var screenToCanvas = function (point){
+                point.x /= _size.scale;
+                point.y /= _size.scale;
             };
+
+            var screenToCanvasAll = function (points){
+                points = points || {};
+                points.forEach(function(point){
+                    screenToCanvas(point);
+                });
+            };
+
             //#endregion
 
             //#region GettersAndSetters
@@ -87,52 +117,47 @@ angular.module('tesisApp')
                 return _context;
             };
 
-            /**Storage Setter
-             * The old storage is clear, and the setter one gets verified.
-             * The new storage is made, by pushing the shapes normalized from the setter.
-             * The storage is not readable, cause the storage is device formatted.
-             *
-             * @param {[string]}storage
-             */
             this.setStorage = function (storage) {
-                _storage = [];
-                storage = storage || [];
-                for (var i = 0; i < storage.length; i++) {
-                    var shape = new Shape(JSON.parse(storage[i]));
-                    shape.setPoints(normalizeAllPoints(shape.getPoints()));
-                    _storage.push(JSON.stringify(shape));
-                }
+                _storage = storage;
             };
-
-            /**
-             *
-             * @param tmpShape
-             */
 
             this.setTmpShape = function (tmpShape) {
                 _tmpShape = new Shape(tmpShape);
             };
 
-            this.resetTmpShape = function () {
-                _tmpShape = null;
+            this.getTmpShape = function () {
+              return _tmpShape;
             };
 
-            this.getTmpShape = function () {
-                return _tmpShape;
+            this.addPoint = function(point) {
+                screenToCanvas(point);
+                _tmpShape.addPoint(point);
+            };
+
+            this.isDrawing = function () {
+                return _drawing;
+            };
+
+            this.setDrawing = function (drawing){
+                _drawing = drawing;
             };
             //#endregion
 
             //#region FUNCTIONS
-
+            /**
+             *
+             * @param width
+             * @param height
+             */
             this.setCanvasSize = function (width, height){
-                _size = new Config({width: width, height: height});
+                _size = new SizeSetting(width, height);
                 _canvas.setAttribute('width', width);
                 _canvas.setAttribute('height', height);
                 _canvas.style.width = width + 'px';
                 _canvas.style.height = height + 'px';
             };
 
-            this.renderShapeStorage = function() {
+            this.renderStorage = function() {
                 _context.clearRect(0,0, _size.width, _size.height);
                 for (var i = 0; i < _storage.length; i++) {
                     this.renderShape(new Shape(JSON.parse(_storage[i])));
@@ -143,6 +168,8 @@ angular.module('tesisApp')
                 if(!shape){
                     throw new Error('Can\'t render shape. Is '+shape);
                 }
+                var points = shape.getPoints();
+                canvasToScreenAll(points);
                 _context.beginPath();
                 //The line width also need to be adjust according to the canvas size.
                 _context.lineWidth = shape.getLineWidth() * _size.scale;
@@ -151,55 +178,70 @@ angular.module('tesisApp')
                 _context.fillStyle = shape.isFilled() ? shape.getFillStyle() : Enums.COLORS.TRANSPARENT;
                 switch (shape.getToolName()){
                     case Enums.TOOLS.PENCIL:
-                        pencil(shape);
+                        pencil(points);
                         break;
                     case Enums.TOOLS.LINE:
-                        line(shape);
+                        line(points);
                         break;
                     case Enums.TOOLS.RECTANGLE:
-                        rectangle(shape);
+                        rectangle(points);
                         break;
                     case Enums.TOOLS.CIRCLE:
-                        circle(shape);
+                        circle(points);
                         break;
                     default:
                         console.error('ERR! Tool: '+ shape.getToolName() +' is invalid');
-                        _tmpShape = null;
+                        _drawing = false;
                         break;
                 }
                 _context.fill();
                 _context.stroke();
+                screenToCanvasAll(shape.getPoints());
             };
 
             this.refresh = function () {
-                this.renderShapeStorage();
-                if(this.getTmpShape().getPoints().length > 1){
-                    this.renderShape(this.getTmpShape());
+                this.renderStorage();
+                if(_tmpShape.getPoints().length > 1){
+                    this.renderShape(_tmpShape);
                 }
             };
 
             this.endDrawing = function () {
-                if(this.getTmpShape().getPoints().length > 1){
-                    _storage.push(JSON.stringify(this.getTmpShape()));
+                _undos = [];
+                if(_tmpShape.getPoints().length > 1){
+                    _storage.push(JSON.stringify(_tmpShape));
                 }
-                _tmpShape = null;
-                this.renderShapeStorage();
+                _drawing = false;
+                this.renderStorage();
+                console.log(_storage);
             };
 
             this.cancelDraw = function () {
                 this.getContext().translate(0,0);
-                _tmpShape = null;
+                _drawing = false;
             };
 
             this.resetCanvas = function () {
-                this.setStorage([]);
-                this.renderShapeStorage();
+                _storage = [];
+                this.renderStorage();
             };
 
             this.undo = function () {
-                _storage.pop();
-                this.renderShapeStorage();
-                _tmpShape = null;
+                if(_storage.length <= 0) {
+                    return;
+                }
+                _undos.push(_storage.pop());
+                this.renderStorage();
+                _drawing = false;
+            };
+
+            this.redo = function () {
+                if(_undos.length <= 0){
+                    return;
+                }
+                _storage.push(_undos.pop());
+                this.renderStorage();
+                _drawing = false;
             };
             //#endregion
         }

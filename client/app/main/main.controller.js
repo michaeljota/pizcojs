@@ -30,6 +30,24 @@ angular.module('tesisApp')
             };
         };
 
+        var start = function () {
+            _syncer.startDrawing($scope.shape);
+        };
+
+        var move = function (event) {
+            event.preventDefault();
+            if(_syncer.getDrawer().isDrawing()){
+                _syncer.getDrawer().addPoint(newPoint(event));
+                _syncer.refresh();
+            }
+        };
+
+        var end = function () {
+            if (_syncer.getDrawer().isDrawing()) {
+                _syncer.endDrawing();
+            }
+        };
+
         //#region Bindings
         $scope.shape = {};
         $scope.Tools = Enums.TOOLS;
@@ -38,7 +56,7 @@ angular.module('tesisApp')
             $scope.shape = {
                 ToolName   : Enums.TOOLS.PENCIL,
                 LineColor  : Enums.COLORS.BLACK,
-                LineWidth  : 1,
+                LineWidth  : 3,
                 LineCap    : 'round',
                 FillStyle  : Enums.COLORS.GREY,
                 Filled     : false,
@@ -47,37 +65,20 @@ angular.module('tesisApp')
 
             canvas = _syncer.getDrawer().getCanvas();
 
-            canvas.ontouchstart =
-                canvas.onmousedown = function () {
-                    _syncer.startDrawing($scope.shape);
-                };
+            canvas.addEventListener('touchstart', start ,false);
+            canvas.addEventListener('mousedown', start, false);
 
-            canvas.ontouchmove = function (event) {
-                event.preventDefault();
-                if(_syncer.getDrawer().getTmpShape()){
-                    _syncer.getDrawer().getTmpShape().addPoint(newPoint(event));
-                    _syncer.refresh();
-                }
-            };
+            canvas.addEventListener('touchmove', move, false);
+            canvas.addEventListener('mousemove', move, false);
 
-            canvas.onmousemove = function (event) {
-                if(_syncer.getDrawer().getTmpShape()){
-                    _syncer.getDrawer().getTmpShape().addPoint(newPoint(event));
-                    _syncer.refresh();
-                }
-            };
+            canvas.addEventListener('touchend', end, false);
+            canvas.addEventListener('mouseup', end, false);
+            //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
+            canvas.addEventListener('mouseleave', end, false);
 
-            canvas.ontouchend =
-                canvas.onmouseleave =
-                    canvas.onmouseup = function () {
-                        if(_syncer.getDrawer().getTmpShape()){
-                            _syncer.endDrawing();
-                        }
-                    };
-
-            canvas.ontouchcancel = function () {
+            canvas.addEventListener('touchcancel', function () {
                 _syncer.getDrawer().cancelDraw();
-            };
+            }, false);
 
             window.addEventListener('resize', resizeCanvas);
             window.addEventListener('load', resizeCanvas());
