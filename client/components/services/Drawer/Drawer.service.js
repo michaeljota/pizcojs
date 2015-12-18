@@ -190,7 +190,7 @@ angular.module('tesisApp')
                         circle(points);
                         break;
                     default:
-                        console.error('ERR! Tool: '+ shape.getToolName() +' is invalid');
+                        throw  new Error ('Tool: '+ shape.getToolName() +' is invalid');
                         _drawing = false;
                         break;
                 }
@@ -213,7 +213,6 @@ angular.module('tesisApp')
                 }
                 _drawing = false;
                 this.renderStorage();
-                console.log(_storage);
             };
 
             this.cancelDraw = function () {

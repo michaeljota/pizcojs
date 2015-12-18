@@ -6,19 +6,52 @@
         <div class="toolbox">
             <div class="toolset">
                 <ul>
-                    <li><a href="" data-ng-click="shape.ToolName = Tools.PENCIL" class="pencil tool"> Pencil </a> </li>
-                    <li><a href="" data-ng-click="shape.ToolName = Tools.LINE" class="line tool"> Line </a> </li>
-                    <li><a href="" data-ng-click="shape.ToolName = Tools.RECTANGLE" class="rectangle tool"> Rectangle </a></li>
-                    <li><a href="" data-ng-click="shape.ToolName = Tools.CIRCLE" class="circle tool"> Circle </a></li>
+                    <li>
+                        <md-button class="md-icon-button" data-ng-click="shape.ToolName = Tools.PENCIL" aria-label="Pencil">
+                            <md-icon md-svg-icon="pencil"></md-icon>
+                        </md-button>
+                    </li>
+                    <li>
+                        <md-button class="md-icon-button" data-ng-click="shape.ToolName = Tools.LINE" aria-label="Line">
+                            <md-icon md-svg-icon="vector-line"></md-icon>
+                        </md-button>
+                    </li>
+                    <li>
+                        <md-button class="md-icon-button" data-ng-click="shape.ToolName = Tools.RECTANGLE" aria-label="Rectangle">
+                            <md-icon md-svg-icon="vector-square"></md-icon>
+                        </md-button>
+                    </li>
+                    <li>
+                        <md-button class="md-icon-button" data-ng-click="shape.ToolName = Tools.CIRCLE" aria-label="Circle">
+                            <md-icon md-svg-icon="vector-circle"></md-icon>
+                        </md-button>
+                    </li>
                     <li>
                         <ul>
-                            <li><a href="" data-ng-click="undo()" class="undo tool"> Undo </a></li>
-                            <li><a href="" data-ng-click="redo()" class="redo tool">Redo</a></li>
-                            <li><a href="" data-ng-click="reset()" class="reset tool"> Reset </a></li>
+                            <li>
+                                <md-button class="md-icon-button" data-ng-click="undo()" aria-label="Undo">
+                                    <md-icon md-svg-icon="undo-variant"></md-icon>
+                                </md-button>
+                            </li>
+                            <li>
+                                <md-button class="md-icon-button" data-ng-click="redo()" aria-label="Redo">
+                                    <md-icon md-svg-icon="redo-variant"></md-icon>
+                                </md-button>
+                            </li>
+                            <li>
+                                <md-button class="md-icon-button" data-ng-click="reset()" aria-label="Reset">
+                                    <md-icon md-svg-icon="delete"></md-icon>
+                                </md-button>
+                            </li>
+                            <li>
+                                <md-checkbox ng-model="shape.Stroked">Stroked</md-checkbox>
+                            </li>
+                            <li>
+                                <md-checkbox ng-model="shape.Filled">Filled</md-checkbox>
+                            </li>
+                            <!--TODO: Replace this with a better color picker, integrate to the UI-->
                             <li><div class="tool">Line Color:</div> <input type="color" data-ng-model="shape.LineColor">
                             <li><div class="tool">Fill Color:</div> <input type="color" data-ng-model="shape.FillStyle"></li>
-                            <li><div class="tool">Stroked:</div> <input type="checkbox" data-ng-model="shape.Stroked"></li>
-                            <li><div class="tool">Filled:</div> <input type="checkbox" data-ng-model="shape.Filled"></li>
                         </ul>
                     </li>
                 </ul>
