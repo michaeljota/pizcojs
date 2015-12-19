@@ -9,7 +9,7 @@ angular.module('tesisApp', [
     'btford.socket-io',
     'ngMaterial'
 ])
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
         $urlRouterProvider
             .otherwise('/');
 
@@ -17,4 +17,8 @@ angular.module('tesisApp', [
 
         $mdIconProvider
             .defaultIconSet('./assets/icons/mdi.svg');
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('deep-purple')
+            .accentPalette('blue');
     });
