@@ -174,8 +174,8 @@ angular.module('tesisApp')
                 //The line width also need to be adjust according to the canvas size.
                 _context.lineWidth = shape.getLineWidth() * _size.scale;
                 _context.lineCap = shape.getLineCap();
-                _context.strokeStyle = shape.isStroked() ? shape.getLineColor() : Enums.COLORS.TRANSPARENT;
-                _context.fillStyle = shape.isFilled() ? shape.getFillStyle() : Enums.COLORS.TRANSPARENT;
+                _context.strokeStyle = shape.getLineColor();
+                _context.fillStyle = shape.getFillStyle();
                 switch (shape.getToolName()){
                     case Enums.TOOLS.PENCIL:
                         pencil(points);
@@ -194,8 +194,8 @@ angular.module('tesisApp')
                         _drawing = false;
                         break;
                 }
-                _context.fill();
-                _context.stroke();
+                if (shape.isStroked()) _context.stroke();
+                if (shape.isFilled()) _context.fill();
                 screenToCanvasAll(shape.getPoints());
             };
 
