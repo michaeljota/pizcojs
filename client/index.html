@@ -14,6 +14,7 @@
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
       <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+      <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
       <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css({.tmp,client}) app/app.css -->
@@ -23,6 +24,7 @@
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/modalLogin/modalLogin.css">
       <link rel="stylesheet" href="components/modal/modal.css">
+      <link rel="stylesheet" href="components/toolbar/toolbar.css">
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
@@ -32,7 +34,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div data-ng-include="'components/navbar/navbar.html'"></div>
+    <div data-ng-include="'components/toolbar/toolbar.html'"></div>
     <div data-ui-view=""></div>
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
@@ -61,6 +63,10 @@
       <script src="bower_components/lodash/dist/lodash.compat.js"></script>
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-socket-io/socket.js"></script>
+      <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <script src="bower_components/angular-aria/angular-aria.js"></script>
+      <script src="bower_components/angular-messages/angular-messages.js"></script>
+      <script src="bower_components/angular-material/angular-material.js"></script>
       <!-- endbower -->
     <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -82,6 +88,7 @@
           <script src="components/services/Syncer/Syncer.service.js"></script>
           <script src="components/services/User/User.service.js"></script>
           <script src="components/services/socket/socket.service.js"></script>
+          <script src="components/toolbar/toolbar.controller.js"></script>
           <!-- endinjector -->
         <!-- endbuild -->
 </body>

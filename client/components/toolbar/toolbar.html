@@ -1,0 +1,28 @@
+<div data-ng-controller="ToolbarCtrl">
+    <md-content>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" aria-label="Settings">
+                    <md-icon md-svg-icon="menu"></md-icon>
+                </md-button>
+                <h2>
+                    <span>PizcoJS</span>
+                </h2>
+                <span flex></span>
+                <md-menu md-position-mode="target-right target">
+                    <md-button class="md-icon-button" aria-label="Menu" data-ng-click="$mdOpenMenu($event)">
+                        <md-icon md-menu-origin md-svg-icon="dots-vertical"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="download()" aria-label="Download">
+                                <md-icon md-svg-icon="download" md-menu-align-target></md-icon>
+                                Download
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-toolbar>
+    </md-content>
+</div>

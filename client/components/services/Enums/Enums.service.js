@@ -5,9 +5,8 @@ angular.module('tesisApp')
     // AngularJS will instantiate a singleton by calling "new" on this function
 
         var Colors = Object.freeze({
-            TRANSPARENT: 'rgba(0, 0, 0, 0)',
-            BLACK:       'rgba(0, 0, 0, 1)',
-            GREY:        'rgba(180, 180, 180, 1)'
+            BLACK:       '#000000',
+            GREY:        '#676767'
         });
 
         var Tool = Object.freeze({
