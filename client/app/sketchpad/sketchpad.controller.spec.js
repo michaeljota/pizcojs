@@ -1,16 +1,16 @@
 'use strict';
 
-describe('Controller: ModalLoginCtrl', function () {
+describe('Controller: SketchpadCtrl', function () {
 
   // load the controller's module
   beforeEach(module('tesisApp'));
 
-  var ModalLoginCtrl, scope;
+  var SketchpadCtrl, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    ModalLoginCtrl = $controller('ModalLoginCtrl', {
+    SketchpadCtrl = $controller('SketchpadCtrl', {
       $scope: scope
     });
   }));
