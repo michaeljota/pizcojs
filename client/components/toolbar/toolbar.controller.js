@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('tesisApp')
-  .controller('ToolbarCtrl', function ($scope, $mdDialog) {
+  .controller('ToolbarCtrl', function ($scope, $mdDialog, $mdSidenav) {
+
         var originatorEv;
+
 
         $scope.openMenu = function($mdOpenMenu, ev) {
             originatorEv = ev;
@@ -23,6 +25,12 @@ angular.module('tesisApp')
         };*/
 
         $scope.download = function () {
-            //TODO:
-        }
+            console.log('Downloading');
+        };
+
+        $scope.openSidenav = function () {
+            console.log('Opening sidenav');
+            $mdSidenav('left')
+                .toggle()
+        };
     });

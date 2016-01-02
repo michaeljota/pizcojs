@@ -67,7 +67,7 @@ angular.module('tesisApp')
         };
 
         var newPoint = function (event) {
-            return (event.touches) ?
+            var t = (event.touches) ?
             {
                 x: (event.touches[0].pageX - event.target.offsetLeft),
                 y: (event.touches[0].pageY - event.target.offsetTop)
@@ -76,6 +76,8 @@ angular.module('tesisApp')
                 x: (event.pageX - event.target.offsetLeft),
                 y: (event.pageY - event.target.offsetTop)
             };
+            console.log(t);
+            return t;
         };
 
         var start = function () {

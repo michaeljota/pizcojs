@@ -13,7 +13,6 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
-      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
       <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
       <!-- endbower -->
     <!-- endbuild -->
@@ -24,7 +23,9 @@
       <link rel="stylesheet" href="app/login/login.css">
       <link rel="stylesheet" href="app/main/main.css">
       <link rel="stylesheet" href="app/sketchpad/sketchpad.css">
+      <link rel="stylesheet" href="components/directives/menuLink/menuLink.css">
       <link rel="stylesheet" href="components/modal/modal.css">
+      <link rel="stylesheet" href="components/sidenav/sidenav.css">
       <link rel="stylesheet" href="components/toolbar/toolbar.css">
       <!-- endinjector -->
     <!-- endbuild -->
@@ -35,12 +36,12 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <!-- TODO: Improve this -->
+    <!-- TODO: Improve this. -- If there is a how -- -->
     <div layout="row" data-ng-cloak>
         <div data-ng-include="'components/sidenav/sidenav.html'"></div>
         <div layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
             <div data-ng-include="'components/toolbar/toolbar.html'"></div>
-            <md-content md-scroll-y="" flex="" layout-padding="" class="layout-padding ng-scope flex">
+            <md-content md-scroll-y="" flex="" layout-padding="" class="ng-scope flex">
                 <div ui-view=""></div>
             </md-content>
         </div>
@@ -63,13 +64,10 @@
     <![endif]-->
     <!-- build:js({client,node_modules}) app/vendor.js -->
       <!-- bower:js -->
-      <script src="bower_components/jquery/dist/jquery.js"></script>
       <script src="bower_components/angular/angular.js"></script>
       <script src="bower_components/angular-resource/angular-resource.js"></script>
       <script src="bower_components/angular-cookies/angular-cookies.js"></script>
       <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-      <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-      <script src="bower_components/lodash/dist/lodash.compat.js"></script>
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-socket-io/socket.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -91,6 +89,8 @@
           <script src="app/main/main.js"></script>
           <script src="app/sketchpad/sketchpad.controller.js"></script>
           <script src="app/sketchpad/sketchpad.js"></script>
+          <script src="components/directives/menuLink/menuLink.directive.js"></script>
+          <script src="components/directives/menuToggle/menuToggle.directive.js"></script>
           <script src="components/modal/modal.service.js"></script>
           <script src="components/navbar/navbar.controller.js"></script>
           <script src="components/services/Drawer/Drawer.service.js"></script>

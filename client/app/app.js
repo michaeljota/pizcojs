@@ -5,9 +5,10 @@ angular.module('tesisApp', [
     'ngResource',
     'ngSanitize',
     'ui.router',
-    'ui.bootstrap',
     'btford.socket-io',
-    'ngMaterial'
+    'ngMaterial',
+    'ngAnimate',
+    'ngAria'
 ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
         $urlRouterProvider

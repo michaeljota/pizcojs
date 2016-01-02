@@ -1,7 +1,7 @@
 <div data-ng-controller="ToolbarCtrl">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Sidebar">
+            <md-button class="md-icon-button" aria-label="Sidebar" hide-gt-md ng-click="openSidenav()">
                 <md-icon md-svg-icon="menu"></md-icon>
             </md-button>
             <h2>
@@ -9,7 +9,7 @@
             </h2>
             <span flex></span>
             <md-menu md-position-mode="target-right target">
-                <md-button class="md-icon-button" aria-label="Menu" data-ng-click="$mdOpenMenu($event)">
+                <md-button class="md-icon-button" aria-label="Menu" data-ng-click="$mdOpenMenu()">
                     <md-icon md-menu-origin md-svg-icon="dots-vertical"></md-icon>
                 </md-button>
                 <md-menu-content width="4">

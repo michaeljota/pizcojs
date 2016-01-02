@@ -1,17 +1,19 @@
-<div data-ng-controller="SidenavCtrl">
+<div data-ng-controller="SidenavCtrl" data-ng-init="init()">
     <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
         <md-toolbar>
             <h1 class="md-toolbar-tools">UNERG</h1>
         </md-toolbar>
         <!--TODO: Meter el logo aquí y esas cosas -->
-        <md-content layout-padding="">
-            <md-button ng-click="close()" class="md-primary" hide-gt-md="">
-                Close Sidenav Left
-            </md-button>
-            <p hide-md="" show-gt-md="">
-                This sidenav is locked open on your device. To go back to the default behavior,
-                narrow your display.
-            </p>
+        <md-content flex role="navigation">
+            <!--TODO: Falta que se vea mejor. Se supone que los botones deben ocupar toda la fila. -->
+            <md-list class="side-menu">
+                <md-list-item ng-repeat="section in sections" class="parent-list-item">
+                    <md-button class="{{section.icon}}" ui-sref-active="active"
+                               ui-sref="{{section.state ? section.state : '' }}" ng-click="focusSection()">
+                        {{section.name}}
+                    </md-button>
+                </md-list-item>
+            </md-list>
         </md-content>
     </md-sidenav>
 </div>
