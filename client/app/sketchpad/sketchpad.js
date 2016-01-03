@@ -3,7 +3,7 @@
 angular.module('tesisApp')
   .config(function ($stateProvider) {
     $stateProvider
-      .state('sketchpad', {
+      .state('app.sketchpad', {
         url: '/sketchpad',
         templateUrl: 'app/sketchpad/sketchpad.html',
         controller: 'SketchpadCtrl'

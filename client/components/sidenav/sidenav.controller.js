@@ -10,21 +10,21 @@ angular.module('tesisApp')
 
         sections.push({
             name: 'Login',
-            state: 'main',
+            state: 'app.login',
             type: 'link',
             icon: 'hexagon'
         });
 
         sections.push({
             name: 'Main',
-            state: 'main',
+            state: 'app.main',
             type: 'link',
             icon: 'hexagon'
         });
 
         sections.push({
             name: 'Sketchpad',
-            state: 'sketchpad',
+            state: 'app.sketchpad',
             type: 'link',
             icon: 'hexagon'
         });

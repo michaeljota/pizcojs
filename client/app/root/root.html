@@ -1,0 +1,9 @@
+<div layout="row" data-ng-cloak>
+    <div data-ng-include="'components/sidenav/sidenav.html'"></div>
+    <div layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
+        <div data-ng-include="'components/toolbar/toolbar.html'"></div>
+        <md-content md-scroll-y="" flex="" layout-padding="" class="ng-scope flex">
+            <div ui-view=""></div>
+        </md-content>
+    </div>
+</div>

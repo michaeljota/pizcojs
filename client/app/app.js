@@ -12,7 +12,7 @@ angular.module('tesisApp', [
 ])
     .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
         $urlRouterProvider
-            .otherwise('/');
+            .otherwise('/login');
 
         $locationProvider.html5Mode(true);
 
