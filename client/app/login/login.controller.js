@@ -14,7 +14,7 @@ angular.module('tesisApp')
 
         socket.socket.on('login-success', function (data) {
             //TODO: Set globar user model.
-            $state.go('main');
+            $state.go('app.main');
         });
 
         socket.socket.on('login-fail', function () {
