@@ -1,3 +1,50 @@
-<div class="col-md-12">
-{{message}}
+<div layout="row">
+    <div layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
+        <md-card ng-repeat="card in cards" ng-if="$even">
+            <img ng-src="{{card.img}}" class="md-card-image" alt="Washed Out" data-ng-dblclick="enterRoom(card.room)">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">{{card.title}}</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-icon-button" aria-label="Favorite" ng-click="setFaved(card)">
+                    <md-icon ng-if="card.faved" md-svg-icon="heart"></md-icon>
+                    <md-icon ng-if="!card.faved" md-svg-icon="heart-outline"></md-icon>
+                </md-button>
+                <!-- TODO: This should be a menu ? Menu : Delete -->
+                <md-button class="md-icon-button" aria-label="Settings">
+                    <md-icon md-svg-icon="dots-vertical"></md-icon>
+                </md-button>
+                <!-- TODO: This should be a done ? done : Delete -->
+                <md-button class="md-icon-button" aria-label="Share">
+                    <md-icon md-svg-icon="share"></md-icon>
+                </md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+    <div layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
+        <md-card ng-repeat="card in cards" ng-if="$odd">
+            <img ng-src="{{card.img}}" class="md-card-image" alt="Washed Out" data-ng-dblclick="enterRoom(card.room)">
+            <md-card-title>
+                <md-card-title-text>
+                    <span class="md-headline">{{card.title}}</span>
+                </md-card-title-text>
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-icon-button" aria-label="Favorite" ng-click="setFaved(card)">
+                    <md-icon ng-if="card.faved" md-svg-icon="heart"></md-icon>
+                    <md-icon ng-if="!card.faved" md-svg-icon="heart-outline"></md-icon>
+                </md-button>
+                <!-- TODO: This should be a menu ? Menu : Delete -->
+                <md-button class="md-icon-button" aria-label="Settings">
+                    <md-icon md-svg-icon="dots-vertical"></md-icon>
+                </md-button>
+                <!-- TODO: This should be a done ? done : Delete -->
+                <md-button class="md-icon-button" aria-label="Share">
+                    <md-icon md-svg-icon="share"></md-icon>
+                </md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
 </div>

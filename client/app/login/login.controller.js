@@ -13,7 +13,8 @@ angular.module('tesisApp')
         };
 
         socket.socket.on('login-success', function (data) {
-            //TODO: Set globar user model.
+            //TODO: Set global user model.
+            //Voy a suponer que con lo de arriba quise decir que se tiene que configurar el usuario aquí y que según la configuración del usuario, entonces se acomodan las vistas.
             $state.go('app.main');
         });
 
