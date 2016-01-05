@@ -29,6 +29,13 @@ angular.module('tesisApp')
             icon: 'hexagon'
         });
 
+        sections.push({
+            name: 'Player',
+            state: 'app.player',
+            type: 'link',
+            icon: 'hexagon'
+        });
+
         $scope.autoFocusContent = false;
 
         $scope.status = {
@@ -51,5 +58,5 @@ angular.module('tesisApp')
             page && page.url && $state.go(page.url);
             currentSection = section;
             currentPage = page;
-        }
+        };
     });

@@ -3,128 +3,16 @@
         <div id="canvasContainer" class="canvasContainer">
         </div>
         <md-divider></md-divider>
-        <div class="toolbox">
-            <div class="toolset">
-                <ul>
-                    <li>
-                        <ul>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="shape.ToolName = Tools.PENCIL" aria-label="Pencil">
-                                    <md-icon md-svg-icon="pencil"></md-icon>
-                                </md-button>
-                            </li>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="shape.ToolName = Tools.LINE" aria-label="Line">
-                                    <md-icon md-svg-icon="vector-line"></md-icon>
-                                </md-button>
-                            </li>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="shape.ToolName = Tools.RECTANGLE" aria-label="Rectangle">
-                                    <md-icon md-svg-icon="vector-square"></md-icon>
-                                </md-button>
-                            </li>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="print()" aria-label="Circle">
-                                    <md-icon md-svg-icon="vector-circle"></md-icon>
-                                </md-button>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="undo()" aria-label="Undo">
-                                    <md-icon md-svg-icon="undo-variant"></md-icon>
-                                </md-button>
-                            </li>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="redo()" aria-label="Redo">
-                                    <md-icon md-svg-icon="redo-variant"></md-icon>
-                                </md-button>
-                            </li>
-                            <li>
-                                <md-button class="md-icon-button" ng-click="reset()" aria-label="Reset">
-                                    <md-icon md-svg-icon="delete"></md-icon>
-                                </md-button>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul>
-                            <li>
-                                <md-checkbox ng-model="shape.Stroked"><div class="md-body-1">Stroked</div></md-checkbox>
-                            </li>
-                            <li>
-                                <md-checkbox ng-model="shape.Filled"><div class="md-body-1">Filled</div></md-checkbox>
-                            </li>
-                            <!--TODO: Replace this with a better color picker, integrate to the UI
-                            This is an approach. Using the MD Menu, and Sliders, could be a nice color picker.
-
-                                    <md-menu-content width="6">
-                                        <md-menu-item>
-                                            <div layout>
-                                                <div flex="10" layout layout-align="center center">
-                                                    <span class="md-body-1">R</span>
-                                                </div>
-                                                <md-slider flex min="0" max="255" ng-model="color.red" aria-label="red" id="red-slider" class>
-                                                </md-slider>
-                                                <div flex="20" layout layout-align="center center">
-                                                    <input flex type="number" ng-model="color.red" aria-label="red" aria-controls="red-slider">
-                                                </div>
-                                            </div>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <div layout>
-                                                <div flex="10" layout layout-align="center center">
-                                                    <span class="md-body-1">G</span>
-                                                </div>
-                                                <md-slider flex ng-model="color.green" min="0" max="255" aria-label="green" id="green-slider" class="md-accent">
-                                                </md-slider>
-                                                <div flex="20" layout layout-align="center center">
-                                                    <input flex type="number" ng-model="color.green" aria-label="green" aria-controls="green-slider">
-                                                </div>
-                                            </div>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <div layout>
-                                                <div flex="10" layout layout-align="center center">
-                                                    <span class="md-body-1">B</span>
-                                                </div>
-                                                <md-slider flex ng-model="color.blue" min="0" max="255" aria-label="blue" id="blue-slider" class="md-primary">
-                                                </md-slider>
-                                                <div flex="20" layout layout-align="center center">
-                                                    <input flex type="number" ng-model="color.blue" aria-label="blue" aria-controls="blue-slider">
-                                                </div>
-                                            </div>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                            -->
-                            <!--
-                            Another option could be to use a preset pad of colors, from the CSS standard naming.
-                            <li>
-                                <md-menu>
-                                    <md-button aria-label="Line Color" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-                                        <md-icon md-menu-origin md-svg-icon="crop-square"></md-icon>
-                                    </md-button>
-                                    <md-menu-content width="6">
-                                        <md-menu-item>
-                                            <md-grid-list md-cols="4" md-row-height="1:1" md-gutter="2px">
-                                                <md-grid-tile ng-repeat="tile in tiles" md-rowspan="{{tile.span.row}}" md-colspan="{{tile.span.col}}" md-colspan="1" ng-class="tile.background">
-                                                    <md-icon md-svg-icon="{{tile.icon}}"></md-icon>
-                                                    <md-grid-tile-footer><h3>{{tile.title}}</h3></md-grid-tile-footer>
-                                                </md-grid-tile>
-                                            </md-grid-list>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                                </md-menu>
-                            </li>
-                            -->
-                            <li><div class="md-body-1">Line Color:</div> <input type="color" data-ng-model="shape.LineColor">
-                            <li><div class="md-body-1">Fill Color:</div> <input type="color" data-ng-model="shape.FillStyle"></li>
-                        </ul>
-                    </li>
-                </ul>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="tool.onClick()" aria-label="{{tool.label}}" ng-repeat="tool in tools">
+                    <md-icon md-svg-icon="{{tool.icon}}"></md-icon>
+                </md-button>
+                <md-checkbox ng-model="shape.Stroked"><div class="">Stroked</div></md-checkbox>
+                <md-checkbox ng-model="shape.Filled"><div class="">Filled</div></md-checkbox>
+                <div class="">Line Color:</div> <input type="color" data-ng-model="shape.LineColor">
+                <div class="">Fill Color:</div> <input type="color" data-ng-model="shape.FillStyle">
             </div>
-        </div>
+        </md-toolbar>
     </div>
 </div>

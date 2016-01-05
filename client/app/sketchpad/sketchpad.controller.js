@@ -6,57 +6,67 @@ angular.module('tesisApp')
         var _syncer = new Syncer(document.getElementById('canvasContainer'));
         var canvas;
 
-        $scope.tiles = buildGridModel({
-            icon : "avatar:svg-",
-            title: "Svg-",
-            background: ""
+        var tools = [];
+        tools.push({
+            label: 'Pencil',
+            onClick: function() {
+                $scope.shape.ToolName = Enums.TOOLS.PENCIL;
+            },
+            icon: 'pencil'
         });
 
-        function buildGridModel(tileTmpl){
-            var it, results = [ ];
+        tools.push({
+            label: 'Line',
+            onClick: function() {
+                $scope.shape.ToolName = Enums.TOOLS.LINE;
+            },
+            icon: 'vector-line'
+        });
 
-            for (var j=0; j<11; j++) {
+        tools.push({
+            label: 'Rectangle',
+            onClick: function() {
+                $scope.shape.ToolName = Enums.TOOLS.RECTANGLE;
+            },
+            icon: 'vector-square'
+        });
 
-                it = angular.extend({},tileTmpl);
-                it.icon  = it.icon + (j+1);
-                it.title = it.title + (j+1);
-                it.span  = { row : 1, col : 1 };
+        tools.push({
+            label: 'Circle',
+            onClick: function() {
+                $scope.shape.ToolName = Enums.TOOLS.CIRCLE;
+            },
+            icon: 'vector-circle'
+        });
 
-                switch(j+1) {
-                    case 1:
-                        it.background = "red";
-                        it.span.row = it.span.col = 2;
-                        break;
+        tools.push({
+            label: 'Undo',
+            onClick: function() {
+                undo();
+            },
+            icon: 'undo-variant'
+        });
 
-                    case 2: it.background = "green";         break;
-                    case 3: it.background = "darkBlue";      break;
-                    case 4:
-                        it.background = "blue";
-                        it.span.col = 2;
-                        break;
+        tools.push({
+            label: 'Redo',
+            onClick: function() {
+                redo();
+            },
+            icon: 'redo-variant'
+        });
 
-                    case 5:
-                        it.background = "yellow";
-                        it.span.row = it.span.col = 2;
-                        break;
-
-                    case 6: it.background = "pink";          break;
-                    case 7: it.background = "darkBlue";      break;
-                    case 8: it.background = "purple";        break;
-                    case 9: it.background = "deepBlue";      break;
-                    case 10: it.background = "lightPurple";  break;
-                    case 11: it.background = "yellow";       break;
-                }
-
-                results.push(it);
-            }
-            return results;
-        }
+        tools.push({
+            label: 'Reset',
+            onClick: function() {
+                reset();
+            },
+            icon: 'delete'
+        });
 
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
             var wid = container.clientWidth;
-            var hei = window.innerHeight * 0.70;
+            var hei = window.innerHeight * 0.80;
             if(wid>hei){
                 wid = hei;
             }else{
@@ -98,9 +108,22 @@ angular.module('tesisApp')
             }
         };
 
+
+        var reset = function (){
+            _syncer.resetCanvas();
+        };
+
+        var undo = function () {
+            _syncer.undo();
+        };
+
+        var redo = function () {
+            //TODO:
+        };
+
         //#region Bindings
         $scope.shape = {};
-        $scope.Tools = Enums.TOOLS;
+        $scope.tools = tools;
 
         $scope.init = function () {
             $scope.shape = {
@@ -133,14 +156,6 @@ angular.module('tesisApp')
             resizeCanvas();
 
             window.addEventListener('resize', resizeCanvas);
-        };
-
-        $scope.reset = function (){
-            _syncer.resetCanvas();
-        };
-
-        $scope.undo = function () {
-            _syncer.undo();
         };
 
         $scope.$watch('shape.ToolName', function () {

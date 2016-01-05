@@ -28,6 +28,7 @@ angular.module('tesisApp')
         $scope.cards = cards;
 
         $scope.enterRoom = function (room) {
+            //TODO: Esto debería ingresar a la sala y dejar al usuario en la pantalla de dibujo.
             console.log('Entering in %s', room);
         };
 

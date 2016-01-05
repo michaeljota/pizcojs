@@ -28,6 +28,7 @@ angular.module('tesisApp')
         $scope.cards = cards;
 
         $scope.playSketchpad = function (sketchpad) {
+            //TODO: Debería entrar al reproductor, pasando como parametros la información de la pizarra.
             console.log('Entering in %s', sketchpad);
         };
 
