@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tesisApp', [
+var app = angular.module('tesisApp', [
     'ngCookies',
     'ngResource',
     'ngSanitize',
@@ -9,17 +9,23 @@ angular.module('tesisApp', [
     'ngMaterial',
     'ngAnimate',
     'ngAria'
-])
-    .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $mdIconProvider, $mdThemingProvider) {
-        $urlRouterProvider
-            .otherwise('/login');
+]);
 
-        $locationProvider.html5Mode(true);
+/*UI Router Config*/
+app.config(function ($stateProvider, $urlRouterProvider, $locationProvider){
+    $urlRouterProvider
+        .otherwise('/login');
 
-        $mdIconProvider
-            .defaultIconSet('./assets/icons/mdi.svg');
+    $locationProvider.html5Mode(true);
+});
 
-        $mdThemingProvider.theme('default')
-            .primaryPalette('deep-purple')
-            .accentPalette('blue');
-    });
+/*Angular Material Config*/
+app.config(function ($mdIconProvider, $mdThemingProvider) {
+
+    $mdIconProvider
+        .defaultIconSet('./assets/icons/mdi.svg');
+
+    $mdThemingProvider.theme('default')
+        .primaryPalette('deep-purple')
+        .accentPalette('blue');
+});

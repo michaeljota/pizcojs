@@ -6,6 +6,8 @@ angular.module('tesisApp')
             .state('app.main', {
                 url: '/main',
                 templateUrl: 'app/main/main.html',
-                controller: 'MainCtrl'
+                controller: 'MainCtrl',
+                parent: 'app',
+                abstract: true
             });
     });

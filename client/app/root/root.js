@@ -5,6 +5,7 @@ angular.module('tesisApp')
         $stateProvider
             .state('app', {
                 url: '',
-                templateUrl: 'app/root/root.html'
+                templateUrl: 'app/root/root.html',
+                abstract: true
             });
     });
