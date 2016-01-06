@@ -5,7 +5,6 @@ angular.module('tesisApp', [
     'ngResource',
     'ngSanitize',
     'ui.router',
-    'ui.bootstrap',
     'btford.socket-io',
     'ngMaterial'
 ])
