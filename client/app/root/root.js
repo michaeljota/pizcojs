@@ -4,8 +4,20 @@ angular.module('tesisApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('app', {
-                url: '',
-                templateUrl: 'app/root/root.html',
-                abstract: true
+                url: '/',
+                abstract: true,
+                views: {
+                    '' : {
+                        templateUrl: 'app/root/root.html'
+                    },
+                    'sidenav@app': {
+                        templateUrl: 'components/sidenav/sidenav.html',
+                        controller: 'SidenavCtrl'
+                    },
+                    'toolbar@app': {
+                        templateUrl: 'components/toolbar/toolbar.html',
+                        controller: 'ToolbarCtrl'
+                    }
+                }
             });
     });

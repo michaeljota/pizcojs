@@ -1,11 +1,9 @@
 <div layout="row" data-ng-cloak>
-    <!--TODO: Se supone que de alguna forma, tanto el sidenav como el toolbar, se pueden colocar como vistas del ui-router.
-    ver como y hacerlo.-->
-    <div data-ng-include="'components/sidenav/sidenav.html'"></div>
+    <div ui-view="sidenav"></div>
     <div layout="column" tabindex="-1" role="main" flex="" class="layout-column flex">
-        <div data-ng-include="'components/toolbar/toolbar.html'"></div>
+        <div ui-view="toolbar"></div>
         <md-content md-scroll-y="" flex="" layout-padding="" class="ng-scope flex">
-            <div ui-view=""></div>
+            <div ui-view="content"></div>
         </md-content>
     </div>
 </div>

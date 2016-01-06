@@ -4,10 +4,14 @@ angular.module('tesisApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('app.main', {
-                url: '/main',
-                templateUrl: 'app/main/main.html',
-                controller: 'MainCtrl',
+                url: '^/main',
                 parent: 'app',
-                abstract: true
+                abstract: true,
+                views: {
+                    'content@app': {
+                        templateUrl: 'app/main/main.html',
+                        controller: 'MainCtrl'
+                    }
+                }
             });
     });
