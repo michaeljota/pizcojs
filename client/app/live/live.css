@@ -1,11 +1,11 @@
 @media (max-width: 480px) {
     .md-card {
-        width: 95%; /* 1 items */
+        width: 50%; /* 1 items */
     }
 }
 @media (min-width: 480px) {
     .md-card {
-        width: 48%; /* 2 items */
+        width: 24%;
         display: inline-flex;
     }
 }

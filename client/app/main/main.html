@@ -1,11 +1,8 @@
-<md-content class="md-padding">
-    <md-tabs class="md-accent" md-stretch-tabs="always" md-selected="selectedIndex">
-        <md-tab id="{{tab.id}}" ng-repeat="tab in tabs">
-            <md-tab-label>{{tab.label}}</md-tab-label>
-            <md-tab-body>
-                <div id="content" ui-view="" flex></div>
-            </md-tab-body>
-        </md-tab>
-    </md-tabs>
-</md-content>
-
+<md-tabs class="md-accent" md-stretch-tabs="always" md-selected="selectedIndex" md-dynamic-height>
+    <md-tab id="{{tab.id}}" ng-repeat="tab in tabs">
+        <md-tab-label>{{tab.label}}</md-tab-label>
+        <md-tab-body>
+            <div id="content" ui-view="" flex></div>
+        </md-tab-body>
+    </md-tab>
+</md-tabs>
