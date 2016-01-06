@@ -5,8 +5,12 @@ angular.module('tesisApp')
         $stateProvider
             .state('app.login', {
                 url: '^/login',
-                templateUrl: 'app/login/login.html',
-                controller: 'LoginCtrl',
-                parent: 'app'
+                parent: 'app',
+                views: {
+                    'content@app': {
+                        templateUrl: 'app/login/login.html',
+                        controller: 'LoginCtrl'
+                    }
+                }
             });
     });
