@@ -6,21 +6,21 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'http://etc.usf.edu/clipart/40600/40690/pb_sq_40690_lg.gif',
+            img: 'assets/canvas-testing.png',
             room: 'room',
             faved: false
         });
 
         cards.push ({
             title: 'Prueba',
-            img: 'http://etc.usf.edu/clipart/40600/40690/pb_sq_40690_lg.gif',
+            img: 'assets/canvas-testing.png',
             room: 'room',
             faved: false
         });
 
         cards.push ({
             title: 'Prueba',
-            img: 'http://etc.usf.edu/clipart/40600/40690/pb_sq_40690_lg.gif',
+            img: 'assets/canvas-testing.png',
             room: 'room',
             faved: false
         });
