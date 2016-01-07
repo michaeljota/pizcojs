@@ -1,8 +1,14 @@
 'use strict';
 
 angular.module('tesisApp')
-  .controller('LoginCtrl', function ($scope, socket, $state) {
-    $scope.message = 'Hello';
+    .controller('LoginCtrl', function ($scope, socket, $state) {
+
+        $scope.checkEnter = function (keyEvent) {
+            if(keyEvent.which == 13){
+                $scope.login();
+            }
+        };
+
         $scope.user = {
             name: ''
         };
@@ -21,4 +27,4 @@ angular.module('tesisApp')
         socket.socket.on('login-fail', function () {
 
         });
-  });
+    });
