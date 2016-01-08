@@ -11,7 +11,10 @@
             <p>
                 Creation Date: {{room.creationDate}}
             </p>
-            <p>
+            <p ng-if="room.duration">
+                Duration: {{room.duration}}
+            </p>
+            <p ng-if="room.clientsConnected">
                 Clients Connected: {{room.clientsConnected}}
             </p>
         </div>
