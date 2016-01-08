@@ -1,0 +1,25 @@
+<md-dialog aria-label="RoomInfo" flex="50" ng-cloak>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2>{{room.title}} info</h2>
+            <p>
+                Name: {{room.name}}
+            </p>
+            <p>
+                Owner: {{room.owner}}
+            </p>
+            <p>
+                Creation Date: {{room.creationDate}}
+            </p>
+            <p>
+                Clients Connected: {{room.clientsConnected}}
+            </p>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="close()" style="margin-right:20px;">
+            Ok
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

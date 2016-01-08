@@ -37,23 +37,33 @@ angular.module('tesisApp')
             //TODO: Esto debería ingresar a la sala y dejar al usuario en la pantalla de dibujo.
             console.log('Entering in %s', room);
         };
-        
-        $scope.showInfo = function (room) {
-            console.log(room.title);
-            var alert = $mdDialog.alert()
-                .title ('%s INFO', room.title)
-                .textContent (
-                    'Name: %s\n'+
-                    'Owner: %s\n'+
-                    'Creation Date: %s\n'+
-                    'Clients Connected: %s\n',
-                    room.title, room.owner, room.creationDate, room.clientsConnected
-                )
-                .clickOutsideToClose(true)
-                .ok ('OK');
-            $mdDialog.show (alert)
-                .finally (function () {
-                    alert = null;
-                });
+
+        $scope.showInfo = function (room, ev) {
+            $mdDialog.show ({
+                templateUrl: 'app/roomInfo/roomInfo.html',
+                controller: 'roomInfoCtrl',
+                locals: {
+                    room: room
+                },
+                clickOutsideToClose:true,
+                targetEvent: ev
+            })
+        };
+
+        function showCustomGreeting($event) {
+            $mdDialog.show({
+                targetEvent: $event,
+                template: '<md-dialog>' +
+                '  <md-content>Hello {{ employee }}!</md-content>' +
+                '  <div class="md-actions">' +
+                '    <md-button ng-click="closeDialog()">' +
+                '      Close Greeting' +
+                '    </md-button>' +
+                '  </div>' +
+                '</md-dialog>',
+                controller: 'GreetingController',
+                onComplete: afterShowAnimation,
+                locals: {employee: $scope.userName}
+            });
         }
     });
