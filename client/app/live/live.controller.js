@@ -6,7 +6,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'room',
             owner: 'Michael',
             creationDate: new Date(),
@@ -15,7 +15,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'room',
             owner: 'Michael',
             creationDate: new Date(),
@@ -24,7 +24,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'room',
             owner: 'Michael',
             creationDate: new Date(),
@@ -49,4 +49,8 @@ angular.module('tesisApp')
                 targetEvent: ev
             })
         };
+
+        $scope.createRoom = function () {
+            //TODO: Mostrar una ventana modal para recibir los datos de la sala a crear.
+        }
     });

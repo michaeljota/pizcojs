@@ -15,9 +15,3 @@
         display: inline-flex;
     }
 }
-@media (min-width: 820px) {
-    .ctm-card {
-        width: 25%;
-        display: inline-flex;
-    }
-}

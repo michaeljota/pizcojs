@@ -6,7 +6,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'Sketchpad',
             owner: 'Michael',
             creationDate: new Date(),
@@ -15,7 +15,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'Sketchpad',
             owner: 'Michael',
             creationDate: new Date(),
@@ -24,7 +24,7 @@ angular.module('tesisApp')
 
         cards.push ({
             title: 'Prueba',
-            img: 'assets/canvas-testing.png',
+            img: '../assets/img/blank_square.svg',
             name: 'Sketchpad',
             owner: 'Michael',
             creationDate: new Date(),
