@@ -1,28 +1,34 @@
 'use strict';
 
 angular.module('tesisApp')
-    .controller('LiveCtrl', function ($scope) {
+    .controller('LiveCtrl', function ($scope, $mdDialog) {
         var cards = [];
 
         cards.push ({
             title: 'Prueba',
             img: 'assets/canvas-testing.png',
-            room: 'room',
-            faved: false
+            name: 'room',
+            owner: 'Michael',
+            creationDate: new Date(),
+            clientsConnected: 1
         });
 
         cards.push ({
             title: 'Prueba',
             img: 'assets/canvas-testing.png',
-            room: 'room',
-            faved: false
+            name: 'room',
+            owner: 'Michael',
+            creationDate: new Date(),
+            clientsConnected: 1
         });
 
         cards.push ({
             title: 'Prueba',
             img: 'assets/canvas-testing.png',
-            room: 'room',
-            faved: false
+            name: 'room',
+            owner: 'Michael',
+            creationDate: new Date(),
+            clientsConnected: 1
         });
 
         $scope.cards = cards;
@@ -31,8 +37,23 @@ angular.module('tesisApp')
             //TODO: Esto debería ingresar a la sala y dejar al usuario en la pantalla de dibujo.
             console.log('Entering in %s', room);
         };
-
-        $scope.setFaved = function (card) {
-            card.faved = !card.faved;
-        };
+        
+        $scope.showInfo = function (room) {
+            console.log(room.title);
+            var alert = $mdDialog.alert()
+                .title ('%s INFO', room.title)
+                .textContent (
+                    'Name: %s\n'+
+                    'Owner: %s\n'+
+                    'Creation Date: %s\n'+
+                    'Clients Connected: %s\n',
+                    room.title, room.owner, room.creationDate, room.clientsConnected
+                )
+                .clickOutsideToClose(true)
+                .ok ('OK');
+            $mdDialog.show (alert)
+                .finally (function () {
+                    alert = null;
+                });
+        }
     });
