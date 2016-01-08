@@ -49,21 +49,4 @@ angular.module('tesisApp')
                 targetEvent: ev
             })
         };
-
-        function showCustomGreeting($event) {
-            $mdDialog.show({
-                targetEvent: $event,
-                template: '<md-dialog>' +
-                '  <md-content>Hello {{ employee }}!</md-content>' +
-                '  <div class="md-actions">' +
-                '    <md-button ng-click="closeDialog()">' +
-                '      Close Greeting' +
-                '    </md-button>' +
-                '  </div>' +
-                '</md-dialog>',
-                controller: 'GreetingController',
-                onComplete: afterShowAnimation,
-                locals: {employee: $scope.userName}
-            });
-        }
     });
