@@ -1,6 +1,6 @@
 <div ng-repeat="card in cards" class="ctm-card">
     <md-card class="md-card">
-        <img ng-src="{{card.img}}" class="md-card-image" alt="Washed Out" data-ng-dblclick="enterRoom(card.room)">
+        <img ng-src="{{card.img}}" class="md-card-image" alt="{{card.title}}" data-ng-dblclick="enterRoom(card.room)">
         <md-card-title>
             <md-card-title-text>
                 <span class="md-headline">{{card.title}}</span>
