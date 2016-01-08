@@ -1,21 +1,21 @@
 <div layout="column" layout-align="center">
-    <md-content class="autoScroll">
-        <form name="loginForm">
-            <!--TODO: Bajarlo por CSS. Preferiblemente que no modifique muchas cosas dentro del MD.-->
-            <br><br><br><br>
-            <div layout="row" layout-align="center center">
-                <md-input-container class="md-icon-float md-block">
-                    <label>Name</label>
-                    <md-icon md-svg-icon="account-circle" class="name"></md-icon>
-                    <input required name="userName" data-ng-model="user.name" type="text" ng-keydown="checkEnter($event)">
-                    <div ng-messages="loginForm.userName.$error">
-                        <div ng-message="required">This is required.</div>
-                    </div>
-                </md-input-container>
-            </div>
-            <div layout="row" layout-align="center center">
-                <md-button class="md-raised md-primary" ng-click="login()">Login</md-button>
-            </div>
-        </form>
-    </md-content>
+    <div class="login">
+        <md-content class="autoScroll">
+            <form name="loginForm">
+                <div layout="row" layout-align="center center">
+                    <md-input-container class="md-icon-float md-block">
+                        <label>Name</label>
+                        <md-icon md-svg-icon="account-circle" class="name"></md-icon>
+                        <input required name="userName" data-ng-model="user.name" type="text" ng-keydown="checkEnter($event)">
+                        <div ng-messages="loginForm.userName.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="center center">
+                    <md-button class="md-raised md-primary" ng-click="login()">Login</md-button>
+                </div>
+            </form>
+        </md-content>
+    </div>
 </div>
