@@ -5,7 +5,7 @@
         <md-divider></md-divider>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" ng-click="tool.onClick()" aria-label="{{tool.label}}" ng-repeat="tool in tools">
+                <md-button class="md-icon-button" ng-click="tool.onClick()" aria-label="{{tool.label}}" ng-repeat="tool in tools track by $index">
                     <md-icon md-svg-icon="{{tool.icon}}"></md-icon>
                 </md-button>
                 <md-checkbox ng-model="shape.Stroked"><div class="">Stroked</div></md-checkbox>
