@@ -17,7 +17,7 @@ angular.module('tesisApp')
 
         sections.push({
             name: 'Main',
-            state: 'app.main.live',
+            state: 'app.main',
             type: 'link',
             icon: 'hexagon'
         });

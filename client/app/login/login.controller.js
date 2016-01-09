@@ -24,7 +24,7 @@ angular.module('tesisApp')
             $scope.user = data;
             //TODO: Set global user model.
             //Voy a suponer que con lo de arriba quise decir que se tiene que configurar el usuario aquí y que según la configuración del usuario, entonces se acomodan las vistas.
-            $state.go('app.main.live');
+            $state.go('app.main');
         });
 
         socket.socket.on('login-fail', function () {
