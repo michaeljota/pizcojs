@@ -19,46 +19,41 @@ var Client = function(address){
 var SketchpadManager = function(){
     this._storage = [];
     this._drawing = false;
-    this._config = {
-        Share : false,
-        Collaborate : false,
-        LocalStorage : false
-    };
 
     this.ResetStorage = function(room){
         this._storage = [];
         this._drawing = false;
-        room.emit('remoteDrawing', this._drawing);
-        room.emit('syncStorage', this._storage);
-        room.emit('cancelDraw');
-        room.emit('renderStorage');
+        room.emit('syncer-remoteDrawing', this._drawing);
+        room.emit('syncer-syncStorage', this._storage);
+        room.emit('syncer-cancelDraw');
+        room.emit('syncer-renderStorage');
     };
 
     this.Draw = function(room, shape){
-        room.emit('draw', shape)
+        room.emit('syncer-draw', shape)
     };
 
     this.SaveShape = function(room, shape){
         this._storage.push(shape);
-        room.emit('syncStorage', this._storage);
+        room.emit('syncer-syncStorage', this._storage);
     };
 
     this.RenderStorage = function(room){
-        room.emit('renderStorage');
+        room.emit('syncer-renderStorage');
     };
 
     this.SyncStorage = function(room){
-        room.emit('syncStorage', this._storage);
-        room.emit('remoteDrawing', this._drawing);
+        room.emit('syncer-syncStorage', this._storage);
+        room.emit('syncer-remoteDrawing', this._drawing);
     };
 
     this.RemoteDrawing = function(room, active) {
         this._drawing = active;
-        room.emit('remoteDrawing', this._drawing);
+        room.emit('syncer-remoteDrawing', this._drawing);
     };
 
     this.Refresh = function(room) {
-        room.emit('refresh');
+        room.emit('syncer-refresh');
     }
 
 };
@@ -67,6 +62,10 @@ var Room = function(name){
     this.name = name;
     this.sketchpad = new SketchpadManager();
     this.clients = [];
+    this.config = {
+        Share : false,
+        Collaborate : false
+    };
 };
 
 var rooms = [];
@@ -135,36 +134,36 @@ module.exports = function (io) {
         });
         //#endregion
 
-        /*socket.on('draw', function (shape){
+        /*socket.on('syncer-draw', function (shape){
             sketchpad.Draw(io.sockets.in(user.room), shape);
         });
 
-        socket.on('refresh', function(){
+        socket.on('syncer-refresh', function(){
             sketchpad.Refresh(io.sockets.in(user.room));
         });
 
-        socket.on('saveShape', function (shape){
+        socket.on('syncer-saveShape', function (shape){
             sketchpad.SaveShape(io.sockets.in(user.room), shape);
         });
 
-        socket.on('renderStorage', function (){
+        socket.on('syncer-renderStorage', function (){
             sketchpad.RenderStorage(io.sockets.in(user.room));
         });
 
-        socket.on('resetShapeStorage', function (){
+        socket.on('syncer-resetShapeStorage', function (){
             sketchpad.ResetStorage(io.sockets.in(user.room));
         });
 
-        socket.on('remoteDrawing', function (active) {
+        socket.on('syncer-remoteDrawing', function (active) {
             sketchpad.RemoteDrawing(socket.broadcast.in(user.room), active);
         });
 
-        socket.on('syncPlease', function(){
+        socket.on('syncer-syncPlease', function(){
             socket.emit('syncStorage', sketchpad._storage);
             socket.emit('renderStorage');
         });
 
-        socket.on('updateUser', function (user){
+        /*socket.on('updateUser', function (user){
             for(var i=0; i<rooms.length; i++){
                 if(user.Room == rooms[i].name){
                     console.log('User: '+user.Name+' joined: '+user.Room);

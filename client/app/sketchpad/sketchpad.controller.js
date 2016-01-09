@@ -72,7 +72,7 @@ angular.module('tesisApp')
             }else{
                 hei = wid;
             }
-            _syncer.getDrawer().setCanvasSize(wid,hei);
+            _syncer.setCanvasSize(wid,hei);
             _syncer.requestSync();
         };
 
@@ -108,7 +108,6 @@ angular.module('tesisApp')
             }
         };
 
-
         var reset = function (){
             _syncer.resetCanvas();
         };
@@ -118,7 +117,7 @@ angular.module('tesisApp')
         };
 
         var redo = function () {
-            //TODO:
+            _syncer.redo ();
         };
 
         //#region Bindings
@@ -136,7 +135,7 @@ angular.module('tesisApp')
                 Stroked    : true
             };
 
-            canvas = _syncer.getDrawer().getCanvas();
+            canvas = _syncer.getCanvas();
 
             canvas.addEventListener('touchstart', start ,false);
             canvas.addEventListener('mousedown', start, false);
@@ -150,7 +149,7 @@ angular.module('tesisApp')
             canvas.addEventListener('mouseleave', end, false);
 
             canvas.addEventListener('touchcancel', function () {
-                _syncer.getDrawer().cancelDraw();
+                _syncer.cancelDraw();
             }, false);
 
             resizeCanvas();

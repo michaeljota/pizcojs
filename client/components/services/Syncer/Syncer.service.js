@@ -8,21 +8,21 @@ angular.module('tesisApp')
             var _drawer = new Drawer(container);
 
             //#region Synchronize
-            socket.socket.on('draw', function(shape) {
+            socket.socket.on('syncer-draw', function(shape) {
                 if(_remoteDrawing){
                     _drawer.renderShape(new Shape(JSON.parse(shape)));
                 }
             });
 
-            socket.socket.on('renderStorage', function() {
+            socket.socket.on('syncer-renderStorage', function() {
                 _drawer.renderStorage();
             });
 
-            socket.socket.on('syncStorage', function(shapeStorage) {
+            socket.socket.on('syncer-syncStorage', function(shapeStorage) {
                 _drawer.setStorage(shapeStorage);
             });
 
-            socket.socket.on('refresh', function() {
+            socket.socket.on('syncer-refresh', function() {
                 if(_remoteDrawing){
                     _drawer.renderStorage();
                 }else{
@@ -30,26 +30,23 @@ angular.module('tesisApp')
                 }
             });
 
-            socket.socket.on('remoteDrawing', function(active) {
+            socket.socket.on('syncer-remoteDrawing', function(active) {
                 _remoteDrawing = active;
                 console.log(_remoteDrawing);
             });
 
-            socket.socket.on('cancelDraw', function(){
+            socket.socket.on('syncer-cancelDraw', function(){
                 _drawer.cancelDraw();
             });
             //#endregion
 
             //#region Getters/Setters
-            this.getDrawer = function () {
-                return _drawer;
+            this.getCanvas = function () {
+                return _drawer.getCanvas();
             };
 
-            this.setDrawer = function (drawer) {
-                if(!drawer instanceof Drawer) {
-                    throw new Error('Can\'t set drawer');
-                }
-                _drawer = drawer;
+            this.setCanvasSize = function (wid,hei) {
+                _drawer.setCanvasSize(wid, hei);
             };
             //#endregion
 
@@ -58,38 +55,41 @@ angular.module('tesisApp')
                     //socket.socket.emit('updateTmpShape', tmpShape);
                     _drawer.setTmpShape(tmpShape);
                     _drawer.setDrawing(true);
-                    socket.socket.emit('remoteDrawing', true);
+                    socket.socket.emit('syncer-remoteDrawing', true);
                 }
             };
 
             this.refresh = function () {
-                socket.socket.emit('refresh');
+                socket.socket.emit('syncer-refresh');
                 if(_drawer.getTmpShape().getPoints().length > 1){
-                    socket.socket.emit('draw', JSON.stringify(_drawer.getTmpShape()));
+                    socket.socket.emit('syncer-draw', JSON.stringify(_drawer.getTmpShape()));
                 }
             };
 
             this.endDrawing = function () {
                 if(_drawer.getTmpShape().getPoints().length > 1){
-                    socket.socket.emit('saveShape', JSON.stringify(_drawer.getTmpShape()));
-                    socket.socket.emit('renderStorage');
+                    socket.socket.emit('syncer-saveShape', JSON.stringify(_drawer.getTmpShape()));
+                    socket.socket.emit('syncer-renderStorage');
                 }
                 _drawer.endDrawing();
-                socket.socket.emit('remoteDrawing', false);
+                socket.socket.emit('syncer-remoteDrawing', false);
             };
 
             this.resetCanvas = function () {
                 _drawer.cancelDraw();
-                socket.socket.emit('resetShapeStorage');
+                socket.socket.emit('syncer-resetShapeStorage');
             };
 
             this.undo = function () {
-                _drawer.undo();
-                socket.socket.emit('undo');
+                socket.socket.emit('syncer-undo');
+            };
+
+            this.redo = function () {
+                socket.socket.emit('syncer-redo');
             };
 
             this.requestSync = function () {
-                socket.socket.emit('syncPlease');
+                socket.socket.emit('syncer-syncPlease');
             };
 
         };
