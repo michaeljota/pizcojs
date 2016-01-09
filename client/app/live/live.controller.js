@@ -50,7 +50,24 @@ angular.module('tesisApp')
             })
         };
 
-        $scope.createRoom = function () {
-            //TODO: Mostrar una ventana modal para recibir los datos de la sala a crear.
+        $scope.createRoom = function (ev) {
+            $mdDialog.show ({
+                templateUrl: 'app/roomCreation/roomCreation.html',
+                controller: 'roomCreationCtrl',
+                clickOutsideToClose:true,
+                targetEvent: ev
+            })
+            .then(function (room) {
+                //TODO: Enviar la información al servidor para que el servidor cree la sala y luego ingrese al usuario en ella.
+                var alert = $mdDialog.alert()
+                    .title('Testing')
+                    .content('This looks fine: '+room.name)
+                    .ok('Close');
+                $mdDialog
+                    .show( alert )
+                    .finally(function() {
+                        alert = undefined;
+                    });
+            })
         }
     });
