@@ -47,7 +47,7 @@ angular.module('tesisApp')
                 },
                 clickOutsideToClose:true,
                 targetEvent: ev
-            })
+            });
         };
 
         $scope.createRoom = function (ev) {
@@ -68,6 +68,6 @@ angular.module('tesisApp')
                     .finally(function() {
                         alert = undefined;
                     });
-            })
-        }
+            });
+        };
     });

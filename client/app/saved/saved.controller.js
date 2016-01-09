@@ -51,7 +51,7 @@ angular.module('tesisApp')
                 },
                 clickOutsideToClose:true,
                 targetEvent: ev
-            })
+            });
         };
 
         $scope.delete = function (room, ev) {

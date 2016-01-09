@@ -1,3 +1,5 @@
+'use strict';
+
 (function (angular){
     angular.module('tesisApp')
         .controller('roomCreationCtrl', function($scope, $mdDialog){

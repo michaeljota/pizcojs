@@ -31,6 +31,6 @@ angular.module('tesisApp')
         $scope.openSidenav = function () {
             console.log('Opening sidenav');
             $mdSidenav('left')
-                .toggle()
+                .toggle();
         };
     });

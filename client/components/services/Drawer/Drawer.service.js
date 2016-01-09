@@ -190,12 +190,15 @@ angular.module('tesisApp')
                         circle(points);
                         break;
                     default:
-                        throw  new Error ('Tool: '+ shape.getToolName() +' is invalid');
                         _drawing = false;
-                        break;
+                        throw new Error ('Tool: '+ shape.getToolName() +' is invalid');
                 }
-                if (shape.isStroked()) _context.stroke();
-                if (shape.isFilled()) _context.fill();
+                if (shape.isStroked()) {
+                    _context.stroke();
+                }
+                if (shape.isFilled()) {
+                    _context.fill();
+                }
                 screenToCanvasAll(shape.getPoints());
             };
 

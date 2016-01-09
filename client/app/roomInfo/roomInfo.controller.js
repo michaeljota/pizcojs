@@ -7,6 +7,6 @@
 
             $scope.close = function () {
                 $mdDialog.hide();
-            }
+            };
         });
 })(angular);
