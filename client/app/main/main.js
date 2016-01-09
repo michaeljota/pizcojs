@@ -6,11 +6,18 @@ angular.module('tesisApp')
             .state('app.main', {
                 url: '^/main',
                 parent: 'app',
-                abstract: true,
                 views: {
                     'content@app': {
                         templateUrl: 'app/main/main.html',
                         controller: 'MainCtrl'
+                    },
+                    'live@app.main': {
+                        templateUrl: 'app/live/live.html',
+                        controller: 'LiveCtrl'
+                    },
+                    'saved@app.main': {
+                        templateUrl: 'app/saved/saved.html',
+                        controller: 'SavedCtrl'
                     }
                 }
             });
