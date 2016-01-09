@@ -12,6 +12,7 @@
             };
 
             $scope.close = function () {
+                if(!$scope.room.name) return;
                 $mdDialog.hide($scope.room);
             }
         });
