@@ -26,5 +26,5 @@ angular.module('tesisApp')
         return {
             COLORS  : Colors,
             TOOLS   : Tool
-        }
+        };
   });

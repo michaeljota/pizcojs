@@ -20,7 +20,7 @@ angular.module('tesisApp')
             setRoom : function (room){
                 _room = room;
             },
-            isReady : function () {
+            isLogged : function () {
                 return (_name && _room);
             }
         };

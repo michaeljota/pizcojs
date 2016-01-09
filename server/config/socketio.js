@@ -5,18 +5,18 @@
 'use strict';
 
 var config = require('./environment');
+var uuid = require('node-uuid');
 
 var Client = function(address){
-    this.name = "";
-    this.address = address !== null || address !== undefined ?
-        address.address + ':' + address.port :
+    this.id = uuid.v4();
+    this.name = '';
+    this.address = address ? address :
         process.env.DOMAIN;
     this.connectionDate = new Date();
-    this.room = "/";
+    this.color = '#000000';
 };
 
 var SketchpadManager = function(){
-    this._clients = {};
     this._storage = [];
     this._drawing = false;
     this._config = {
@@ -66,26 +66,28 @@ var SketchpadManager = function(){
 var Room = function(name){
     this.name = name;
     this.sketchpad = new SketchpadManager();
+    this.clients = [];
 };
 
 var rooms = [];
+var users = [];
 
-rooms.push(new Room('room'));
 
 
 // When the user disconnects.. perform this
-function onDisconnect(socket, client) {
-    console.info('[%s] DISCONNECTED (ROOM: %s)', client.address, client.room);
+function onDisconnect(socket, user) {
+    users.splice(users.indexOf(user),1);
+    console.info('[%s] DISCONNECTED. Now %s users online', user.address, users.length);
 }
 
 // When the user connects.. perform this
-function onConnect(socket, client) {
+function onConnect(socket, user) {
     // When the client emits 'info', this listens and executes
     socket.on('info', function (data) {
         console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
     });
 
-    console.info('[%s] CONNECTED TO ROOM: %s', client.address, client.room);
+    console.info('[%s] CONNECTED. Now %s users online', user.address, users.length);
 
     // Insert sockets below
     //require('../api/thing/thing.socket').register(socket);
@@ -108,43 +110,53 @@ module.exports = function (io) {
     // }));
 
     io.on('connection', function (socket) {
-        var client = new Client(socket.handshake.address);
-        var sketchpad;
-
-        client.room = rooms[0].name;
-        sketchpad = rooms[0].sketchpad;
-        socket.join(client.room);
+        var user = new Client(socket.handshake.address);
+        users.push(user);
+        var room;
 
         // Call onConnect.
-        onConnect(socket, client);
+        onConnect(socket, user);
 
         // Call onDisconnect.
         socket.on('disconnect', function () {
-            onDisconnect(socket, client);
+            onDisconnect(socket, user);
         });
 
-        socket.on('draw', function (shape){
-            sketchpad.Draw(io.sockets.in(client.room), shape);
+        //#region User data
+        socket.on('login-update', function (data) {
+            if(!data){
+                socket.emit('login-fail');
+                return;
+            }
+            user.name = data.name;
+            //TODO: Set a random color to the user.
+            console.info('[%s] is now know as %s', user.address, user.name);
+            socket.emit('login-success', user);
+        });
+        //#endregion
+
+        /*socket.on('draw', function (shape){
+            sketchpad.Draw(io.sockets.in(user.room), shape);
         });
 
         socket.on('refresh', function(){
-            sketchpad.Refresh(io.sockets.in(client.room));
+            sketchpad.Refresh(io.sockets.in(user.room));
         });
 
         socket.on('saveShape', function (shape){
-            sketchpad.SaveShape(io.sockets.in(client.room), shape);
+            sketchpad.SaveShape(io.sockets.in(user.room), shape);
         });
 
         socket.on('renderStorage', function (){
-            sketchpad.RenderStorage(io.sockets.in(client.room));
+            sketchpad.RenderStorage(io.sockets.in(user.room));
         });
 
         socket.on('resetShapeStorage', function (){
-            sketchpad.ResetStorage(io.sockets.in(client.room));
+            sketchpad.ResetStorage(io.sockets.in(user.room));
         });
 
         socket.on('remoteDrawing', function (active) {
-            sketchpad.RemoteDrawing(socket.broadcast.in(client.room), active);
+            sketchpad.RemoteDrawing(socket.broadcast.in(user.room), active);
         });
 
         socket.on('syncPlease', function(){
@@ -157,10 +169,10 @@ module.exports = function (io) {
                 if(user.Room == rooms[i].name){
                     console.log('User: '+user.Name+' joined: '+user.Room);
                     sketchpad = rooms[i].sketchpad;
-                    client.name = user.Name;
-                    socket.leave(client.room);
-                    client.room = user.Room;
-                    socket.join(client.room);
+                    user.name = user.Name;
+                    socket.leave(user.room);
+                    user.room = user.Room;
+                    socket.join(user.room);
                     socket.emit('userUpdated');
                     return;
                 }
@@ -168,11 +180,11 @@ module.exports = function (io) {
             console.log('User: '+user.Name+' created: '+user.Room);
             var j = rooms.push (new Room(user.Room));
             sketchpad = rooms[j-1].sketchpad;
-            client.name = user.Name;
-            socket.leave(client.room);
-            client.room = user.Room;
-            socket.join(client.room);
+            user.name = user.Name;
+            socket.leave(user.room);
+            user.room = user.Room;
+            socket.join(user.room);
             socket.emit('userUpdated');
-        });
+        });*/
     });
 };
