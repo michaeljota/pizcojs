@@ -7,8 +7,13 @@ angular.module('tesisApp')
             $mdOpenMenu(ev);
         };
 
-        $scope.showAppInfo = function () {
-            
+        $scope.showAppInfo = function (ev) {
+            $mdDialog.show ({
+                templateUrl: 'app/appInfo/appInfo.html',
+                controller: 'appInfoCtrl',
+                clickOutsideToClose:true,
+                targetEvent: ev
+            });
         };
 
         $scope.openSidenav = function () {
