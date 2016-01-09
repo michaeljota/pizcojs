@@ -8,8 +8,7 @@ angular.module('tesisApp')
                 parent: 'app',
                 views: {
                     'content@app': {
-                        templateUrl: 'app/main/main.html',
-                        controller: 'MainCtrl'
+                        templateUrl: 'app/main/main.html'
                     },
                     'live@app.main': {
                         templateUrl: 'app/live/live.html',
