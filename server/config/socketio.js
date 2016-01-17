@@ -71,8 +71,6 @@ var Room = function(name){
 var rooms = [];
 var users = [];
 
-
-
 // When the user disconnects.. perform this
 function onDisconnect(socket, user) {
     users.splice(users.indexOf(user),1);
@@ -89,6 +87,7 @@ function onConnect(socket, user) {
     console.info('[%s] CONNECTED. Now %s users online', user.address, users.length);
 
     // Insert sockets below
+    require ('../api/classroom/classroom.socket').register(socket);
     //require('../api/thing/thing.socket').register(socket);
 }
 

@@ -23,14 +23,21 @@ class Shape extends EmbeddedDocument {
             choices: ['pencil','circle','line','rectangle']
         };
         this.lineColor = {
-            type: String
+            type: String,
+            default: '#000'
         };
         this.fillColor = {
-            type: String
+            type: String,
+            default: '#000'
+        };
+        this.lineWidth = {
+            type: Number,
+            default: 3
         };
         this.lineCap = {
             type: Number,
-            default: '3'
+            choices: ['butt', 'round', 'square'],
+            default: 'round'
         };
         this.stroked = {
             type: Boolean,
@@ -41,7 +48,8 @@ class Shape extends EmbeddedDocument {
             default: false
         };
         this.points = {
-            type: [Point]
+            type: [Point],
+            default: []
         };
     }
 }
@@ -50,7 +58,8 @@ class Whiteboard extends EmbeddedDocument {
     constructor() {
         super();
         this.shapes = {
-            type: [Shape]
+            type: [Shape],
+            default: []
         }
     }
 }
@@ -60,7 +69,8 @@ class Classroom extends Document {
         super();
 
         this.name = {
-            type: String
+            type: String,
+            required: true
         };
 
         this.date = {
@@ -70,9 +80,12 @@ class Classroom extends Document {
 
         this.whiteboards = {
             type: [Whiteboard],
-            default: []
+            default: [Whiteboard.create()]
         };
     }
 }
 
-module.exports = Classroom;
+module.exports.Classroom = Classroom;
+module.exports.Whiteboard = Whiteboard;
+module.exports.Shape = Shape;
+module.exports.Point = Point;
