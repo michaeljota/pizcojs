@@ -57,20 +57,23 @@ angular.module('tesisApp')
             };
 
             var line = function(points){
+                var i = points.length - 1;
                 _context.moveTo(points[0].x, points[0].y);
-                _context.lineTo(points[1].x, points[1].y);
+                _context.lineTo(points[i].x, points[i].y);
             };
 
             var rectangle = function(points){
+                var i = points.length - 1;
                 var width, height;
-                width = points[1].x - points[0].x;
-                height = points[1].y - points[0].y;
+                width = points[i].x - points[0].x;
+                height = points[i].y - points[0].y;
                 _context.rect(points[0].x, points[0].y, width, height);
             };
 
             var circle = function(points){
-                var radius = (Math.abs(points[1].x - points[0].x) + (Math.abs(points[1].y - points[0].y)) / 2);
-                _context.arc(points[1].x, points[1].y, radius, 0, Math.PI * 2, false);
+                var i = points.length - 1;
+                var radius = (Math.abs(points[i].x - points[0].x) + (Math.abs(points[i].y - points[0].y)) / 2);
+                _context.arc(points[i].x, points[i].y, radius, 0, Math.PI * 2, false);
             };
 
             var canvasToScreen = function (point){
@@ -80,7 +83,7 @@ angular.module('tesisApp')
 
             /**
              * @description
-             * Since the points are related to the canvas standard ize, they have to be transform it to the device canvas screen size.
+             * Since the points are related to the canvas standard size, they have to be transform it to the device canvas screen size.
              * @param {*|[Vector2]} points
              */
             var canvasToScreenAll = function(points){
@@ -131,7 +134,7 @@ angular.module('tesisApp')
 
             this.addPoint = function(point) {
                 screenToCanvas(point);
-                _tmpShape.addPoint(point);
+                _tmpShape.getPoints().push(point);
             };
 
             this.isDrawing = function () {
