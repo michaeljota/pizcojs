@@ -4,64 +4,7 @@ angular.module('tesisApp')
   .controller('SketchpadCtrl', function ($scope, $http, Syncer, Enums) {
 
         var _syncer = new Syncer(document.getElementById('canvasContainer'));
-        var canvas;
-
-        var tools = [];
-        tools.push({
-            label: 'Pencil',
-            onClick: function() {
-                $scope.shape.ToolName = Enums.TOOLS.PENCIL;
-            },
-            icon: 'pencil'
-        });
-
-        tools.push({
-            label: 'Line',
-            onClick: function() {
-                $scope.shape.ToolName = Enums.TOOLS.LINE;
-            },
-            icon: 'vector-line'
-        });
-
-        tools.push({
-            label: 'Rectangle',
-            onClick: function() {
-                $scope.shape.ToolName = Enums.TOOLS.RECTANGLE;
-            },
-            icon: 'vector-square'
-        });
-
-        tools.push({
-            label: 'Circle',
-            onClick: function() {
-                $scope.shape.ToolName = Enums.TOOLS.CIRCLE;
-            },
-            icon: 'vector-circle'
-        });
-
-        tools.push({
-            label: 'Undo',
-            onClick: function() {
-                undo();
-            },
-            icon: 'undo-variant'
-        });
-
-        tools.push({
-            label: 'Redo',
-            onClick: function() {
-                redo();
-            },
-            icon: 'redo-variant'
-        });
-
-        tools.push({
-            label: 'Reset',
-            onClick: function() {
-                reset();
-            },
-            icon: 'delete'
-        });
+        var _canvas;
 
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
@@ -77,7 +20,7 @@ angular.module('tesisApp')
         };
 
         var newPoint = function (event) {
-            var t = (event.touches) ?
+            return (event.touches) ?
             {
                 x: (event.touches[0].pageX - event.target.offsetLeft),
                 y: (event.touches[0].pageY - event.target.offsetTop)
@@ -86,8 +29,6 @@ angular.module('tesisApp')
                 x: (event.pageX - event.target.offsetLeft),
                 y: (event.pageY - event.target.offsetTop)
             };
-            console.log(t);
-            return t;
         };
 
         var start = function () {
@@ -96,14 +37,14 @@ angular.module('tesisApp')
 
         var move = function (event) {
             event.preventDefault();
-            if(_syncer.getDrawer().isDrawing()){
-                _syncer.getDrawer().addPoint(newPoint(event));
+            if(_syncer.isDrawing()){
+                _syncer.addPoint(newPoint(event));
                 _syncer.refresh();
             }
         };
 
         var end = function () {
-            if (_syncer.getDrawer().isDrawing()) {
+            if (_syncer.isDrawing()) {
                 _syncer.endDrawing();
             }
         };
@@ -122,33 +63,36 @@ angular.module('tesisApp')
 
         //#region Bindings
         $scope.shape = {};
-        $scope.tools = tools;
+        $scope.tools = Enums.TOOLS;
+        $scope.reset = reset();
+        $scope.undo = undo();
+        $scope.redo = redo();
 
         $scope.init = function () {
             $scope.shape = {
-                ToolName   : Enums.TOOLS.PENCIL,
-                LineColor  : Enums.COLORS.BLACK,
-                LineWidth  : 3,
-                LineCap    : 'round',
-                FillStyle  : Enums.COLORS.GREY,
-                Filled     : false,
-                Stroked    : true
+                type       : Enums.TOOLS.PENCIL,
+                lineColor  : Enums.COLORS.BLACK,
+                lineWidth  : 3,
+                lineCap    : 'round',
+                fillColor  : Enums.COLORS.GREY,
+                filled     : false,
+                stroked    : true
             };
 
-            canvas = _syncer.getCanvas();
+            _canvas = _syncer.getCanvas();
 
-            canvas.addEventListener('touchstart', start ,false);
-            canvas.addEventListener('mousedown', start, false);
+            _canvas.addEventListener('touchstart', start ,false);
+            _canvas.addEventListener('mousedown', start, false);
 
-            canvas.addEventListener('touchmove', move, false);
-            canvas.addEventListener('mousemove', move, false);
+            _canvas.addEventListener('touchmove', move, false);
+            _canvas.addEventListener('mousemove', move, false);
 
-            canvas.addEventListener('touchend', end, false);
-            canvas.addEventListener('mouseup', end, false);
+            _canvas.addEventListener('touchend', end, false);
+            _canvas.addEventListener('mouseup', end, false);
             //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
-            canvas.addEventListener('mouseleave', end, false);
+            _canvas.addEventListener('mouseleave', end, false);
 
-            canvas.addEventListener('touchcancel', function () {
+            _canvas.addEventListener('touchcancel', function () {
                 _syncer.cancelDraw();
             }, false);
 
