@@ -10,17 +10,10 @@ angular.module('tesisApp')
         });
 
         var Tool = Object.freeze({
-            PENCIL : 0,
-            LINE : 1,
-            RECTANGLE : 2,
-            CIRCLE : 3,
-
-            properties : {
-                0: {name: 'pencil', value: 0, code: 'P'},
-                1: {name: 'line', value: 1, code: 'L'},
-                2: {name: 'rectangle', value: 2, code: 'R'},
-                3: {name: 'circle', value: 3, code: 'C'}
-            }
+            PENCIL : 'pencil',
+            LINE : 'line',
+            RECTANGLE : 'rectangle',
+            CIRCLE : 'circle'
         });
 
         return {

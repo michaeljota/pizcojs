@@ -11,3 +11,4 @@ npm-debug.log
 *.iml
 *.mp3
 *.d.ts
+*.db
