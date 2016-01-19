@@ -2,6 +2,8 @@
 
 var Document = require('camo').Document;
 var EmbeddedDocument = require('camo').EmbeddedDocument;
+var _postSave = require('./../api.socket.js').postSave;
+var _postDelete = require('./../api.socket.js').postDelete;
 
 class Point extends EmbeddedDocument {
     constructor() {
@@ -54,6 +56,14 @@ class Shape extends Document {
             default: []
         };
     }
+
+    postSave () {
+        _postSave ('shapes', this);
+    }
+
+    postDelete () {
+        _postDelete ('shapes', this);
+    }
 }
 
 class Whiteboard extends Document {
@@ -63,6 +73,14 @@ class Whiteboard extends Document {
             type: [Shape],
             default: []
         }
+    }
+
+    postSave () {
+        _postSave ('whiteboards', this);
+    }
+
+    postDelete () {
+        _postDelete ('whiteboards', this);
     }
 }
 
@@ -83,6 +101,14 @@ class Classroom extends Document {
         this.whiteboards = {
             type: [Whiteboard]
         };
+    }
+
+    postSave () {
+        _postSave ('classrooms', this);
+    }
+
+    postDelete () {
+        _postDelete ('classrooms', this);
     }
 }
 
