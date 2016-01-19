@@ -7,15 +7,17 @@ class Point extends EmbeddedDocument {
     constructor() {
         super();
         this.x = {
-            type: Number
+            type: Number,
+            required: true
         };
         this.y = {
-            type: Number
+            type: Number,
+            required: true
         };
     }
 }
 
-class Shape extends EmbeddedDocument {
+class Shape extends Document {
     constructor() {
         super();
         this.type = {
@@ -35,7 +37,7 @@ class Shape extends EmbeddedDocument {
             default: 3
         };
         this.lineCap = {
-            type: Number,
+            type: String,
             choices: ['butt', 'round', 'square'],
             default: 'round'
         };
@@ -54,7 +56,7 @@ class Shape extends EmbeddedDocument {
     }
 }
 
-class Whiteboard extends EmbeddedDocument {
+class Whiteboard extends Document {
     constructor() {
         super();
         this.shapes = {
@@ -68,7 +70,7 @@ class Classroom extends Document {
     constructor() {
         super();
 
-        this.name = {
+        this.className = {
             type: String,
             required: true
         };
@@ -79,8 +81,7 @@ class Classroom extends Document {
         };
 
         this.whiteboards = {
-            type: [Whiteboard],
-            default: [Whiteboard.create()]
+            type: [Whiteboard]
         };
     }
 }

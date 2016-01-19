@@ -1,25 +1,42 @@
 'use strict';
 
 var router = require('express').Router();
-var controller = require('./classroom.controller');
+var classroomController = require('./classroom.controller');
+var whiteboardController = require('./whiteboard.controller');
+var shapeController = require('./shape.controller');
 
 router.route('/classrooms')
-    .get(controller.findAll)
-    .post(controller.add);
+    .get(classroomController.findAll)
+    .post(classroomController.add);
 
 router.route('/classrooms/:classId')
-    .get(controller.find)
-    .post(controller.update)
-    .put(controller.update)
-    .delete(controller.destroy);
+    .get(classroomController.find)
+    .post(classroomController.update)
+    .put(classroomController.update)
+    .delete(classroomController.destroy);
 
-router.route('/classrooms/:classId/Whiteboard/add')
-    .get(controller.newWhiteboard);
+router.route('/classrooms/:classId/whiteboards')
+    .get(whiteboardController.findAll)
+    .post(whiteboardController.add);
 
-router.route('/classrooms/:classId/addShape')
-    .post(controller.addShape);
+router.route('/whiteboards/:wbId')
+    .get(whiteboardController.find)
+    .post(whiteboardController.update)
+    .put(whiteboardController.update)
+    .delete(whiteboardController.destroy);
 
-router.route('/classrooms/:classId/addPoint')
-    .post(controller.addPoint);
+router.route('/whiteboards/:wbId/shapes')
+    .get(shapeController.findAll)
+    .post(shapeController.add);
+
+router.route('/shapes/:shapeId')
+    .get(shapeController.find)
+    .post(shapeController.update)
+    .put(shapeController.update)
+    .delete(shapeController.destroy);
+
+router.route('/shapes/:shapeId/points')
+    .get(shapeController.findPoints)
+    .post(shapeController.addPoint);
 
 module.exports = router;
