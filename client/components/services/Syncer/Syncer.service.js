@@ -48,6 +48,10 @@ angular.module('tesisApp')
             this.setCanvasSize = function (wid,hei) {
                 _drawer.setCanvasSize(wid, hei);
             };
+
+            this.isDrawing = _drawer.isDrawing;
+
+            this.addPoint = _drawer.addPoint;
             //#endregion
 
             this.startDrawing = function (tmpShape) {
@@ -61,13 +65,13 @@ angular.module('tesisApp')
 
             this.refresh = function () {
                 socket.socket.emit('syncer-refresh');
-                if(_drawer.getTmpShape().getPoints().length > 1){
+                if(_drawer.getTmpShape().points.length > 1){
                     socket.socket.emit('syncer-draw', JSON.stringify(_drawer.getTmpShape()));
                 }
             };
 
             this.endDrawing = function () {
-                if(_drawer.getTmpShape().getPoints().length > 1){
+                if(_drawer.getTmpShape().points.length > 1){
                     socket.socket.emit('syncer-saveShape', JSON.stringify(_drawer.getTmpShape()));
                     socket.socket.emit('syncer-renderStorage');
                 }

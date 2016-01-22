@@ -70,13 +70,13 @@ angular.module('tesisApp')
 
         $scope.init = function () {
             $scope.shape = {
-                type       : Enums.TOOLS.PENCIL,
+                shapeType  : Enums.TOOLS.PENCIL,
                 lineColor  : Enums.COLORS.BLACK,
                 lineWidth  : 3,
                 lineCap    : 'round',
                 fillColor  : Enums.COLORS.GREY,
-                filled     : false,
-                stroked    : true
+                stroked    : true,
+                filled     : false
             };
 
             _canvas = _syncer.getCanvas();

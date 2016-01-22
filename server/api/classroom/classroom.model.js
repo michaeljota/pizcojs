@@ -22,7 +22,7 @@ class Point extends EmbeddedDocument {
 class Shape extends Document {
     constructor() {
         super();
-        this.type = {
+        this.shapeType = {
             type: String,
             choices: ['pencil','circle','line','rectangle']
         };

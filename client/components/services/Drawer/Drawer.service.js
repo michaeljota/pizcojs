@@ -134,7 +134,7 @@ angular.module('tesisApp')
 
             this.addPoint = function(point) {
                 screenToCanvas(point);
-                _tmpShape.getPoints().push(point);
+                _tmpShape.points.push(point);
             };
 
             this.isDrawing = function () {
@@ -171,15 +171,15 @@ angular.module('tesisApp')
                 if(!shape){
                     throw new Error('Can\'t render shape. Is '+shape);
                 }
-                var points = shape.getPoints();
+                var points = shape.points;
                 canvasToScreenAll(points);
                 _context.beginPath();
                 //The line width also need to be adjust according to the canvas size.
-                _context.lineWidth = shape.getLineWidth() * _size.scale;
-                _context.lineCap = shape.getLineCap();
-                _context.strokeStyle = shape.getLineColor();
-                _context.fillStyle = shape.getFillStyle();
-                switch (shape.getToolName()){
+                _context.lineWidth = shape.lineWidth * _size.scale;
+                _context.lineCap = shape.lineCap;
+                _context.strokeStyle = shape.lineColor;
+                _context.fillStyle = shape.fillStyle;
+                switch (shape.shapeType){
                     case Enums.TOOLS.PENCIL:
                         pencil(points);
                         break;
@@ -194,27 +194,27 @@ angular.module('tesisApp')
                         break;
                     default:
                         _drawing = false;
-                        throw new Error ('Tool: '+ shape.getToolName() +' is invalid');
+                        throw new Error ('Tool: '+ shape.shapeType +' is invalid');
                 }
-                if (shape.isStroked()) {
+                if (shape.stroked) {
                     _context.stroke();
                 }
-                if (shape.isFilled()) {
+                if (shape.filled) {
                     _context.fill();
                 }
-                screenToCanvasAll(shape.getPoints());
+                screenToCanvasAll(shape.points);
             };
 
             this.refresh = function () {
                 this.renderStorage();
-                if(_tmpShape.getPoints().length > 1){
+                if(_tmpShape.points.length > 1){
                     this.renderShape(_tmpShape);
                 }
             };
 
             this.endDrawing = function () {
                 _undos = [];
-                if(_tmpShape.getPoints().length > 1){
+                if(_tmpShape.points.length > 1){
                     _storage.push(JSON.stringify(_tmpShape));
                 }
                 _drawing = false;
