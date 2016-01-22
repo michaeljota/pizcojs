@@ -26,9 +26,7 @@ function find (req, res) {
 }
 
 function add (req, res) {
-    var s = Shape.create({
-        type:req.body.type
-    });
+    var s = Shape.create(req.body);
     s.save()
         .then(shape => {
             Whiteboard.loadOne({_id: req.params.wbId})
@@ -45,10 +43,7 @@ function add (req, res) {
 
 function update (req, res) {
     Shape.loadOneAndUpdate(
-        {_id: req.params.shapeId},
-        {
-            type:req.body.type
-        })
+        {_id: req.params.shapeId},req.body)
         .then(whiteboard => successHandler (res, whiteboard))
         .catch(err => errorHandler (res, err));
 }
@@ -82,14 +77,15 @@ function addPoint (req, res) {
 
 /**
  * Naming for endpoints.
- * GET      /shapes                      ->  findAll
- * POST     /shapes                      ->  create
+ * GET      whiteboard/:wbId/shapes      ->  findAll
+ * POST     whiteboard:wbId/shapes       ->  create
  * GET      /shapes/:shapeId             ->  find
  * POST     /shapes/:shapeId             ->  update
  * PUT      /shapes/:shapeId             ->  update
  * DELETE   /shapes/:shapeId             ->  destroy
  *
- * POST     /shape/:shapeId/addPoint    -> addPoint
+ * GET      /shape/:shapeId/points       -> findPoints
+ * POST     /shape/:shapeId/points       -> addPoint
  */
 
 module.exports.findAll = findAll;

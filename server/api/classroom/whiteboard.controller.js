@@ -12,7 +12,7 @@ function successHandler (res, obj) {
 }
 
 function findAll (req, res) {
-    Classroom.loadOne({_id: req.params.classId})
+    Classroom.loadOne({_id: req.params.crId})
         .then(classroom => successHandler (res, classroom.whiteboards))
         .catch(err => errorHandler (res, err));
 }
@@ -21,7 +21,7 @@ function add (req, res) {
     var wb = Whiteboard.create();
     wb.save()
         .then(whiteboard => {
-            Classroom.loadOne({_id: req.params.classId})
+            Classroom.loadOne({_id: req.params.crId})
                 .then(classroom => {
                     classroom.whiteboards.push(wb);
                     classroom.save()
@@ -58,8 +58,8 @@ function destroy (req, res) {
 
 /**
  * Naming for endpoints.
- * GET      /whiteboards                   ->  findAll
- * POST     /whiteboards                   ->  create
+ * GET      classroom/:crId/whiteboards    ->  findAll
+ * POST     classroom/:crId/whiteboards    ->  create
  * GET      /whiteboards/:wbId             ->  find
  * POST     /whiteboards/:wbId             ->  update
  * PUT      /whiteboards/:wbId             ->  update

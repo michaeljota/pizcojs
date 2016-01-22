@@ -1,9 +1,6 @@
 'use strict';
 
 var Classroom = require('./classroom.model').Classroom;
-var Whiteboard = require('./classroom.model').Whiteboard;
-var Shape = require('./classroom.model').Shape;
-var Point = require('./classroom.model').Point;
 
 function errorHandler (res, err) {
     res.status(500).send(err.message);
@@ -20,31 +17,26 @@ function findAll (req, res) {
 }
 
 function find (req, res) {
-    Classroom.loadOne({_id: req.params.classId})
+    Classroom.loadOne({_id: req.params.crId})
         .then(classroom => successHandler (res, classroom))
         .catch(err => errorHandler (res, err));
 }
 
 function add (req, res) {
-    var classroom = Classroom.create({
-        className: req.body.name
-    });
+    var classroom = Classroom.create(req.body);
     classroom.save()
         .then(classroom => successHandler (res, classroom))
         .catch(err => errorHandler (res, err));
 }
 
 function update (req, res) {
-    Classroom.loadOneAndUpdate({_id: req.params.classId},
-        {
-            className: req.body.name
-        })
+    Classroom.loadOneAndUpdate({_id: req.params.crId},req.body)
         .then(classroom => successHandler (res, classroom))
         .catch(err => errorHandler (res, err));
 }
 
 function destroy (req, res) {
-    Classroom.loadOneAndDelete({_id: req.params.classId})
+    Classroom.loadOneAndDelete({_id: req.params.crId})
         .then(successHandler (res, null))
         .catch(err => errorHandler (res, err));
 }
@@ -53,10 +45,10 @@ function destroy (req, res) {
  * Naming for endpoints.
  * GET      /classroom                   ->  findAll
  * POST     /classroom                   ->  create
- * GET      /classroom/:classId          ->  find
- * POST     /classroom/:classId          ->  update
- * PUT      /classroom/:classId          ->  update
- * DELETE   /classroom/:classId          ->  destroy
+ * GET      /classroom/:crId             ->  find
+ * POST     /classroom/:crId             ->  update
+ * PUT      /classroom/:crId             ->  update
+ * DELETE   /classroom/:crId             ->  destroy
  */
 
 module.exports.findAll = findAll;
