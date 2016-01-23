@@ -1,10 +1,8 @@
 'use strict';
 
 angular.module('tesisApp')
-  .controller('SketchpadCtrl', function ($scope, $http, Syncer, Enums) {
+  .controller('SketchpadCtrl', function ($scope, $http, Enums, canvas, whiteboardRenderer, socket) {
 
-        var _syncer = new Syncer(document.getElementById('canvasContainer'));
-        var _canvas;
 
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
@@ -15,9 +13,14 @@ angular.module('tesisApp')
             }else{
                 hei = wid;
             }
-            _syncer.setCanvasSize(wid,hei);
-            _syncer.requestSync();
+            canvas.setSize(wid,hei);
+            container.appendChild(canvas.canvas);
+
+            whiteboardRenderer.startRender();
         };
+
+        var _drawing;
+        var _shapeId;
 
         var newPoint = function (event) {
             return (event.touches) ?
@@ -32,33 +35,32 @@ angular.module('tesisApp')
         };
 
         var start = function () {
-            _syncer.startDrawing($scope.shape);
+            _drawing = true;
+            console.log($scope.shape);
+            socket.socket.emit('shape:create', 'R0hilkMR3XKFMJ6v', $scope.shape);
         };
 
         var move = function (event) {
             event.preventDefault();
-            if(_syncer.isDrawing()){
-                _syncer.addPoint(newPoint(event));
-                _syncer.refresh();
+            if (_drawing && _shapeId){
+                socket.socket.emit('point:create', _shapeId, newPoint(event));
             }
         };
 
         var end = function () {
-            if (_syncer.isDrawing()) {
-                _syncer.endDrawing();
-            }
+            _drawing = false;
         };
 
         var reset = function (){
-            _syncer.resetCanvas();
+           // _syncer.resetCanvas();
         };
 
         var undo = function () {
-            _syncer.undo();
+           // _syncer.undo();
         };
 
         var redo = function () {
-            _syncer.redo ();
+           // _syncer.redo ();
         };
 
         //#region Bindings
@@ -79,26 +81,33 @@ angular.module('tesisApp')
                 filled     : false
             };
 
-            _canvas = _syncer.getCanvas();
+            canvas.canvas.addEventListener('touchstart', start ,false);
+            canvas.canvas.addEventListener('mousedown', start, false);
 
-            _canvas.addEventListener('touchstart', start ,false);
-            _canvas.addEventListener('mousedown', start, false);
+            canvas.canvas.addEventListener('touchmove', move, false);
+            canvas.canvas.addEventListener('mousemove', move, false);
 
-            _canvas.addEventListener('touchmove', move, false);
-            _canvas.addEventListener('mousemove', move, false);
-
-            _canvas.addEventListener('touchend', end, false);
-            _canvas.addEventListener('mouseup', end, false);
+            canvas.canvas.addEventListener('touchend', end, false);
+            canvas.canvas.addEventListener('mouseup', end, false);
             //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
-            _canvas.addEventListener('mouseleave', end, false);
+            canvas.canvas.addEventListener('mouseleave', end, false);
 
-            _canvas.addEventListener('touchcancel', function () {
-                _syncer.cancelDraw();
+            canvas.canvas.addEventListener('touchcancel', function () {
+                //_syncer.cancelDraw();
             }, false);
 
             resizeCanvas();
 
             window.addEventListener('resize', resizeCanvas);
+
+            socket.socket.on('shape:created', function (shape) {
+                console.log('created');
+                _shapeId = shape._id;
+            });
+
+            socket.socket.on('crud:error', function (err) {
+                console.log('Server error: '+ err);
+            });
         };
 
         $scope.$watch('shape.ToolName', function () {

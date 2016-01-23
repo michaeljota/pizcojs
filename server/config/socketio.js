@@ -88,6 +88,7 @@ function onConnect(socket, user) {
 
     // Insert sockets below
     require ('../api/api.socket.js').register(socket);
+    require ('../api/classroom/shape.socket.js') (socket);
     //require('../api/thing/thing.socket').register(socket);
 }
 
