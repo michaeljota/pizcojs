@@ -1,6 +1,5 @@
 'use strict';
 
-var Classroom = require('./classroom.model').Classroom;
 var Whiteboard = require('./classroom.model').Whiteboard;
 var Shape = require('./classroom.model').Shape;
 var Point = require('./classroom.model').Point;
