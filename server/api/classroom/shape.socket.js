@@ -5,7 +5,8 @@ var Shape = require('./classroom.model').Shape;
 var Point = require('./classroom.model').Point;
 
 function errorHandler (socket, err) {
-    console.log(err);
+    socket.emit('server:error', err);
+    throw err;
 }
 
 function successHandler (socket, event, obj) {
@@ -14,8 +15,6 @@ function successHandler (socket, event, obj) {
 
 function event (socket){
     socket.on('shape:create', function (wbId, shape) {
-        console.log('creating');
-        console.log(shape);
         var s = Shape.create({
             shapeType: shape.shapeType,
             lineColor: shape.lineColor,
@@ -29,17 +28,14 @@ function event (socket){
             .then(shape => {
                 Whiteboard.loadOne({_id: wbId})
                     .then(whiteboard => {
-                        if(!whiteboard) {
-                            return errorHandler (socket, new Error('Whiteboard not found'));
-                        }
                         whiteboard.shapes.push(shape);
                         whiteboard.save()
                             .then(wb => successHandler (socket, 'shape:created', shape))
-                            .catch(err => errorHandler (socket, err));
+                            .catch(err => errorHandler (socket, new Error('Saving the whiteboard. '+err.message, err.code)));
                     })
                     .catch(err => errorHandler (socket, err));
             })
-            .catch(err => errorHandler (socket, err));
+            .catch(err => errorHandler (socket, new Error('Saving the shape. '+err.message, err.code)));
     });
 
     //TODO:
@@ -50,11 +46,15 @@ function event (socket){
     socket.on('shape:delete', function() {});
 
     socket.on('point:create', function (shapeId, point) {
+        var p = Point.create({
+            x: point.x,
+            y: point.y
+        });
         Shape.loadOne ({_id: shapeId})
             .then(shape => {
-                shape.points.push(point);
+                shape.points.push(p);
                 shape.save()
-                    .catch(err => errorHandler(socket, err));
+                    .catch(err => errorHandler(socket, new Error('Saving the shape. '+err.message, err.code)));
             })
             .catch(err => errorHandler(socket, err));
     });
