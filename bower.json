@@ -1,19 +1,19 @@
 {
-    "name": "tesis",
-    "version": "0.0.0",
-    "dependencies": {
-        "angular": ">=1.3.*",
-        "json3": "~3.3.1",
-        "angular-resource": ">=1.3.*",
-        "angular-cookies": ">=1.3.*",
-        "angular-sanitize": ">=1.3.*",
-        "angular-ui-router": "~0.2.15",
-        "angular-socket-io": "~0.7.0",
-        "angular-material": "~1.0.1"
-    },
-    "devDependencies": {
-        "angular-mocks": ">=1.3.*",
-        "angular-scenario": ">=1.3.*"
-    }
+  "name": "tesis",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": ">=1.3.*",
+    "json3": "~3.3.1",
+    "angular-resource": ">=1.3.*",
+    "angular-cookies": ">=1.3.*",
+    "angular-sanitize": ">=1.3.*",
+    "angular-ui-router": "~0.2.15",
+    "angular-socket-io": "~0.7.0",
+    "angular-material": "~1.0.1",
+    "ng-lodash": "~0.3.0"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.3.*",
+    "angular-scenario": ">=1.3.*"
+  }
 }
-

@@ -2,8 +2,8 @@
 'use strict';
 
 angular.module('tesisApp')
-  .factory('socket', function(socketFactory) {
-
+  .factory('socket', function(socketFactory, lodash) {
+    var _ = lodash;
     // socket.io now auto-configures its connection when we ommit a connection url
     var ioSocket = io('', {
       // Send auth token on connection, you will need to DI the Auth service above

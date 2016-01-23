@@ -8,7 +8,8 @@ var app = angular.module('tesisApp', [
     'btford.socket-io',
     'ngMaterial',
     'ngAnimate',
-    'ngAria'
+    'ngAria',
+    'ngLodash'
 ]);
 
 /*UI Router Config*/
