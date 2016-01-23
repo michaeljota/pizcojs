@@ -52,7 +52,7 @@ class Shape extends Document {
             default: false
         };
         this.points = {
-            type: [],
+            type: [Point],
             default: []
         };
     }
@@ -70,7 +70,7 @@ class Whiteboard extends Document {
     constructor() {
         super();
         this.shapes = {
-            type: [],
+            type: [Shape],
             default: []
         }
     }
