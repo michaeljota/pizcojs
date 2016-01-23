@@ -23,7 +23,7 @@ angular.module('tesisApp')
         var _shapeId;
 
         var newPoint = function (event) {
-            return (event.touches) ?
+            var point = (event.touches) ?
             {
                 x: (event.touches[0].pageX - event.target.offsetLeft),
                 y: (event.touches[0].pageY - event.target.offsetTop)
@@ -32,12 +32,15 @@ angular.module('tesisApp')
                 x: (event.pageX - event.target.offsetLeft),
                 y: (event.pageY - event.target.offsetTop)
             };
+            canvas.screenToCanvas(point);
+            console.log(point);
+            return point;
         };
 
         var start = function () {
             _drawing = true;
             console.log($scope.shape);
-            socket.socket.emit('shape:create', 'R0hilkMR3XKFMJ6v', $scope.shape);
+            socket.socket.emit('shape:create', 'V783ioOqiQLcZ4di', $scope.shape);
         };
 
         var move = function (event) {
@@ -49,6 +52,7 @@ angular.module('tesisApp')
 
         var end = function () {
             _drawing = false;
+            _shapeId = false;
         };
 
         var reset = function (){
@@ -92,9 +96,7 @@ angular.module('tesisApp')
             //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
             canvas.canvas.addEventListener('mouseleave', end, false);
 
-            canvas.canvas.addEventListener('touchcancel', function () {
-                //_syncer.cancelDraw();
-            }, false);
+            canvas.canvas.addEventListener('touchcancel', end, false);
 
             resizeCanvas();
 
@@ -108,6 +110,8 @@ angular.module('tesisApp')
             socket.socket.on('crud:error', function (err) {
                 console.log('Server error: '+ err);
             });
+
+            whiteboardRenderer.setWhiteboard('V783ioOqiQLcZ4di');
         };
 
         $scope.$watch('shape.ToolName', function () {

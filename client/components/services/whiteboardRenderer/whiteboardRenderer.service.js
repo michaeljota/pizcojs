@@ -1,23 +1,33 @@
 'use strict';
 
 angular.module('tesisApp')
-    .service('whiteboardRenderer', function ($http, Shape, shapeRenderer, canvas, socket) {
+    .service('whiteboardRenderer', function ($http, shapeRenderer, canvas, socket) {
         var _shapes = [];
 
-        //$http.get('/api/whiteboards/'+wbId+'/shapes/').success(function(shapes){
-        $http.get('/api/whiteboards/R0hilkMR3XKFMJ6v/shapes/').success(function(shapes){
-            _shapes = shapes;
-            socket.syncUpdates('shapes', _shapes);
-        });
-
         function drawShapes() {
-            canvas.context.clearRect(0,0, canvas.getSize().width, canvas.getSize().height);
-            _shapes.forEach(function(shape) {
-                shapeRenderer.renderShape(shape);
-            });
+            if(_shapes && _shapes.length > 0) {
+                canvas.context.clearRect(0, 0, canvas.getSize().width, canvas.getSize().height);
+                _shapes.forEach(function (shape) {
+                    if (!shape.points || shape.points.length === 0) {
+                        return;
+                    }
+                    shapeRenderer.renderShape(shape);
+                });
+            }
         }
 
         this.startRender = function startRender () {
             setInterval(drawShapes, 1000/30);
+        };
+
+        this.setWhiteboard = function setWhiteboard (whiteboardId) {
+            $http.get('/api/whiteboards/'+whiteboardId+'/shapes/')
+                .then(function (response) {
+                    _shapes = response.data;
+                    socket.syncUpdates('shapes', _shapes);
+                })
+                .catch(function (err) {
+                    throw err;
+                })
         }
     });
