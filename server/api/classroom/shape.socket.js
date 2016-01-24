@@ -45,6 +45,12 @@ function event (socket){
 
     socket.on('shape:delete', function() {});
 
+    socket.on('shape:getall', function (wbId) {
+        Whiteboard.loadOne({_id: wbId})
+            .then(whiteboard => successHandler (socket, 'shape:sendall', whiteboard.shapes))
+            .catch(err => errorHandler (socket, err));
+    });
+
     socket.on('point:create', function (shapeId, point) {
         var p = Point.create({
             x: point.x,

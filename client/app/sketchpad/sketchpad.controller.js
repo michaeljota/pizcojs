@@ -16,7 +16,7 @@ angular.module('tesisApp')
             canvas.setSize(wid,hei);
             container.appendChild(canvas.canvas);
 
-            whiteboardRenderer.startRender();
+            whiteboardRenderer.setWhiteboard('MVXe2HSwSIs5rrKm');
         };
 
         var _drawing;
@@ -40,7 +40,7 @@ angular.module('tesisApp')
         var start = function () {
             _drawing = true;
             console.log($scope.shape);
-            socket.socket.emit('shape:create', 'V783ioOqiQLcZ4di', $scope.shape);
+            socket.socket.emit('shape:create', 'MVXe2HSwSIs5rrKm', $scope.shape);
         };
 
         var move = function (event) {
@@ -110,8 +110,6 @@ angular.module('tesisApp')
             socket.socket.on('crud:error', function (err) {
                 console.log('Server error: '+ err);
             });
-
-            whiteboardRenderer.setWhiteboard('V783ioOqiQLcZ4di');
         };
 
         $scope.$watch('shape.ToolName', function () {
