@@ -3,6 +3,8 @@
 angular.module('tesisApp')
     .service('shapeRenderer', function (canvas, Enums) {
 
+        var RendererError = new Error();
+
         //#region Functions
         var pencil = function (points) {
             //Todo: Reduce the lenght of the Points array by using trigonometric functions.
@@ -34,11 +36,9 @@ angular.module('tesisApp')
 
         //#endregion
 
-        this.renderShape = function(shape, cb){
-            cb = cb || angular.noop;
+        this.renderShape = function(shape){
             if(!shape){
-                cb(new Error('Can\'t render shape. Is '+shape));
-                return;
+                throw new RendererError('Can\'t render shape. Is '+shape)
             }
             var points = shape.points;
             canvas.canvasToScreenAll(points);
@@ -61,8 +61,7 @@ angular.module('tesisApp')
                     circle(points);
                     break;
                 default:
-                    cb(new Error ('Tool: '+ shape.shapeType +' is invalid'));
-                    return;
+                    throw new RendererError ('Tool: '+ shape.shapeType +' is invalid');
             }
             if (shape.stroked) {
                 canvas.context.stroke();
