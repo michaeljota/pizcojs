@@ -78,7 +78,7 @@ function onDisconnect(socket, user) {
 }
 
 // When the user connects.. perform this
-function onConnect(socket, user) {
+function onConnect(socket, io, user) {
     // When the client emits 'info', this listens and executes
     socket.on('info', function (data) {
         console.info('[%s] %s', socket.address, JSON.stringify(data, null, 2));
@@ -87,8 +87,8 @@ function onConnect(socket, user) {
     console.info('[%s] CONNECTED. Now %s users online', user.address, users.length);
 
     // Insert sockets below
-    require ('../api/api.socket.js').register(socket);
-    require ('../api/classroom/shape.socket.js') (socket);
+    require ('../api/api.socket.js').register(io);
+    require ('../api/classroom/shape.socket.js') (socket, io);
     //require('../api/thing/thing.socket').register(socket);
 }
 
@@ -114,7 +114,8 @@ module.exports = function (io) {
         var room;
 
         // Call onConnect.
-        onConnect(socket, user);
+        //Le pasamos el socket para que maneje las señales recibidas y el io para que responda a todos.
+        onConnect(socket, io, user);
 
         // Call onDisconnect.
         socket.on('disconnect', function () {

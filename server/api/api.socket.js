@@ -1,20 +1,20 @@
 'use strict';
 
-var _socket = null;
+var _io = null;
 
-function register (socket) {
-    _socket = socket;
+function register (io) {
+    _io = io;
 }
 
 function postSave (collection, doc) {
-    if(_socket) {
-        _socket.emit(collection+':save', doc);
+    if(_io) {
+        _io.emit(collection+':save', doc);
     }
 }
 
 function postDelete (collection, doc) {
-    if(_socket) {
-        _socket.emit(collection+':remove', doc);
+    if(_io) {
+        _io.emit(collection+':remove', doc);
     }
 }
 

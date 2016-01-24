@@ -9,11 +9,11 @@ function errorHandler (socket, err) {
     throw err;
 }
 
-function successHandler (socket, event, obj) {
-    socket.emit(event, obj);
+function successHandler (io, event, obj) {
+    io.emit(event, obj);
 }
 
-function event (socket){
+function event (socket, io){
     socket.on('shape:create', function (wbId, shape) {
         var s = Shape.create({
             shapeType: shape.shapeType,
@@ -30,7 +30,7 @@ function event (socket){
                     .then(whiteboard => {
                         whiteboard.shapes.push(shape);
                         whiteboard.save()
-                            .then(wb => successHandler (socket, 'shape:created', shape))
+                            .then(wb => successHandler (io, 'shape:created', shape))
                             .catch(err => errorHandler (socket, new Error('Saving the whiteboard. '+err.message, err.code)));
                     })
                     .catch(err => errorHandler (socket, err));
@@ -47,7 +47,7 @@ function event (socket){
 
     socket.on('shape:getall', function (wbId) {
         Whiteboard.loadOne({_id: wbId})
-            .then(whiteboard => successHandler (socket, 'shape:sendall', whiteboard.shapes))
+            .then(whiteboard => successHandler (io, 'shape:sendall', whiteboard.shapes))
             .catch(err => errorHandler (socket, err));
     });
 

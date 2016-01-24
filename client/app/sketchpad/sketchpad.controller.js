@@ -33,13 +33,11 @@ angular.module('tesisApp')
                 y: (event.pageY - event.target.offsetTop)
             };
             canvas.screenToCanvas(point);
-            console.log(point);
             return point;
         };
 
         var start = function () {
             _drawing = true;
-            console.log($scope.shape);
             socket.socket.emit('shape:create', 'MVXe2HSwSIs5rrKm', $scope.shape);
         };
 
