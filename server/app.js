@@ -12,16 +12,16 @@ var camo = require('camo');
 var config = require('./config/environment');
 var path = require('path');
 var passport = require('passport');
-var datastorage;
 
 // Connect to datastorage
 //camo.connect('nedb://'+path.join(__dirname, 'datastorage'))
 camo.connect('nedb://memory')
     .then(function(db){
-        datastorage = db;
+        console.log('Datastore started');
     })
     .catch(function(err){
         throw err;
+        process.exit(1);
     });
     
 // Setup server
