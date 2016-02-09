@@ -32,9 +32,9 @@ angular.module('tesisApp')
         cb = cb || angular.noop;
 
         /**
-         * Syncs item creation/updates on 'model:save'
+         * Syncs item creation/updates on 'model:saved'
          */
-        socket.on(modelName + ':save', function (item) {
+        socket.on(modelName + ':saved', function (item) {
           var oldItem = _.find(array, {_id: item._id});
           var index = array.indexOf(oldItem);
           var event = 'created';
@@ -52,9 +52,9 @@ angular.module('tesisApp')
         });
 
         /**
-         * Syncs removed items on 'model:remove'
+         * Syncs removed items on 'model:deleted'
          */
-        socket.on(modelName + ':remove', function (item) {
+        socket.on(modelName + ':deleted', function (item) {
           var event = 'deleted';
           _.remove(array, {_id: item._id});
           cb(event, item, array);

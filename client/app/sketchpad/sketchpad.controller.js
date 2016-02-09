@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('tesisApp')
-  .controller('SketchpadCtrl', function ($scope, $http, Enums, canvas, whiteboardRenderer, socket) {
-
-
+    .controller('SketchpadCtrl', function ($scope, $http, $stateParams, Enums, canvas, socket, classroomRenderer, whiteboardRenderer) {
+      
+        classroomRenderer.setId($stateParams.classroomId);
+        
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
             var wid = container.clientWidth;
@@ -15,14 +16,18 @@ angular.module('tesisApp')
             }
             canvas.setSize(wid,hei);
             container.appendChild(canvas.canvas);
-
-            whiteboardRenderer.setWhiteboard('MVXe2HSwSIs5rrKm');
         };
 
-        var _drawing;
         var _shapeId;
-
-        var newPoint = function (event) {
+        
+        
+        /**
+         * Creates a new point canvas related. 
+         * 
+         * @param event (description)
+         * @returns point
+         */
+        function newPoint (event) {
             var point = (event.touches) ?
             {
                 x: (event.touches[0].pageX - event.target.offsetLeft),
@@ -36,25 +41,36 @@ angular.module('tesisApp')
             return point;
         };
 
-        var start = function () {
-            _drawing = true;
-            socket.socket.emit('shape:create', 'MVXe2HSwSIs5rrKm', $scope.shape);
+
+        /**
+         * Starts the drawing setting a new shape in the whiteboardRenderer.
+         */
+        function start () {
+            whiteboardRenderer.newShape($scope.shape);
         };
 
-        var move = function (event) {
+        /**
+         * Creates a new point at every move, and send it to the server using socket.
+         * 
+         * @param event (description)
+         */
+        function move (event) {
             event.preventDefault();
-            if (_drawing && _shapeId){
-                socket.socket.emit('point:create', _shapeId, newPoint(event));
+            if (_shapeId){
+                socket.socket.emit('points:create', _shapeId, newPoint(event));
             }
         };
 
-        var end = function () {
-            _drawing = false;
+        
+        /**
+         * Finish the draw.
+         */
+        function end () {
             _shapeId = false;
         };
 
         var reset = function (){
-           // _syncer.resetCanvas();
+            classroomRenderer.addWhiteboard();
         };
 
         var undo = function () {
@@ -83,31 +99,22 @@ angular.module('tesisApp')
                 filled     : false
             };
 
-            canvas.canvas.addEventListener('touchstart', start ,false);
+            canvas.canvas.addEventListener('touchstart', start, false);
             canvas.canvas.addEventListener('mousedown', start, false);
 
-            canvas.canvas.addEventListener('touchmove', move, false);
-            canvas.canvas.addEventListener('mousemove', move, false);
+            canvas.canvas.addEventListener('touchmove', move, true);
+            canvas.canvas.addEventListener('mousemove', move, true);
 
-            canvas.canvas.addEventListener('touchend', end, false);
-            canvas.canvas.addEventListener('mouseup', end, false);
+            canvas.canvas.addEventListener('touchend', end);
+            canvas.canvas.addEventListener('mouseup', end);
             //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
-            canvas.canvas.addEventListener('mouseleave', end, false);
+            canvas.canvas.addEventListener('mouseleave', end);
 
-            canvas.canvas.addEventListener('touchcancel', end, false);
+            canvas.canvas.addEventListener('touchcancel', end);
 
             resizeCanvas();
 
             window.addEventListener('resize', resizeCanvas);
-
-            socket.socket.on('shape:created', function (shape) {
-                console.log('created');
-                _shapeId = shape._id;
-            });
-
-            socket.socket.on('crud:error', function (err) {
-                console.log('Server error: '+ err);
-            });
         };
 
         $scope.$watch('shape.ToolName', function () {
@@ -120,5 +127,15 @@ angular.module('tesisApp')
             if(($scope.shape.ToolName === Enums.TOOLS.PENCIL || $scope.shape.ToolName === Enums.TOOLS.LINE) && $scope.shape.Filled){
                 $scope.shape.ToolName = Enums.TOOLS.RECTANGLE;
             }
+        });
+        
+        
+        socket.socket.on('shape:created', function (shape) {
+            console.log('created');
+            _shapeId = shape._id;
+        });
+
+        socket.socket.on('crud:error', function (err) {
+            console.log('Server error: '+ err);
         });
     });

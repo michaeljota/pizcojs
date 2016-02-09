@@ -1,6 +1,6 @@
 'use strict';
 
-var Classroom = require('./classroom.model').Classroom;
+var Classroom = require('./classroom.model');
 
 function errorHandler (res, err) {
     res.status(500).send(err.message);
@@ -12,14 +12,22 @@ function successHandler (res, obj) {
 
 function findAll (req, res) {
     Classroom.loadMany()
-        .then(clasrooms => successHandler (res, clasrooms))
-        .catch(err => errorHandler (res, err));
+        .then((clasrooms) => {
+            successHandler (res, clasrooms)
+        })
+        .catch((err) => {
+            errorHandler (res, err)
+        });
 }
 
 function find (req, res) {
     Classroom.loadOne({_id: req.params.crId})
-        .then(classroom => successHandler (res, classroom))
-        .catch(err => errorHandler (res, err));
+        .then((classroom) => {
+            successHandler (res, classroom)
+        })
+        .catch((err) => {
+            errorHandler (res, err)
+        });
 }
 
 function add (req, res) {
@@ -37,8 +45,8 @@ function update (req, res) {
 
 function destroy (req, res) {
     Classroom.loadOneAndDelete({_id: req.params.crId})
-        .then(successHandler (res, null))
-        .catch(err => errorHandler (res, err));
+        .then(() => { successHandler (res, null) })
+        .catch((err) => { errorHandler (res, err) });
 }
 
 /**

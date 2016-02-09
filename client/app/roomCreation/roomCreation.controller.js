@@ -4,7 +4,7 @@
     angular.module('tesisApp')
         .controller('roomCreationCtrl', function($scope, $mdDialog){
             $scope.room = {
-                name: ''
+                title: ''
             };
             
             $scope.checkEnter = function (keyEvent) {
@@ -14,7 +14,7 @@
             };
 
             $scope.close = function () {
-                if(!$scope.room.name) return;
+                if(!$scope.room.title) return;
                 $mdDialog.hide($scope.room);
             }
         });

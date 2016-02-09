@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tesisApp')
-    .controller('LoginCtrl', function ($scope, socket, $state) {
+    .controller('LoginCtrl', function ($scope, socket, $state, Auth) {
 
         $scope.checkEnter = function (keyEvent) {
             if(keyEvent.which === 13){
@@ -17,17 +17,16 @@ angular.module('tesisApp')
             if(!$scope.user.name) {
                 return;
             }
-            socket.socket.emit('login-update', $scope.user);
+            Auth.createUser({
+                username: $scope.user.name,
+                password: ''
+            })
+            .then(function() {
+                // Account created, redirect to home
+                $state.go('app.main');
+            })
+            .catch(function(err) {
+                console.error(err);
+            });
         };
-
-        socket.socket.on('login-success', function (data) {
-            $scope.user = data;
-            //TODO: Set global user model.
-            //Voy a suponer que con lo de arriba quise decir que se tiene que configurar el usuario aquí y que según la configuración del usuario, entonces se acomodan las vistas.
-            $state.go('app.main');
-        });
-
-        socket.socket.on('login-fail', function () {
-
-        });
     });

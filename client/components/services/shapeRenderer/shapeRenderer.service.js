@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('tesisApp')
-    .service('shapeRenderer', function (canvas, Enums) {
+    .service('shapeRenderer', function (socket, canvas, Enums) {
 
-        var RendererError = new Error();
+        var RendererError = Error;
 
         //#region Functions
         var pencil = function (points) {
@@ -38,7 +38,7 @@ angular.module('tesisApp')
 
         this.renderShape = function(shape){
             if(!shape){
-                throw new RendererError('Can\'t render shape. Is '+shape)
+                throw RendererError('Can\'t render shape. Is '+shape);
             }
             var points = shape.points;
             canvas.canvasToScreenAll(points);
@@ -61,7 +61,7 @@ angular.module('tesisApp')
                     circle(points);
                     break;
                 default:
-                    throw new RendererError ('Tool: '+ shape.shapeType +' is invalid');
+                    throw RendererError ('Tool: '+ shape.shapeType +' is invalid');
             }
             if (shape.stroked) {
                 canvas.context.stroke();

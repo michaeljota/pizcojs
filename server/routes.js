@@ -8,7 +8,9 @@ var errors = require('./components/errors');
 var path = require('path');
 
 module.exports = function(app) {
-  app.use('/api', require('./api/classroom/classroom.router'));
+  app.use('/api/users', require('./app/user'));
+  app.use('/api/rooms', require('./app/room'));
+  app.use('/auth', require('./app/auth'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')

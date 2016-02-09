@@ -87,8 +87,10 @@ function onConnect(socket, io, user) {
     console.info('[%s] CONNECTED. Now %s users online', user.address, users.length);
 
     // Insert sockets below
-    require ('../api/api.socket.js').register(io);
-    require ('../api/classroom/shape.socket.js') (socket, io);
+    require ('../app/socket.js').register(io);
+    require ('../app/classroom/classroom.socket.js') (socket, io);
+    require ('../app/whiteboard/whiteboard.socket.js') (socket, io);
+    require ('../app/shape/shape.socket.js') (socket, io);
     //require('../api/thing/thing.socket').register(socket);
 }
 

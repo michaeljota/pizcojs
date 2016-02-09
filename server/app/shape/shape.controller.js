@@ -1,8 +1,8 @@
 'use strict';
 
-var Whiteboard = require('./classroom.model').Whiteboard;
-var Shape = require('./classroom.model').Shape;
-var Point = require('./classroom.model').Point;
+var Whiteboard = require('../whiteboard/whiteboard.model');
+var Shape = require('./shape.model').Shape;
+var Point = require('./shape.model').Point;
 
 function errorHandler (res, err) {
     res.status(500).send(err.message);
@@ -13,9 +13,9 @@ function successHandler (res, obj) {
 }
 
 function findAll (req, res) {
-    Whiteboard.loadOne({_id: req.params.wbId})
-        .then(whiteboard => successHandler (res, whiteboard.shapes))
-        .catch(err => errorHandler (res, err));
+    Whiteboard.loadOne({_id: req.body.wbId})
+        .then((whiteboard) =>{ successHandler (res, whiteboard.shapes) })
+        .catch((err) =>{ errorHandler (res, err) });
 }
 
 function find (req, res) {
@@ -25,6 +25,20 @@ function find (req, res) {
 }
 
 function add (req, res) {
+    Whiteboard.loadOne({_id: req.body.wbId})
+        .then((whiteboard) => {
+            delete req.body.wbId;
+            var s = Shape.create(req.body);
+            s.save()
+                .then(shape => {
+                    whiteboard.shapes.push(shape);
+                    whiteboard.save()
+                        .then(newWhiteboard => successHandler (res, shape))
+                        .catch(err => errorHandler (res, err));
+                })
+                .catch(err => errorHandler (res, err));
+        })
+        .catch(err => errorHandler (res, err));
     var s = Shape.create(req.body);
     s.save()
         .then(shape => {

@@ -1,8 +1,10 @@
 'use strict';
 
-var Whiteboard = require('./classroom.model').Whiteboard;
-var Shape = require('./classroom.model').Shape;
-var Point = require('./classroom.model').Point;
+var Whiteboard = require('../whiteboard/whiteboard.model');
+var Shape = require('./shape.model');
+var Point = require('./shape.model').Point;
+var collection = Shape.collectionName();
+var pointCollection = Point.collectionName();
 
 function errorHandler (socket, err) {
     socket.emit('server:error', err);
@@ -13,17 +15,9 @@ function successHandler (io, event, obj) {
     io.emit(event, obj);
 }
 
-function event (socket, io){
-    socket.on('shape:create', function (wbId, shape) {
-        var s = Shape.create({
-            shapeType: shape.shapeType,
-            lineColor: shape.lineColor,
-            lineWidth: shape.lineWidth,
-            lineCap:   shape.lineCap,
-            fillColor: shape.fillColor,
-            stroked:   shape.stroked,
-            filled:    shape.filled
-        });
+function event (socket, io) {
+    socket.on(collection+':create', function (wbId, shape) {
+        var s = Shape.create(shape);
         s.save()
             .then(shape => {
                 Whiteboard.loadOne({_id: wbId})
@@ -39,28 +33,30 @@ function event (socket, io){
     });
 
     //TODO:
-    socket.on('shape:read', function() {});
+    socket.on(collection+':read', function() {});
 
-    socket.on('shape:update', function() {});
+    socket.on(collection+':update', function() {});
 
-    socket.on('shape:delete', function() {});
+    socket.on(collection+':delete', function() {});
 
-    socket.on('shape:getall', function (wbId) {
+    socket.on(collection+':getall', function (wbId) {
         Whiteboard.loadOne({_id: wbId})
-            .then(whiteboard => successHandler (io, 'shape:sendall', whiteboard.shapes))
+            .then(whiteboard => successHandler (io, collection+':sendall', whiteboard.shapes))
             .catch(err => errorHandler (socket, err));
     });
 
-    socket.on('point:create', function (shapeId, point) {
+    socket.on(pointCollection+':create', function (shapeId, point) {
         var p = Point.create({
             x: point.x,
             y: point.y
         });
         Shape.loadOne ({_id: shapeId})
-            .then(shape => {
+            .then((shape) => {
                 shape.points.push(p);
                 shape.save()
-                    .catch(err => errorHandler(socket, new Error('Saving the shape. '+err.message, err.code)));
+                    .then((shape) => {
+                    })
+                    .catch((err) => errorHandler(socket, new Error('Saving the shape. '+err.message, err.code)));
             })
             .catch(err => errorHandler(socket, err));
     });

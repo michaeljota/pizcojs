@@ -4,7 +4,7 @@ angular.module('tesisApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('app.sketchpad', {
-                url: '^/sketchpad',
+                url: '^/sketchpad/:classroomId',
                 parent: 'app',
                 views: {
                     'content@app': {
