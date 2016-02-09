@@ -12,7 +12,8 @@ router.route('/')
 router.route('/:roomId')
     .get(controller.find)
     .put(controller.update)
-    .delete(controller.destroy);
+    .delete(controller.destroy)
+    .post(auth.isAuthenticated(), controller.enter);
 //#endregion
 
 module.exports = router;

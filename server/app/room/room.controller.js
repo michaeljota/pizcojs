@@ -80,6 +80,50 @@ function destroy (req, res) {
         });
 }
 
+function enter (req, res) {
+    Room.loadOne({_id: req.params.roomId})
+        .then((room) => {
+            User.loadOne({_id: req.user._id})
+                .then((user) => {
+                    if(contains(room.clients, user)) {
+                        //TODO: This shouldn't happen. If the user leaves the room, it must be logged out.
+                    } else {
+                        room.clients.push(user);
+                        room.save()
+                            .then(() => {
+                                successHandler (res, room);
+                            })
+                            .catch((err) => {
+                                errorHandler (res, err);
+                            });
+                    }
+                })
+                .catch((err) => {
+                    errorHandler (res, err);
+                });
+        })
+        .catch((err) => {
+            errorHandler (res, err);
+        });
+}
+
+
+/**
+ * (description)
+ * 
+ * @param {Array} array The array to look into.
+ * @param {Any} obj The object to look.
+ * @returns {Boolean} Wherever if the object was found or not.
+ */
+function contains(array, obj) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * Naming for endpoints.
  * GET      /room                   ->  findAll
@@ -87,6 +131,7 @@ function destroy (req, res) {
  * GET      /room/:roomId           ->  find
  * PUT      /room/:roomId           ->  update
  * DELETE   /room/:roomId           ->  destroy
+ * POST     /room/:roomId           ->  enter a room
  */
 
 module.exports.findAll = findAll;
@@ -94,3 +139,4 @@ module.exports.find = find;
 module.exports.add = add;
 module.exports.update = update;
 module.exports.destroy = destroy;
+module.exports.enter = enter;

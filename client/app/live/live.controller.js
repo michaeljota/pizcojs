@@ -9,9 +9,13 @@ angular.module('tesisApp')
         });
 
         $scope.enterRoom = function (room) {
-            //TODO: Esto debería ingresar a la sala y dejar al usuario en la pantalla de dibujo.
-            console.log('Entering in:');
-            console.log(room);
+            $http.post('/api/rooms/'+room._id, {})
+                .success (function(room) {
+                    $state.go('app.sketchpad', {classroomId: room.classroom._id});
+                })
+                .catch (function(err) {
+                    console.error(err);
+                });
         };
 
         $scope.showInfo = function (room, ev) {
@@ -39,10 +43,9 @@ angular.module('tesisApp')
                 }
                 $http.post('/api/rooms', { room })
                     .success(function(room) {
-                        
                         $state.go('app.sketchpad', {classroomId: room.classroom._id});
                     })
-                    .error(function(err) {
+                    .catch(function(err) {
                         console.error(err);
                     });
             });

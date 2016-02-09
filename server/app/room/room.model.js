@@ -13,9 +13,7 @@ var _emit = require ('../socket').emit;
  * @extends {EmbeddedDocument}
  */
 class Image extends EmbeddedDocument {
-    
-    
-    
+   
     /**
      * Creates an instance of Image.
      */
@@ -23,16 +21,13 @@ class Image extends EmbeddedDocument {
         super();
         
         this.data = {
-            type: Buffer,
-            required: true
+            type: Buffer
         };
         
         this.contentType = {
-            type: String,
-            required: true
+            type: String
         };
     }
-    
     
     /**
      * Returns dataURL string to be use in src. 
