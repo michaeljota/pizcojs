@@ -5,7 +5,7 @@ var auth = require ('../auth/auth.middleware');
 var jwt = require('jsonwebtoken');
 
 function validationError (res, err) {
-  return res.status(422).json(err);
+    return res.status(422).json(err);
 }
 
 function sendHandler (res, err, status) {
@@ -34,14 +34,12 @@ exports.index = function(req, res) {
  */
 exports.create = function (req, res, next) {
   var newUser = User.create(req.body);
-  console.log(newUser);
   newUser.save()
     .then((user) => {
         var token = auth.signToken(user._id, user.role);
         jsonpHandler(res, {token: token});
     })
     .catch((err) => {
-        console.log(err);
         return validationError (res, err);
     });
 };

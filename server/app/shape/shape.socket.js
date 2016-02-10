@@ -8,7 +8,7 @@ var pointCollection = Point.collectionName();
 
 function errorHandler (socket, err) {
     socket.emit('server:error', err);
-    throw err;
+    console.error(err);
 }
 
 function successHandler (io, event, obj) {
@@ -21,10 +21,15 @@ function event (socket, io) {
         s.save()
             .then(shape => {
                 Whiteboard.loadOne({_id: wbId})
-                    .then(whiteboard => {
+                    .then((whiteboard) => {
+                        if(!whiteboard) {
+                            errorHandler (socket, new Error('Loading the whiteboard.'));
+                        }
                         whiteboard.shapes.push(shape);
                         whiteboard.save()
-                            .then(wb => successHandler (io, 'shape:created', shape))
+                            .then((wb) => {
+                                successHandler (io, collection+':created', shape);
+                            })
                             .catch(err => errorHandler (socket, new Error('Saving the whiteboard. '+err.message, err.code)));
                     })
                     .catch(err => errorHandler (socket, err));

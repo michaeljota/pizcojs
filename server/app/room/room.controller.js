@@ -33,7 +33,6 @@ function find (req, res) {
 }
 
 function add (req, res) {
-    console.log(req.body);
     var room = Room.create(req.body.room);
     User.loadOne({_id: req.user._id})
         .then((user) => {
