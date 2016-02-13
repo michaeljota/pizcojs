@@ -30,6 +30,10 @@ class Classroom extends Document {
     postDelete () {
         _emit (Classroom.collectionName(), 'deleted' , this);
     }
+    
+    get currentWhiteboard () {
+        return this.whiteboards[this.whiteboards.length-1];
+    }
 }
 
 module.exports = Classroom;

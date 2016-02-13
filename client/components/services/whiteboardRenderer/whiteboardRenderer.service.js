@@ -3,8 +3,7 @@
 angular.module('tesisApp')
     .service('whiteboardRenderer', function (shapeRenderer, canvas, socket) {
         var _shapes = [];
-        var intervalId;
-        var whiteboardId;
+        var _intervalId;
 
         function drawShapes() {
             if(_shapes && _shapes.length > 0) {
@@ -19,24 +18,18 @@ angular.module('tesisApp')
         }
 
         this.startRender = function startRender () {
-            intervalId = setInterval(drawShapes, 1000/30);
+            _intervalId = setInterval(drawShapes, 1000/30);
         };
 
         this.stopRender = function stopRender () {
-            clearInterval(intervalId);
+            clearInterval(_intervalId);
         };
         
-        this.newShape = function (shape) {
-            socket.socket.emit('shapes:create', whiteboardId, shape);
-        };
-        
-        socket.socket.on('whiteboards:created', function(whiteboard) {
-            whiteboardId = whiteboard._id;
+        this.setWhiteboard = function setWhiteboard (whiteboardId) {
             socket.socket.emit('shapes:getall', whiteboardId);
-        });
+        }
 
         socket.socket.on('shapes:sendall', function (shapes){
-            console.log(shapes);
             _shapes = shapes;
             socket.syncUpdates('shapes', _shapes);
             drawShapes();

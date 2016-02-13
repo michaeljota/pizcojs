@@ -9,6 +9,8 @@ var path = require('path');
 
 module.exports = function(app) {
   app.use('/api/users', require('./app/user'));
+  app.use('/api/classrooms', require('./app/classroom'));
+  app.use('/api/whiteboards', require('./app/whiteboard'));
   app.use('/api/rooms', require('./app/room'));
   app.use('/auth', require('./app/auth'));
 

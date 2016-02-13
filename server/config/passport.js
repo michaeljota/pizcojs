@@ -11,7 +11,6 @@ function passport (passport) {
     passport.deserializeUser(function(id, done) {
         User.loadOne({_id: id}, {populate: ['name', 'email', 'role', 'provider']})
             .then(user => {
-                console.log(user);
                 done(null, user);
             })
             .catch(err => done(err, false));

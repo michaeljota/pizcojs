@@ -1,7 +1,7 @@
 'use strict';
 
-var Classroom = require('./classroom.model').Classroom;
-var Whiteboard = require('./classroom.model').Whiteboard;
+var Classroom = require('../classroom/classroom.model');
+var Whiteboard = require('./whiteboard.model');
 
 function errorHandler (res, err) {
     res.status(500).send(err.message);

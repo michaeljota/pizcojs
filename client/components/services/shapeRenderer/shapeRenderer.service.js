@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tesisApp')
-    .service('shapeRenderer', function (socket, canvas, Enums) {
+    .service('shapeRenderer', function (socket, canvas, Tools) {
 
         var RendererError = Error;
 
@@ -48,16 +48,16 @@ angular.module('tesisApp')
             canvas.context.strokeStyle = shape.lineColor;
             canvas.context.fillStyle = shape.fillStyle;
             switch (shape.shapeType){
-                case Enums.TOOLS.PENCIL:
+                case Tools.PENCIL:
                     pencil(points);
                     break;
-                case Enums.TOOLS.LINE:
+                case Tools.LINE:
                     line(points);
                     break;
-                case Enums.TOOLS.RECTANGLE:
+                case Tools.RECTANGLE:
                     rectangle(points);
                     break;
-                case Enums.TOOLS.CIRCLE:
+                case Tools.CIRCLE:
                     circle(points);
                     break;
                 default:

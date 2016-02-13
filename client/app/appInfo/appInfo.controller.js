@@ -1,11 +1,14 @@
 'use strict';
 
-(function(angular) {
-    angular.module('tesisApp')
-        .controller('appInfoCtrl', function($scope, $mdDialog){
+(function() {
+    
+    function appInfoCtrl ($scope, $mdDialog){
 
             $scope.close = function () {
                 $mdDialog.hide();
             };
-        });
-})(angular);
+        }
+    
+    angular.module('tesisApp')
+        .controller('appInfoCtrl', appInfoCtrl);
+})();

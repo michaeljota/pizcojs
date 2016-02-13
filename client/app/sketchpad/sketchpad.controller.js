@@ -1,9 +1,8 @@
 'use strict';
 
 angular.module('tesisApp')
-    .controller('SketchpadCtrl', function ($scope, $http, $stateParams, Enums, canvas, socket, classroomRenderer, whiteboardRenderer) {
-      
-        classroomRenderer.setId($stateParams.classroomId);
+    .controller('SketchpadCtrl', function ($scope, $http, $stateParams, Tools, Colors, canvas, 
+        socket, RoomManager) {
         
         var resizeCanvas = function () {
             var container = document.getElementById('canvasContainer');
@@ -43,10 +42,10 @@ angular.module('tesisApp')
 
 
         /**
-         * Starts the drawing setting a new shape in the whiteboardRenderer.
+         * Starts the drawing setting a new shape.
          */
         function start () {
-            whiteboardRenderer.newShape($scope.shape);
+            socket.socket.emit('shapes:create', RoomManager.getCurrentWhiteboardId(), $scope.shape);
         };
 
         /**
@@ -69,8 +68,8 @@ angular.module('tesisApp')
             _shapeId = false;
         };
 
-        var reset = function (){
-            classroomRenderer.addWhiteboard();
+        var reset = function () {
+            RoomManager.addWhiteboard();
         };
 
         var undo = function () {
@@ -83,18 +82,18 @@ angular.module('tesisApp')
 
         //#region Bindings
         $scope.shape = {};
-        $scope.tools = Enums.TOOLS;
-        $scope.reset = reset();
-        $scope.undo = undo();
-        $scope.redo = redo();
+        $scope.tools = Tools;
+        $scope.reset = reset;
+        $scope.undo = undo;
+        $scope.redo = redo;
 
         $scope.init = function () {
             $scope.shape = {
-                shapeType  : Enums.TOOLS.PENCIL,
-                lineColor  : Enums.COLORS.BLACK,
+                shapeType  : Tools.PENCIL,
+                lineColor  : Colors.BLACK,
                 lineWidth  : 3,
                 lineCap    : 'round',
-                fillColor  : Enums.COLORS.GREY,
+                fillColor  : Colors.GREY,
                 stroked    : true,
                 filled     : false
             };
@@ -118,24 +117,18 @@ angular.module('tesisApp')
         };
 
         $scope.$watch('shape.ToolName', function () {
-            if($scope.shape.ToolName === Enums.TOOLS.PENCIL){
+            if($scope.shape.ToolName === Tools.PENCIL){
                 $scope.shape.Filled = false;
             }
         });
 
         $scope.$watch('shape.Filled', function () {
-            if(($scope.shape.ToolName === Enums.TOOLS.PENCIL || $scope.shape.ToolName === Enums.TOOLS.LINE) && $scope.shape.Filled){
-                $scope.shape.ToolName = Enums.TOOLS.RECTANGLE;
+            if(($scope.shape.ToolName === Tools.PENCIL || $scope.shape.ToolName === Tools.LINE) && $scope.shape.Filled){
+                $scope.shape.ToolName = Tools.RECTANGLE;
             }
         });
         
-        
-        socket.socket.on('shape:created', function (shape) {
-            console.log('created');
+        socket.socket.on('shapes:created', function (shape) {
             _shapeId = shape._id;
-        });
-
-        socket.socket.on('crud:error', function (err) {
-            console.log('Server error: '+ err);
         });
     });

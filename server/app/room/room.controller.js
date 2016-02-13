@@ -3,6 +3,7 @@
 var Room = require('./room.model');
 var User = require('../user/user.model');
 var Classroom = require('../classroom/classroom.model');
+var Whiteboard = require('../whiteboard/whiteboard.model');
 
 function errorHandler (res, err) {
     res.status(500).send(err.message);
@@ -33,26 +34,34 @@ function find (req, res) {
 }
 
 function add (req, res) {
-    var room = Room.create(req.body.room);
+    var r = Room.create(req.body);
     User.loadOne({_id: req.user._id})
         .then((user) => {
-            room.owner = user;
-            room.clients.push(user);
-            var c = Classroom.create ({className: room.title});
-            c.save()
-                .then((classroom) => {
-                    room.classroom = classroom;
-                    room.save()
-                        .then((room) => {
-                            successHandler (res, room); 
+            r.owner = user;
+            r.clients.push(user);
+            var c = Classroom.create ({className: r.title});
+            var w = Whiteboard.create();
+            w.save()
+                .then((whiteboard) => {
+                    c.whiteboards.push(w);
+                    c.save()
+                        .then((classroom) => {
+                            r.classroom = c;
+                            r.save()
+                                .then((room) => {
+                                    successHandler (res, room); 
+                                })
+                                .catch((err) => {
+                                    errorHandler (res, err);
+                                });
                         })
                         .catch((err) => {
                             errorHandler (res, err);
                         });
                 })
                 .catch((err) => {
-                    errorHandler (res, err);
-                });
+                    
+                })
         })
         .catch((err) => {
             errorHandler (res, err);
@@ -86,6 +95,7 @@ function enter (req, res) {
                 .then((user) => {
                     if(contains(room.clients, user)) {
                         //TODO: This shouldn't happen. If the user leaves the room, it must be logged out.
+                        successHandler (res, room);
                     } else {
                         room.clients.push(user);
                         room.save()

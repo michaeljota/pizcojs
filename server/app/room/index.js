@@ -13,6 +13,8 @@ router.route('/:roomId')
     .get(controller.find)
     .put(controller.update)
     .delete(controller.destroy)
+
+router.route('/:roomId/enter')
     .post(auth.isAuthenticated(), controller.enter);
 //#endregion
 

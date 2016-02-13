@@ -23,7 +23,7 @@ function event (socket, io) {
                 Whiteboard.loadOne({_id: wbId})
                     .then((whiteboard) => {
                         if(!whiteboard) {
-                            errorHandler (socket, new Error('Loading the whiteboard.'));
+                            return errorHandler (socket, new Error('Loading the whiteboard. ID: '+wbId));
                         }
                         whiteboard.shapes.push(shape);
                         whiteboard.save()
@@ -46,7 +46,12 @@ function event (socket, io) {
 
     socket.on(collection+':getall', function (wbId) {
         Whiteboard.loadOne({_id: wbId})
-            .then(whiteboard => successHandler (io, collection+':sendall', whiteboard.shapes))
+            .then((whiteboard) => {
+                if(!whiteboard) {
+                    return errorHandler (socket, new Error('Whiteboard not found'));
+                }
+                successHandler (io, collection+':sendall', whiteboard.shapes)
+            })
             .catch(err => errorHandler (socket, err));
     });
 

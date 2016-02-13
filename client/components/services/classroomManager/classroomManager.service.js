@@ -1,28 +1,26 @@
 'use strict';
 
 angular.module('tesisApp')
-    .service('classroomRenderer', function (whiteboardRenderer, socket) {
+    .service('jkgjkhgkh', function (whiteboardRenderer, socket) {
         var _whiteboards = [];
-        var classroomId;
+        var _classroomId;
         
         this.addWhiteboard = function(whiteboard) {
-            console.log('creating')
-            socket.socket.emit('whiteboards:create', classroomId);
+            socket.socket.emit('whiteboards:create', _classroomId);
         }
         
         this.setId = function (id) {
-            classroomId = id;
-            socket.socket.emit('whiteboards:getall', classroomId);
+            _classroomId = id;
+            socket.socket.emit('whiteboards:getall', _classroomId);
         }
-
-        socket.socket.on('classrooms:created', function(classroom){
-            classroomId = classroom._id;
-            this.addWhiteboard();
-            socket.socket.emit('whiteboards:getall', classroomId);
-        });
 
         socket.socket.on('whiteboards:sendall', function (whiteboards){
             _whiteboards = whiteboards;
             socket.syncUpdates('whiteboards', _whiteboards);
+        });
+        
+        socket.socket.on('rooms:created', function (room) {
+            _classroomId = room.classroom._id;
+            whiteboardRenderer.setId (room.classroom.currentWhiteboard._id);
         });
     });

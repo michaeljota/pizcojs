@@ -6,7 +6,7 @@ var collection = Whiteboard.collectionName();
 
 function errorHandler (socket, err) {
     socket.emit('server:error', err);
-    console.log(err);
+    console.error(err);
 }
 
 function successHandler (io, event, obj) {

@@ -17,7 +17,7 @@ var passport = require('passport');
 //camo.connect('nedb://'+path.join(__dirname, 'datastorage'))
 camo.connect('nedb://memory')
     .then(function(db){
-        console.log('Datastore started');
+        console.info('Datastore started');
     })
     .catch(function(err){
         throw err;
@@ -38,7 +38,7 @@ require('./routes')(app);
 
 // Start server
 server.listen(config.port, config.ip, function () {
-  console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
+  console.info('Express server listening on %d, in %s mode', config.port, app.get('env'));
 });
 
 // Expose app

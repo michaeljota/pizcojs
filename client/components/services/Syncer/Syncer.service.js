@@ -32,7 +32,6 @@ angular.module('tesisApp')
 
             socket.socket.on('syncer-remoteDrawing', function(active) {
                 _remoteDrawing = active;
-                console.log(_remoteDrawing);
             });
 
             socket.socket.on('syncer-cancelDraw', function(){

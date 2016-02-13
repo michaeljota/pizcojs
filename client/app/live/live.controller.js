@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tesisApp')
-    .controller('LiveCtrl', function ($scope, $mdDialog, $http, $state, socket) {
+    .controller('LiveCtrl', function ($scope, $mdDialog, $http, $state, socket, RoomManager) {
         
         $http.get('/api/rooms').success(function(rooms) {
             $scope.cards = rooms;
@@ -9,8 +9,8 @@ angular.module('tesisApp')
         });
 
         $scope.enterRoom = function (room) {
-            $http.post('/api/rooms/'+room._id, {})
-                .success (function(room) {
+            RoomManager.enter(room)
+                .then (function(room) {
                     $state.go('app.sketchpad', {classroomId: room.classroom._id});
                 })
                 .catch (function(err) {
@@ -41,13 +41,13 @@ angular.module('tesisApp')
                 if(!room || room.title === '') {
                     return;
                 }
-                $http.post('/api/rooms', { room })
-                    .success(function(room) {
-                        $state.go('app.sketchpad', {classroomId: room.classroom._id});
-                    })
-                    .catch(function(err) {
-                        console.error(err);
-                    });
+                RoomManager.create(room)
+                .then (function(room) {
+                    $state.go('app.sketchpad', {classroomId: room.classroom._id});
+                })
+                .catch (function(err) {
+                    console.error(err);
+                });
             });
         };
     });
