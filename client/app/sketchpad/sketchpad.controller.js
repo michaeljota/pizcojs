@@ -18,6 +18,7 @@ angular.module('tesisApp')
         };
 
         var _shapeId;
+        var downloadLink = angular.element('<a></a>');
         
         
         /**
@@ -60,6 +61,13 @@ angular.module('tesisApp')
             }
         };
 
+        function downloadCanvas() {
+            var dataURL = canvas.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+            var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboardId()+'.png';
+            downloadLink.attr('href', dataURL);
+            downloadLink.attr('download', fileName);
+			downloadLink[0].click();
+        }
         
         /**
          * Finish the draw.
@@ -69,6 +77,7 @@ angular.module('tesisApp')
         };
 
         var reset = function () {
+            downloadCanvas();
             RoomManager.addWhiteboard();
         };
 
