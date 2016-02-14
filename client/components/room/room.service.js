@@ -104,7 +104,8 @@
             if(getCurrentRoom()) {
                 return Classroom.addWhiteboard(getCurrentRoom().classroom,
                     function (whiteboard) {
-                        setCurrentWhiteboardId(whiteboard._id);
+                        _currentRoom.classroom.currentWhiteboard = whiteboard;
+                        setCurrentWhiteboardId(_currentRoom.classroom.currentWhiteboard._id);
                         return cb(whiteboard);
                     }, function (err) {
                         return cb(null, err);
