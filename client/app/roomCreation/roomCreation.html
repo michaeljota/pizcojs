@@ -8,7 +8,7 @@
                         <md-input-container class="md-icon-float md-block">
                             <label>Room Name</label>
                             <md-icon md-svg-icon="account-circle" class="name"></md-icon>
-                            <input required name="roomName" data-ng-model="room.title" type="text" ng-keydown="checkEnter($event)">
+                            <input required name="roomName" data-ng-model="room.title" type="text" ng-keydown="checkEnter($event)" md-autofocus>
                             <div ng-messages="createRoomForm.roomName.$error">
                                 <div ng-message="required">This is required.</div>
                             </div>
