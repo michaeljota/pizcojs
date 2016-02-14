@@ -7,7 +7,8 @@ angular.module('tesisApp')
 
         function drawShapes() {
             if(_shapes && _shapes.length > 0) {
-                canvas.context.clearRect(0, 0, canvas.getSize().width, canvas.getSize().height);
+                canvas.context.fillStyle="#FFFFFF";
+                canvas.context.fillRect(0, 0, canvas.getSize().width, canvas.getSize().height);
                 _shapes.forEach(function (shape) {
                     if (!shape.points || shape.points.length === 0) {
                         return;
