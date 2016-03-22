@@ -1,7 +1,11 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-  .factory('Auth', function Auth($http, User, $window, $q) {
+  angular
+    .module('pizcojs')
+    .factory('Auth', Auth);
+
+  function Auth($http, User, $window, $q) {
     var currentUser = {};
     if($window.sessionStorage.token) {
       currentUser = User.get();
@@ -122,4 +126,5 @@ angular.module('tesisApp')
         return $window.sessionStorage.token;
       }
     };
-  });
+  }
+})();

@@ -1,11 +1,15 @@
 'use strict';
 
-angular.module('tesisApp')
-    .factory('Syncer', function (Drawer, socket, Enums, Shape) {
+angular.module('pizcojs')
+    .factory('Syncer', function (socket, Enums, Shape) {
 
-        var Syncer = function (container){
+      function Drawer(container) {
+
+      }
+
+        function Syncer(container){
             var _remoteDrawing = false;
-            var _drawer = new Drawer(container);
+            var _drawer = Drawer(container);
 
             //#region Synchronize
             socket.socket.on('syncer-draw', function(shape) {

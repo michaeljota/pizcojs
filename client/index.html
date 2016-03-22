@@ -22,16 +22,13 @@
       <link rel="stylesheet" href="app/app.css">
       <link rel="stylesheet" href="app/live/live.css">
       <link rel="stylesheet" href="app/login/login.css">
-      <link rel="stylesheet" href="app/player/player.css">
-      <link rel="stylesheet" href="app/saved/saved.css">
       <link rel="stylesheet" href="app/sketchpad/sketchpad.css">
-      <link rel="stylesheet" href="components/modal/modal.css">
       <link rel="stylesheet" href="components/sidenav/sidenav.css">
       <link rel="stylesheet" href="components/toolbar/toolbar.css">
       <!-- endinjector -->
     <!-- endbuild -->
   </head>
-  <body data-ng-app="tesisApp">
+  <body data-ng-app="pizcojs">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -57,17 +54,16 @@
     <!-- build:js({client,node_modules}) app/vendor.js -->
       <!-- bower:js -->
       <script src="bower_components/angular/angular.js"></script>
-      <script src="bower_components/json3/lib/json3.js"></script>
-      <script src="bower_components/angular-resource/angular-resource.js"></script>
-      <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-      <script src="bower_components/angular-socket-io/socket.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
       <script src="bower_components/angular-aria/angular-aria.js"></script>
+      <script src="bower_components/angular-resource/angular-resource.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-messages/angular-messages.js"></script>
       <script src="bower_components/angular-material/angular-material.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
       <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
+      <script src="bower_components/angular-socket-io/socket.js"></script>
       <!-- endbower -->
     <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
@@ -77,32 +73,30 @@
 
         <script src="app/app.js"></script>
           <!-- injector:js -->
+          <script src="app/app.auth.js"></script>
+          <script src="app/app.config.js"></script>
+          <script src="app/app.constants.js"></script>
+          <script src="app/app.route.js"></script>
+          <script src="app/app.run.js"></script>
           <script src="app/appInfo/appInfo.controller.js"></script>
           <script src="app/live/live.controller.js"></script>
           <script src="app/login/login.controller.js"></script>
-          <script src="app/login/login.js"></script>
-          <script src="app/main/main.js"></script>
-          <script src="app/player/player.controller.js"></script>
-          <script src="app/player/player.js"></script>
+          <script src="app/login/login.route.js"></script>
+          <script src="app/main/main.route.js"></script>
           <script src="app/roomCreation/roomCreation.controller.js"></script>
           <script src="app/roomInfo/roomInfo.controller.js"></script>
-          <script src="app/root/root.js"></script>
           <script src="app/saved/saved.controller.js"></script>
           <script src="app/sketchpad/sketchpad.controller.js"></script>
-          <script src="app/sketchpad/sketchpad.js"></script>
+          <script src="app/sketchpad/sketchpad.route.js"></script>
           <script src="components/auth/auth.service.js"></script>
           <script src="components/auth/user.service.js"></script>
           <script src="components/managers/drawManager.service.js"></script>
           <script src="components/managers/roomManager.service.js"></script>
-          <script src="components/modal/modal.service.js"></script>
           <script src="components/models/classroom.service.js"></script>
           <script src="components/models/room.service.js"></script>
-          <script src="components/services/Drawer/Drawer.service.js"></script>
-          <script src="components/services/Enums/Enums.constants.js"></script>
-          <script src="components/services/Shape/Shape.service.js"></script>
           <script src="components/services/Syncer/Syncer.service.js"></script>
           <script src="components/services/canvas/canvas.service.js"></script>
-          <script src="components/services/classroomManager/classroomManager.service.js"></script>
+          <script src="components/services/shape/shape.service.js"></script>
           <script src="components/services/shapeRenderer/shapeRenderer.service.js"></script>
           <script src="components/services/socket/socket.service.js"></script>
           <script src="components/services/whiteboardRenderer/whiteboardRenderer.service.js"></script>

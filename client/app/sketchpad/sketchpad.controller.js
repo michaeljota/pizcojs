@@ -1,143 +1,145 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-    .controller('SketchpadCtrl', function ($scope, $http, $stateParams, Tools, Colors, canvas, 
-        socket, RoomManager) {
-        
-        var resizeCanvas = function () {
-            var container = document.getElementById('canvasContainer');
-            var wid = container.clientWidth;
-            var hei = window.innerHeight * 0.80;
-            if(wid>hei){
-                wid = hei;
-            }else{
-                hei = wid;
-            }
-            canvas.setSize(wid,hei);
-            container.appendChild(canvas.canvas);
-        };
+  angular
+    .module('pizcojs')
+    .controller('SketchpadController', SketchpadController);
 
-        var _shapeId;
-        var downloadLink = angular.element('<a></a>');
-        
-        
-        /**
-         * Creates a new point canvas related. 
-         * 
-         * @param event (description)
-         * @returns point
-         */
-        function newPoint (event) {
-            var point = (event.touches) ?
-            {
-                x: (event.touches[0].pageX - event.target.offsetLeft),
-                y: (event.touches[0].pageY - event.target.offsetTop)
-            } :
-            {
-                x: (event.pageX - event.target.offsetLeft),
-                y: (event.pageY - event.target.offsetTop)
-            };
-            canvas.screenToCanvas(point);
-            return point;
-        };
+  function SketchpadController($http, $stateParams, TOOLS, COLORS, canvas,
+      socket, RoomManager) {
+      var vm = this;
 
-
-        /**
-         * Starts the drawing setting a new shape.
-         */
-        function start () {
-            socket.socket.emit('shapes:create', RoomManager.getCurrentWhiteboardId(), $scope.shape);
-        };
-
-        /**
-         * Creates a new point at every move, and send it to the server using socket.
-         * 
-         * @param event (description)
-         */
-        function move (event) {
-            event.preventDefault();
-            if (_shapeId){
-                socket.socket.emit('points:create', _shapeId, newPoint(event));
-            }
-        };
-
-        function downloadCanvas() {
-            var dataURL = canvas.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-            var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboardId()+'.png';
-            downloadLink.attr('href', dataURL);
-            downloadLink.attr('download', fileName);
-			downloadLink[0].click();
+      function resizeCanvas() {
+        var container = document.getElementById('canvasContainer');
+        var wid = container.clientWidth;
+        var hei = window.innerHeight * 0.80;
+        if(wid>hei){
+          wid = hei;
+        }else{
+          hei = wid;
         }
-        
-        /**
-         * Finish the draw.
-         */
-        function end () {
-            _shapeId = false;
+        canvas.setSize(wid,hei);
+        container.appendChild(canvas.canvas);
+      };
+
+      var _drawing;
+      var downloadLink = angular.element('<a></a>');
+
+
+      /**
+       * Creates a new point canvas related.
+       *
+       * @param event (description)
+       * @returns point
+       */
+      function newPoint (event) {
+        var point = (event.touches) ?
+        {
+          x: (event.touches[0].pageX - event.target.offsetLeft),
+          y: (event.touches[0].pageY - event.target.offsetTop)
+        } :
+        {
+          x: (event.pageX - event.target.offsetLeft),
+          y: (event.pageY - event.target.offsetTop)
+        };
+        canvas.screenToCanvas(point);
+        return point;
+      };
+
+
+      /**
+       * Starts the drawing setting a new shape.
+       */
+      function start () {
+        _drawing = true;
+        socket.socket.emit('shapes:create', vm.shape);
+      };
+
+      /**
+       * Creates a new point at every move, and send it to the server using socket.
+       *
+       * @param event (description)
+       */
+      function move (event) {
+        if (_drawing){
+          event.preventDefault();
+          socket.socket.emit('shapes:addPoint', newPoint(event));
+        }
+      };
+
+      /**
+       * Finish the draw.
+       */
+      function end () {
+        _drawing = false;
+        socket.socket.emit('shapes:save', RoomManager.getCurrentWhiteboardId());
+      };
+
+
+      function downloadCanvas() {
+        var dataURL = canvas.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboardId()+'.png';
+        downloadLink.attr('href', dataURL);
+        downloadLink.attr('download', fileName);
+        downloadLink[0].click();
+      }
+
+      function reset() {
+        downloadCanvas();
+        RoomManager.addWhiteboard();
+      };
+
+      function undo() {
+          // _syncer.undo();
+      };
+
+      function redo() {
+          // _syncer.redo ();
+      };
+
+      //#region Bindings
+      vm.shape = {};
+      vm.tools = TOOLS;
+      vm.reset = reset;
+      vm.undo = undo;
+      vm.redo = redo;
+
+      vm.init = function () {
+        vm.shape = {
+          shapeType  : TOOLS.PENCIL,
+          lineColor  : COLORS.BLACK,
+          lineWidth  : 3,
+          lineCap    : 'round',
+          fillColor  : COLORS.GREY,
+          stroked    : true,
+          filled     : false
         };
 
-        var reset = function () {
-            downloadCanvas();
-            RoomManager.addWhiteboard();
-        };
+        canvas.canvas.addEventListener('touchstart', start, false);
+        canvas.canvas.addEventListener('mousedown', start, false);
 
-        var undo = function () {
-           // _syncer.undo();
-        };
+        canvas.canvas.addEventListener('touchmove', move, true);
+        canvas.canvas.addEventListener('mousemove', move, true);
 
-        var redo = function () {
-           // _syncer.redo ();
-        };
+        canvas.canvas.addEventListener('touchend', end);
+        canvas.canvas.addEventListener('mouseup', end);
+        //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
+        canvas.canvas.addEventListener('mouseleave', end);
 
-        //#region Bindings
-        $scope.shape = {};
-        $scope.tools = Tools;
-        $scope.reset = reset;
-        $scope.undo = undo;
-        $scope.redo = redo;
+        canvas.canvas.addEventListener('touchcancel', end);
 
-        $scope.init = function () {
-            $scope.shape = {
-                shapeType  : Tools.PENCIL,
-                lineColor  : Colors.BLACK,
-                lineWidth  : 3,
-                lineCap    : 'round',
-                fillColor  : Colors.GREY,
-                stroked    : true,
-                filled     : false
-            };
+        resizeCanvas();
 
-            canvas.canvas.addEventListener('touchstart', start, false);
-            canvas.canvas.addEventListener('mousedown', start, false);
+        window.addEventListener('resize', resizeCanvas);
+      };
 
-            canvas.canvas.addEventListener('touchmove', move, true);
-            canvas.canvas.addEventListener('mousemove', move, true);
-
-            canvas.canvas.addEventListener('touchend', end);
-            canvas.canvas.addEventListener('mouseup', end);
-            //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
-            canvas.canvas.addEventListener('mouseleave', end);
-
-            canvas.canvas.addEventListener('touchcancel', end);
-
-            resizeCanvas();
-
-            window.addEventListener('resize', resizeCanvas);
-        };
-
-        $scope.$watch('shape.ToolName', function () {
-            if($scope.shape.ToolName === Tools.PENCIL){
-                $scope.shape.Filled = false;
-            }
-        });
-
-        $scope.$watch('shape.Filled', function () {
-            if(($scope.shape.ToolName === Tools.PENCIL || $scope.shape.ToolName === Tools.LINE) && $scope.shape.Filled){
-                $scope.shape.ToolName = Tools.RECTANGLE;
-            }
-        });
-        
-        socket.socket.on('shapes:created', function (shape) {
-            _shapeId = shape._id;
-        });
-    });
+      vm.checkShape = function() {
+        if(vm.shape.ToolName === TOOLS.PENCIL){
+          vm.shape.Filled = false;
+        }
+        if((vm.shape.ToolName === TOOLS.PENCIL || vm.shape.ToolName === TOOLS.LINE) && vm.shape.Filled){
+          vm.shape.ToolName = TOOLS.RECTANGLE;
+        }
+      }
+  }
+})();

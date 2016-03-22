@@ -1,26 +1,24 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-    .factory('Shape', function (Enums) {
+  angular
+    .module('pizcojs')
+    .factory('Shape', Shape);
 
-        function Vector2(x,y){
-            this.x = x;
-            this.y = y;
-        }
+  function Shape () {
+    function Shape(shape) {
+      this.shapeType  = shape.shapeType;
+      this.lineColor = shape.lineColor;
+      this.lineWidth = shape.lineWidth;
+      this.lineCap = shape.lineCap;
+      this.fillColor = shape.fillColor;
+      this.filled = shape.filled;
+      this.stroked = shape.stroked;
+      this.points = shape.points || [];
+    }
 
-        function Shape(shape) {
-            this.shapeType  = shape.shapeType;
-            this.lineColor = shape.lineColor;
-            this.lineWidth = shape.lineWidth;
-            this.lineCap = shape.lineCap;
-            this.fillColor = shape.fillColor;
-            this.filled = shape.filled;
-            this.stroked = shape.stroked;
-            this.points = shape.points || [];
-        }
+    // Public API here
+    return Shape;
+  }
 
-        Shape.Vector2 = Vector2;
-
-        // Public API here
-        return Shape;
-    });
+})();

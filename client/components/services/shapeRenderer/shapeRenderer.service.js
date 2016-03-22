@@ -1,74 +1,86 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-    .service('shapeRenderer', function (socket, canvas, Tools) {
+  angular
+    .module('pizcojs')
+    .service('shapeRenderer', ShapeRenderer);
 
-        var RendererError = Error;
+  function ShapeRenderer(socket, canvas, TOOLS) {
+    var RendererError = Error;
 
-        //#region Functions
-        var pencil = function (points) {
-            //Todo: Reduce the lenght of the Points array by using trigonometric functions.
-            canvas.context.moveTo(points[0].x, points[0].y);
-            for (var i = 0; i < points.length; i++) {
-                canvas.context.lineTo(points[i].x, points[i].y);
-            }
-        };
+    //#region Functions
+    function pencil(points) {
+      //Todo: Reduce the lenght of the Points array by using trigonometric functions.
+      canvas.context.moveTo(points[0].x, points[0].y);
+      for (var i = 0; i < points.length; i++) {
+        canvas.context.lineTo(points[i].x, points[i].y);
+      }
+    };
 
-        var line = function(points){
-            var i = points.length - 1;
-            canvas.context.moveTo(points[0].x, points[0].y);
-            canvas.context.lineTo(points[i].x, points[i].y);
-        };
+    function line(points){
+      var i = points.length - 1;
+      canvas.context.moveTo(points[0].x, points[0].y);
+      canvas.context.lineTo(points[i].x, points[i].y);
+    };
 
-        var rectangle = function(points){
-            var i = points.length - 1;
-            var width, height;
-            width = points[i].x - points[0].x;
-            height = points[i].y - points[0].y;
-            canvas.context.rect(points[0].x, points[0].y, width, height);
-        };
+    function rectangle(points){
+      var i = points.length - 1;
+      var width, height;
+      width = points[i].x - points[0].x;
+      height = points[i].y - points[0].y;
+      canvas.context.rect(points[0].x, points[0].y, width, height);
+    };
 
-        var circle = function(points){
-            var i = points.length - 1;
-            var radius = (Math.abs(points[i].x - points[0].x) + (Math.abs(points[i].y - points[0].y)) / 2);
-            canvas.context.arc(points[i].x, points[i].y, radius, 0, Math.PI * 2, false);
-        };
+    function circle(points){
+      var i = points.length - 1;
+      var radius = (Math.abs(points[i].x - points[0].x) + (Math.abs(points[i].y - points[0].y)) / 2);
+      canvas.context.arc(points[i].x, points[i].y, radius, 0, Math.PI * 2, false);
+    };
 
-        //#endregion
+    //#endregion
 
-        this.renderShape = function(shape){
-            if(!shape){
-                throw RendererError('Can\'t render shape. Is '+shape);
-            }
-            var points = shape.points;
-            canvas.canvasToScreenAll(points);
-            canvas.context.beginPath();
-            canvas.context.lineWidth = shape.lineWidth * canvas.getSize().scale;
-            canvas.context.lineCap = shape.lineCap;
-            canvas.context.strokeStyle = shape.lineColor;
-            canvas.context.fillStyle = shape.fillStyle;
-            switch (shape.shapeType){
-                case Tools.PENCIL:
-                    pencil(points);
-                    break;
-                case Tools.LINE:
-                    line(points);
-                    break;
-                case Tools.RECTANGLE:
-                    rectangle(points);
-                    break;
-                case Tools.CIRCLE:
-                    circle(points);
-                    break;
-                default:
-                    throw RendererError ('Tool: '+ shape.shapeType +' is invalid');
-            }
-            if (shape.stroked) {
-                canvas.context.stroke();
-            }
-            if (shape.filled) {
-                canvas.context.fill();
-            }
-            canvas.screenToCanvasAll(shape.points);
-        };
-    });
+    this.renderShape = renderShape;
+
+    function renderShape(shape){
+      if(!shape){
+        throw RendererError('Can\'t render shape. Is '+shape);
+      }
+      var points = shape.points;
+      canvas.canvasToScreenAll(points);
+      canvas.context.beginPath();
+      canvas.context.lineWidth = shape.lineWidth * canvas.getSize().scale;
+      canvas.context.lineCap = shape.lineCap;
+      canvas.context.strokeStyle = shape.lineColor;
+      canvas.context.fillStyle = shape.fillStyle;
+      switch (shape.shapeType){
+        case TOOLS.PENCIL:
+          pencil(points);
+          break;
+        case TOOLS.LINE:
+          line(points);
+          break;
+        case TOOLS.RECTANGLE:
+          rectangle(points);
+          break;
+        case TOOLS.CIRCLE:
+          circle(points);
+          break;
+        default:
+          throw RendererError ('Tool: '+ shape.shapeType +' is invalid');
+      }
+      if (shape.stroked) {
+        canvas.context.stroke();
+      }
+      if (shape.filled) {
+        canvas.context.fill();
+      }
+      canvas.screenToCanvasAll(shape.points);
+    };
+
+    socket.socket.on('shapes:draw', onShapesDraw);
+
+    function onShapesDraw(shape){
+      renderShape(shape);
+    }
+  }
+})();

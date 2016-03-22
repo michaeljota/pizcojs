@@ -1,19 +1,20 @@
 (function() {
-    'use strict';
+  'use strict';
 
-    angular.module('tesisApp')
-        .factory('Classroom', Classroom);
+  angular
+    .module('pizcojs')
+    .factory('Classroom', Classroom);
 
-    function Classroom ($resource) {
-        return $resource('/api/classrooms/:id/:controller', {
-            id: '@_id'
-        },{
-            addWhiteboard: {
-                method: 'POST',
-                params: {
-                    controller: 'whiteboard'
-                }
-            }
-        });
-    }
+  function Classroom ($resource) {
+    return $resource('/api/classrooms/:id/:controller', {
+      id: '@_id'
+    },{
+      addWhiteboard: {
+        method: 'POST',
+        params: {
+          controller: 'whiteboard'
+        }
+      }
+    });
+  }
 })();

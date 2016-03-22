@@ -1,53 +1,75 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-    .controller('LiveCtrl', function ($scope, $mdDialog, $http, $state, socket, RoomManager) {
-        
-        $http.get('/api/rooms').success(function(rooms) {
-            $scope.cards = rooms;
-            socket.syncUpdates('rooms', $scope.cards);
-        });
+  angular
+    .module('pizcojs')
+    .controller('LiveController', LiveController);
 
-        $scope.enterRoom = function (room) {
-            RoomManager.enter(room)
-                .then (function(room) {
-                    $state.go('app.sketchpad', {classroomId: room.classroom._id});
-                })
-                .catch (function(err) {
-                    console.error(err);
-                });
-        };
+  function LiveController($mdDialog, $http, $state, socket, RoomManager) {
+    var vm = this;
 
-        $scope.showInfo = function (room, ev) {
-            $mdDialog.show ({
-                templateUrl: 'app/roomInfo/roomInfo.html',
-                controller: 'roomInfoCtrl',
-                locals: {
-                    room: room
-                },
-                clickOutsideToClose:true,
-                targetEvent: ev
-            });
-        };
-
-        $scope.createRoom = function (ev) {
-            $mdDialog.show ({
-                templateUrl: 'app/roomCreation/roomCreation.html',
-                controller: 'roomCreationCtrl',
-                clickOutsideToClose:true,
-                targetEvent: ev
-            })
-            .then(function (room) {
-                if(!room || room.title === '') {
-                    return;
-                }
-                RoomManager.create(room)
-                .then (function(room) {
-                    $state.go('app.sketchpad', {classroomId: room.classroom._id});
-                })
-                .catch (function(err) {
-                    console.error(err);
-                });
-            });
-        };
+    $http.get('/api/rooms').success(function(rooms) {
+      vm.cards = rooms;
+      socket.syncUpdates('rooms', vm.cards);
     });
+
+    vm.enterRoom = enterRoom;
+
+    function enterRoom(room) {
+      RoomManager.enter(room)
+        .then (function(room) {
+          $state.go('app.sketchpad', {classroomId: room.classroom._id});
+        })
+        .catch (function(err) {
+          console.error(err);
+        });
+    };
+
+    vm.showInfo = showInfo;
+
+    function showInfo(room, ev) {
+      $mdDialog.show ({
+        templateUrl: 'app/roomInfo/roomInfo.html',
+        controller: 'roomInfoController',
+        controllerAs: 'modal',
+        locals: {
+          room: room
+        },
+        clickOutsideToClose:true,
+        targetEvent: ev
+      });
+    };
+
+    vm.createRoom = createRoom;
+
+    function createRoom(ev) {
+      $mdDialog.show ({
+        templateUrl: 'app/roomCreation/roomCreation.html',
+        controller: 'roomCreationController',
+        controllerAs: 'modal',
+        clickOutsideToClose:true,
+        targetEvent: ev
+      })
+      .then(function (room) {
+        if(!room || room.title === '') {
+          return;
+        }
+        RoomManager.create(room)
+        .then (function(room) {
+          $state.go('app.sketchpad', {classroomId: room.classroom._id});
+        })
+        .catch (function(err) {
+          console.error(err);
+        });
+      });
+    };
+
+    vm.getImage = getImage;
+
+    function getImage(card) {
+      return card.image && card.image.dataURL ?
+        card.image.dataURL :
+        '../assets/img/blank_square.svg';
+    }
+  }
+})();

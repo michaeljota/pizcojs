@@ -1,36 +1,47 @@
-<div class="d" data-ng-init="init()">
-    <div class="mainContainer">
-        <div id="canvasContainer" class="canvasContainer">
-        </div>
-        <md-divider></md-divider>
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <md-button class="md-icon-button" ng-click="shape.ToolName = tools.PENCIL" aria-label="Pencil">
-                    <md-icon md-svg-icon="pencil"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="shape.ToolName = tools.LINE" aria-label="Line">
-                    <md-icon md-svg-icon="vector-line"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="shape.ToolName = tools.RECTANGLE" aria-label="Rectangle">
-                    <md-icon md-svg-icon="vector-square"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="shape.ToolName = tools.CIRCLE" aria-label="Circle">
-                    <md-icon md-svg-icon="vector-circle"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="undo()" aria-label="Undo">
-                    <md-icon md-svg-icon="undo-variant"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="redo()" aria-label="Redo">
-                    <md-icon md-svg-icon="redo-variant"></md-icon>
-                </md-button>
-                <md-button class="md-icon-button" ng-click="reset()" aria-label="Reset">
-                    <md-icon md-svg-icon="note-plus-outline"></md-icon>
-                </md-button>
-                <md-checkbox ng-model="shape.Stroked"><div class="">Stroked</div></md-checkbox>
-                <md-checkbox ng-model="shape.Filled"><div class="">Filled</div></md-checkbox>
-                <div class="">Line Color:</div> <input type="color" data-ng-model="shape.LineColor">
-                <div class="">Fill Color:</div> <input type="color" data-ng-model="shape.FillStyle">
-            </div>
-        </md-toolbar>
+<div class="d" ng-init="vm.init()">
+  <div class="mainContainer">
+    <div id="canvasContainer" class="canvasContainer">
     </div>
+    <md-divider></md-divider>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Pencil"
+          ng-click="vm.setTool(vm.TOOLS.PENCIL)">
+          <md-icon md-svg-icon="pencil"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Line"
+          ng-click="vm.setTool(vm.TOOLS.LINE)">
+          <md-icon md-svg-icon="vector-line"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Rectangle"
+          ng-click="vm.setTool(vm.TOOLS.RECTANGLE)">
+          <md-icon md-svg-icon="vector-square"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Circle"
+          ng-click="vm.setTool(vm.TOOLS.CIRCLE)">
+          <md-icon md-svg-icon="vector-circle"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Undo"
+          ng-click="vm.undo()">
+          <md-icon md-svg-icon="undo-variant"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Redo"
+          ng-click="vm.redo()">
+          <md-icon md-svg-icon="redo-variant"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Reset"
+          ng-click="vm.reset()">
+          <md-icon md-svg-icon="note-plus-outline"></md-icon>
+        </md-button>
+        <md-checkbox ng-model="shape.Stroked"><div>Stroked</div></md-checkbox>
+        <md-checkbox ng-model="shape.Filled"><div>Filled</div></md-checkbox>
+        <div>Line Color:</div>
+        <input type="color" ng-model="shape.LineColor"
+          ng-change="vm.checkShape()">
+        <div>Fill Color:</div>
+        <input type="color" ng-model="shape.FillStyle"
+          ng-change="vm.checkShape()">
+      </div>
+    </md-toolbar>
+  </div>
 </div>

@@ -1,23 +1,25 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-  .controller('ToolbarCtrl', function ($scope, $mdDialog, $mdSidenav) {
+  angular
+    .module('pizcojs')
+    .controller('ToolbarController', ToolbarController);
 
-        $scope.openMenu = function($mdOpenMenu, ev) {
-            $mdOpenMenu(ev);
-        };
+  function ToolbarController($mdDialog, $mdSidenav) {
+    var tbVm = this;
 
-        $scope.showAppInfo = function (ev) {
-            $mdDialog.show ({
-                templateUrl: 'app/appInfo/appInfo.html',
-                controller: 'appInfoCtrl',
-                clickOutsideToClose:true,
-                targetEvent: ev
-            });
-        };
+    tbVm.showAppInfo = function (ev) {
+      $mdDialog.show ({
+        templateUrl: 'app/appInfo/appInfo.html',
+        controller: 'appInfoCtrl',
+        clickOutsideToClose:true,
+        targetEvent: ev
+      });
+    };
 
-        $scope.openSidenav = function () {
-            $mdSidenav('left')
-                .toggle();
-        };
-    });
+    tbVm.openSidenav = function () {
+      $mdSidenav('left')
+          .toggle();
+    };
+  }
+})();

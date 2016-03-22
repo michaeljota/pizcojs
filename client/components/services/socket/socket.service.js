@@ -1,8 +1,12 @@
 /* global io */
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-  .factory('socket', function(socketFactory, lodash) {
+  angular
+    .module('pizcojs')
+    .factory('socket', socket);
+
+  function socket(socketFactory, lodash) {
     var _ = lodash;
     // socket.io now auto-configures its connection when we ommit a connection url
     var ioSocket = io('', {
@@ -71,4 +75,5 @@ angular.module('tesisApp')
         socket.removeAllListeners(modelName + ':remove');
       }
     };
-  });
+  }
+})();
