@@ -21,9 +21,8 @@ camo.connect('nedb://memory')
     })
     .catch(function(err){
         throw err;
-        process.exit(1);
     });
-    
+
 // Setup server
 var app = express();
 var server = require('http').createServer(app);

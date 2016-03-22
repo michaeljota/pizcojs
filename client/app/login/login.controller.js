@@ -1,32 +1,39 @@
-'use strict';
+(function(){
+  'use strict';
 
-angular.module('tesisApp')
-    .controller('LoginCtrl', function ($scope, socket, $state, Auth) {
+  angular
+    .module('pizcojs')
+    .controller('LoginController', LoginController);
 
-        $scope.checkEnter = function (keyEvent) {
-            if(keyEvent.which === 13){
-                $scope.login();
-            }
-        };
+  function LoginController(socket, $state, Auth) {
+    var vm = this;
 
-        $scope.user = {
-            name: ''
-        };
+    vm.checkEnter = function (keyEvent) {
+      if(keyEvent.which === 13){
+        vm.login();
+      }
+    };
 
-        $scope.login = function () {
-            if(!$scope.user.name) {
-                return;
-            }
-            Auth.createUser({
-                username: $scope.user.name,
-                password: ''
-            })
-            .then(function() {
-                // Account created, redirect to home
-                $state.go('app.main');
-            })
-            .catch(function(err) {
-                console.error(err);
-            });
-        };
-    });
+    vm.user = {
+      name: ''
+    };
+
+    vm.login = function () {
+      console.log(vm.user);
+      if(!vm.user.name) {
+        return;
+      }
+      Auth.createUser({
+        username: vm.user.name,
+        password: ''
+      })
+      .then(function() {
+        // Account created, redirect to home
+        $state.go('app.main');
+      })
+      .catch(function(err) {
+        console.error(err);
+      });
+    };
+  }
+})();

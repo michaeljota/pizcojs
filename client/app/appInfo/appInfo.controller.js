@@ -1,14 +1,15 @@
-'use strict';
-
 (function() {
-    
-    function appInfoCtrl ($scope, $mdDialog){
+  'use strict';
 
-            $scope.close = function () {
-                $mdDialog.hide();
-            };
-        }
-    
-    angular.module('tesisApp')
-        .controller('appInfoCtrl', appInfoCtrl);
+  angular
+    .module('pizcojs')
+    .controller('appInfoCtrl', appInfoCtrl);
+
+  function appInfoCtrl ($mdDialog){
+    var modal = this;
+
+    modal.close = function () {
+      $mdDialog.hide();
+    };
+  }
 })();

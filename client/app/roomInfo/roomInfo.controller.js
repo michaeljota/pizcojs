@@ -1,12 +1,17 @@
-'use strict';
+(function() {
+  'use strict';
 
-(function(angular) {
-    angular.module('tesisApp')
-        .controller('roomInfoCtrl', function($scope, $mdDialog, room){
-            $scope.room = room;
+  angular
+    .module('pizcojs')
+    .controller('roomInfoCtrl', roomInfoController);
 
-            $scope.close = function () {
-                $mdDialog.hide();
-            };
-        });
-})(angular);
+  function roomInfoController($mdDialog, room){
+    var modal = this;
+
+    modal.room = room;
+
+    modal.close = function () {
+      $mdDialog.hide();
+    };
+  }
+})();

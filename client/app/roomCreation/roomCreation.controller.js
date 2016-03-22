@@ -1,21 +1,26 @@
-'use strict';
+(function(){
+  'use strict';
 
-(function (angular){
-    angular.module('tesisApp')
-        .controller('roomCreationCtrl', function($scope, $mdDialog){
-            $scope.room = {
-                title: ''
-            };
-            
-            $scope.checkEnter = function (keyEvent) {
-                if(keyEvent.which == 13){
-                    $scope.close();
-                }
-            };
+  angular
+    .module('pizcojs')
+    .controller('roomCreationController', roomCreationController);
 
-            $scope.close = function () {
-                if(!$scope.room.title) return;
-                $mdDialog.hide($scope.room);
-            }
-        });
-})(angular)
+  function roomCreationController($mdDialog){
+    var modal = this;
+
+    modal.room = {
+      title: ''
+    };
+
+    modal.checkEnter = function (keyEvent) {
+      if(keyEvent.which == 13){
+        modal.close();
+      }
+    };
+
+    modal.close = function () {
+      if(!modal.room.title) return;
+      $mdDialog.hide(modal.room);
+    }
+  }
+})()

@@ -16,7 +16,7 @@ function successHandler (res, obj) {
 function findAll (req, res) {
     Room.loadMany()
         .then((rooms) => {
-            successHandler (res, rooms); 
+            successHandler (res, rooms);
         })
         .catch((err) => {
             errorHandler (res, err);
@@ -26,7 +26,7 @@ function findAll (req, res) {
 function find (req, res) {
     Room.loadOne({_id: req.params.roomId})
         .then((room) => {
-            successHandler (res, room); 
+            successHandler (res, room);
         })
         .catch((err) => {
             errorHandler (res, err);
@@ -49,7 +49,7 @@ function add (req, res) {
                             r.classroom = c;
                             r.save()
                                 .then((room) => {
-                                    successHandler (res, room); 
+                                    successHandler (res, room);
                                 })
                                 .catch((err) => {
                                     errorHandler (res, err);
@@ -60,7 +60,7 @@ function add (req, res) {
                         });
                 })
                 .catch((err) => {
-                    
+                    errorHandler (res, err);
                 })
         })
         .catch((err) => {
@@ -71,7 +71,7 @@ function add (req, res) {
 function update (req, res) {
     Room.loadOneAndUpdate({_id: req.params.roomId},req.body)
         .then((room) => {
-            successHandler (res, room); 
+            successHandler (res, room);
         })
         .catch((err) => {
             errorHandler (res, err);
@@ -81,7 +81,7 @@ function update (req, res) {
 function destroy (req, res) {
     Room.loadOneAndDelete({_id: req.params.roomId})
         .then(() => {
-            successHandler (res, null); 
+            successHandler (res, null);
         })
         .catch((err) => {
             errorHandler (res, err);
@@ -119,7 +119,7 @@ function enter (req, res) {
 
 /**
  * (description)
- * 
+ *
  * @param {Array} array The array to look into.
  * @param {Any} obj The object to look.
  * @returns {Boolean} Wherever if the object was found or not.

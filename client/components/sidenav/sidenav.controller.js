@@ -1,62 +1,57 @@
+(function(){
 'use strict';
 
-angular.module('tesisApp')
-    .controller('SidenavCtrl', function ($scope, $state) {
+  angular
+    .module('pizcojs')
+    .controller('SidenavController', SidenavController);
 
-        var sections = [];
-        var openedSection;
-        var currentSection;
-        var currentPage;
+  function SidenavController($state){
+    var snVm = this;
 
-        sections.push({
-            name: 'Login',
-            state: 'app.login',
-            type: 'link',
-            icon: 'hexagon'
-        });
+    var openedSection;
+    var currentSection;
+    var currentPage;
 
-        sections.push({
-            name: 'Main',
-            state: 'app.main',
-            type: 'link',
-            icon: 'hexagon'
-        });
+    snVm.sections = [{
+      name: 'Login',
+      state: 'app.login',
+      type: 'link',
+      icon: 'hexagon'
+    },{
+      name: 'Main',
+      state: 'app.main',
+      type: 'link',
+      icon: 'hexagon'
+    },{
+      name: 'Sketchpad',
+      state: 'app.sketchpad',
+      type: 'link',
+      icon: 'hexagon'
+    }];
 
-        sections.push({
-            name: 'Sketchpad',
-            state: 'app.sketchpad',
-            type: 'link',
-            icon: 'hexagon'
-        });
+    snVm.autoFocusContent = false;
 
-        sections.push({
-            name: 'Player',
-            state: 'app.player',
-            type: 'link',
-            icon: 'hexagon'
-        });
+    snVm.status = {
+      isFirstOpen: true,
+      isFirstDisabled: false
+    };
 
-        $scope.autoFocusContent = false;
+    snVm.getState = function getState(section) {
+      return section.state ? section.state : null;
+    }
 
-        $scope.status = {
-            isFirstOpen: true,
-            isFirstDisabled: false
-        };
+    snVm.isOpen = function (section) {
+      return openedSection === section;
+    };
 
-        $scope.sections = sections;
+    snVm.toggleOpen =  function (section) {
+      openedSection = (openedSection === section ? null : section)
+    };
 
-
-        $scope.isOpen = function (section) {
-            return openedSection === section;
-        };
-
-        $scope.toggleOpen =  function (section) {
-            openedSection = (openedSection === section ? null : section)
-        };
-
-        $scope.selectPage = function (section, page) {
-            page && page.url && $state.go(page.url);
-            currentSection = section;
-            currentPage = page;
-        };
-    });
+    snVm.selectPage = function (section, page) {
+      page && page.url && $state.go(page.url);
+      currentSection = section;
+      currentPage = page;
+    };
+  }
+})();

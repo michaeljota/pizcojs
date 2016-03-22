@@ -1,25 +1,25 @@
 <md-dialog aria-label="RoomInfo" flex="50" ng-cloak>
-    <md-dialog-content>
-        <div class="md-dialog-content">
-            <h2>{{room.title}} info</h2>
-            <p>
-                Owner: {{room.owner}}
-            </p>
-            <p>
-                Creation Date: {{room.creationDate}}
-            </p>
-            <p ng-if="room.duration">
-                Duration: {{room.duration}}
-            </p>
-            <p ng-if="room.clientsConnected">
-                Clients Connected: {{room.clientsConnected}}
-            </p>
-        </div>
-    </md-dialog-content>
-    <md-dialog-actions layout="row">
-        <span flex></span>
-        <md-button ng-click="close()" style="margin-right:20px;">
-            Ok
-        </md-button>
-    </md-dialog-actions>
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <h2>{{::modal.room.title}} info</h2>
+      <p>
+          Owner: {{::modal.room.owner}}
+      </p>
+      <p>
+          Creation Date: {{::modal.room.creationDate}}
+      </p>
+      <p ng-show="modal.room.duration">
+          Duration: {{::modal.room.duration}}
+      </p>
+      <p ng-show="modal.room.clientsConnected">
+          Clients Connected: {{::modal.room.clientsConnected}}
+      </p>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row" layout-aling="center end">
+    <span flex></span>
+    <md-button ng-click="modal.close()">
+      Ok
+    </md-button>
+  </md-dialog-actions>
 </md-dialog>
