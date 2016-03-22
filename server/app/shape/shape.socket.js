@@ -1,10 +1,12 @@
 'use strict';
 
-var Whiteboard = require('../whiteboard/whiteboard.model');
-var Shape = require('./shape.model');
-var Point = require('./shape.model').Point;
-var collection = Shape.collectionName();
-var pointCollection = Point.collectionName();
+const Whiteboard = require('../whiteboard/whiteboard.model');
+const Shape = require('./shape.model');
+const Point = require('./shape.model').Point;
+const collection = Shape.collectionName();
+const pointCollection = Point.collectionName();
+
+let shapes = [];
 
 function errorHandler (socket, err) {
     socket.emit('server:error', err);

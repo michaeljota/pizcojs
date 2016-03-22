@@ -1,8 +1,7 @@
 'use strict';
 
-var Document = require('camo').Document;
-var EmbeddedDocument = require('camo').EmbeddedDocument;
-var _emit = require('./../socket.js').emit;
+const EmbeddedDocument = require('camo').EmbeddedDocument;
+const _emit = require('./../socket.js').emit;
 
 class Point extends EmbeddedDocument {
     constructor() {
@@ -18,7 +17,7 @@ class Point extends EmbeddedDocument {
     }
 }
 
-class Shape extends Document {
+class Shape extends EmbeddedDocument {
     constructor() {
         super();
         this.shapeType = {
@@ -59,7 +58,7 @@ class Shape extends Document {
     postSave () {
         _emit (Shape.collectionName(), 'saved', this);
     }
-    
+
     postDelete () {
         _emit (Shape.collectionName(), 'deleted', this);
     }
