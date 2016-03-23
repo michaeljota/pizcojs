@@ -3,7 +3,7 @@
 
   angular
     .module('pizcojs')
-    .controller('roomInfoCtrl', roomInfoController);
+    .controller('roomInfoController', roomInfoController);
 
   function roomInfoController($mdDialog, room){
     var modal = this;
