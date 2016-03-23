@@ -76,11 +76,5 @@
       }
       canvas.screenToCanvasAll(shape.points);
     };
-
-    socket.socket.on('shapes:draw', onShapesDraw);
-
-    function onShapesDraw(shape){
-      renderShape(shape);
-    }
   }
 })();

@@ -47,5 +47,12 @@
     socket.socket.on('shapes:saved', function (shape){
       drawShapes();
     });
+
+    socket.socket.on('shapes:draw', onShapesDraw);
+
+    function onShapesDraw(shape){
+      drawShapes();
+      shapeRenderer.renderShape(shape);
+    }
   }
 })();
