@@ -27,6 +27,9 @@ function event (socket, io) {
   });
 
   socket.on(collection+':save', function(wbId) {
+    if (_shape.points.length <= 1) {
+      return;
+    }
     Whiteboard.loadOne({_id: wbId})
       .then((whiteboard) => {
         if(!whiteboard) {
