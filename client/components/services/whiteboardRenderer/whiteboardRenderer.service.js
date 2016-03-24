@@ -40,11 +40,11 @@
 
     socket.socket.on('shapes:sendall', function (shapes){
       _shapes = shapes;
-      socket.syncUpdates('shapes', _shapes);
       drawShapes();
     });
 
     socket.socket.on('shapes:saved', function (shape){
+      _shapes.push(shape);
       drawShapes();
     });
 

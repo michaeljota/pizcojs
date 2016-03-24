@@ -54,14 +54,6 @@ class Shape extends EmbeddedDocument {
             default: []
         };
     }
-
-    postSave () {
-        _emit (Shape.collectionName(), 'saved', this);
-    }
-
-    postDelete () {
-        _emit (Shape.collectionName(), 'deleted', this);
-    }
 }
 
 module.exports = Shape;

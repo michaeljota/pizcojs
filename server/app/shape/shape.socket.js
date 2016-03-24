@@ -33,10 +33,10 @@ function event (socket, io) {
           return errorHandler (socket, new Error('Whiteboard not found'));
         }
         whiteboard.shapes.push(_shape);
-          return whiteboard.save();
+        return whiteboard.save();
       })
       .then((whiteboard) => {
-        successHandler (io, collection+':saved', whiteboard.shapes)
+        successHandler (io, collection+':saved', _shape);
       })
       .catch(err => errorHandler (socket, err));
   }, function (err) {

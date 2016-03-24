@@ -79,8 +79,10 @@
      * Finish the draw.
      */
     function end () {
-      _drawing = false;
-      socket.socket.emit('shapes:save', RoomManager.getCurrentWhiteboardId());
+      if(_drawing){
+        _drawing = false;
+        socket.socket.emit('shapes:save', RoomManager.getCurrentWhiteboardId());
+      }
     }
 
 
@@ -138,8 +140,8 @@
     canvas.canvas.addEventListener('touchstart', start, false);
     canvas.canvas.addEventListener('mousedown', start, false);
 
-    canvas.canvas.addEventListener('touchmove', move, true);
-    canvas.canvas.addEventListener('mousemove', move, true);
+    canvas.canvas.addEventListener('touchmove', move, false);
+    canvas.canvas.addEventListener('mousemove', move, false);
 
     canvas.canvas.addEventListener('touchend', end);
     canvas.canvas.addEventListener('mouseup', end);
