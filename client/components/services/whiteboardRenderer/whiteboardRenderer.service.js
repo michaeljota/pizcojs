@@ -26,33 +26,42 @@
       }
     }
 
-    this.startRender = function startRender () {
+    function startRender() {
       _intervalId = setInterval(drawShapes, 1000/30);
-    };
+    }
 
-    this.stopRender = function stopRender () {
+    function stopRender() {
       clearInterval(_intervalId);
-    };
+    }
 
-    this.setWhiteboard = function setWhiteboard (whiteboardId) {
+    function setWhiteboard(whiteboardId) {
       socket.socket.emit('shapes:getall', whiteboardId);
     }
 
-    socket.socket.on('shapes:sendall', function (shapes){
-      _shapes = shapes;
-      drawShapes();
-    });
+    this.startRender = startRender;
+    this.stopRender = stopRender;
+    this.setWhiteboard = setWhiteboard;
+    this.drawShapes = drawShapes;
 
-    socket.socket.on('shapes:saved', function (shape){
+    //#region Socket functions.
+    function onShapesSaved(shape) {
       _shapes.push(shape);
       drawShapes();
-    });
+    }
 
-    socket.socket.on('shapes:draw', onShapesDraw);
+    function onShapesSendAll(shapes) {
+      _shapes = shapes;
+      drawShapes();
+    }
 
-    function onShapesDraw(shape){
+    function onShapesDraw(shape) {
       drawShapes();
       shapeRenderer.renderShape(shape);
     }
+
+    socket.socket.on('shapes:sendall', onShapesSendAll);
+    socket.socket.on('shapes:saved', onShapesSaved);
+    socket.socket.on('shapes:draw', onShapesDraw);
+    //#endregion
   }
 })();

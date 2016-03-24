@@ -6,7 +6,7 @@
     .controller('SketchpadController', SketchpadController);
 
   function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
-    canvas, socket, RoomManager) {
+    canvas, socket, RoomManager, whiteboardRenderer) {
     var vm = this;
     var timerResize;
 
@@ -28,6 +28,7 @@
       }
       canvas.setSize(wid,hei);
       container.appendChild(canvas.canvas);
+      whiteboardRenderer.drawShapes();
     }
 
     var _drawing;
