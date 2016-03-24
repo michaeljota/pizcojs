@@ -19,7 +19,6 @@
     };
 
     vm.login = function () {
-      console.log(vm.user);
       if(!vm.user.name) {
         return;
       }
