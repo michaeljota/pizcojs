@@ -5,14 +5,14 @@
     .module('pizcojs')
     .controller('SketchpadController', SketchpadController);
 
-  function SketchpadController($http, $stateParams, TOOLS, COLORS, canvas,
-    socket, RoomManager) {
+  function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
+    canvas, socket, RoomManager) {
     var vm = this;
 
     function resizeCanvas() {
       var container = document.getElementById('canvasContainer');
       var wid = container.clientWidth;
-      var hei = window.innerHeight * 0.80;
+      var hei = $window.innerHeight * 0.80;
       if(wid>hei){
         wid = hei;
       }else{
@@ -20,7 +20,7 @@
       }
       canvas.setSize(wid,hei);
       container.appendChild(canvas.canvas);
-    };
+    }
 
     var _drawing;
     var downloadLink = angular.element('<a></a>');
@@ -44,7 +44,7 @@
       };
       canvas.screenToCanvas(point);
       return point;
-    };
+    }
 
 
     /**
@@ -53,7 +53,7 @@
     function start () {
       _drawing = true;
       socket.socket.emit('shapes:create', vm.shape);
-    };
+    }
 
     /**
      * Creates a new point at every move, and send it to the server using socket.
@@ -65,7 +65,7 @@
         event.preventDefault();
         socket.socket.emit('shapes:addPoint', newPoint(event));
       }
-    };
+    }
 
     /**
      * Finish the draw.
@@ -73,7 +73,7 @@
     function end () {
       _drawing = false;
       socket.socket.emit('shapes:save', RoomManager.getCurrentWhiteboardId());
-    };
+    }
 
 
     function downloadCanvas() {
@@ -87,65 +87,60 @@
     function reset() {
       downloadCanvas();
       RoomManager.addWhiteboard();
-    };
+    }
 
     function undo() {
         // _syncer.undo();
-    };
+    }
 
     function redo() {
         // _syncer.redo ();
-    };
-
-    //#region Bindings
-    vm.shape = {};
-    vm.TOOLS = TOOLS;
-    vm.reset = reset;
-    vm.undo = undo;
-    vm.redo = redo;
-
-    vm.init = function () {
-      vm.shape = {
-        shapeType  : TOOLS.PENCIL,
-        lineColor  : COLORS.BLACK,
-        lineWidth  : 1.5,
-        lineCap    : 'round',
-        fillColor  : COLORS.GREY,
-        stroked    : true,
-        filled     : false
-      };
-
-      canvas.canvas.addEventListener('touchstart', start, false);
-      canvas.canvas.addEventListener('mousedown', start, false);
-
-      canvas.canvas.addEventListener('touchmove', move, true);
-      canvas.canvas.addEventListener('mousemove', move, true);
-
-      canvas.canvas.addEventListener('touchend', end);
-      canvas.canvas.addEventListener('mouseup', end);
-      //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
-      canvas.canvas.addEventListener('mouseleave', end);
-
-      canvas.canvas.addEventListener('touchcancel', end);
-
-      resizeCanvas();
-
-      window.addEventListener('resize', resizeCanvas);
-    };
-
-    vm.checkShape = function() {
-      if(vm.shape.ToolName === TOOLS.PENCIL){
-        vm.shape.Filled = false;
-      }
-      if((vm.shape.ToolName === TOOLS.PENCIL || vm.shape.ToolName === TOOLS.LINE) && vm.shape.Filled){
-        vm.shape.ToolName = TOOLS.RECTANGLE;
-      }
     }
 
-    vm.setTool = setTool;
+    function checkShape() {
+      if(vm.shape.shapeType === TOOLS.PENCIL){
+        vm.shape.Filled = false;
+      }
+      if((vm.shape.shapeType === TOOLS.PENCIL || vm.shape.shapeType === TOOLS.LINE) && vm.shape.filled){
+        vm.shape.shapeType = TOOLS.RECTANGLE;
+      }
+    }
 
     function setTool(tool) {
       vm.shape.shapeType = tool;
     }
+
+    //#region Bindings
+    vm.shape = {
+      shapeType  : TOOLS.PENCIL,
+      lineColor  : COLORS.BLACK,
+      lineWidth  : 1.5,
+      lineCap    : 'round',
+      fillColor  : COLORS.GREY,
+      stroked    : true,
+      filled     : false
+    };
+    vm.TOOLS = TOOLS;
+    vm.reset = reset;
+    vm.undo = undo;
+    vm.redo = redo;
+    vm.checkShape = checkShape;
+    vm.setTool = setTool;
+
+    canvas.canvas.addEventListener('touchstart', start, false);
+    canvas.canvas.addEventListener('mousedown', start, false);
+
+    canvas.canvas.addEventListener('touchmove', move, true);
+    canvas.canvas.addEventListener('mousemove', move, true);
+
+    canvas.canvas.addEventListener('touchend', end);
+    canvas.canvas.addEventListener('mouseup', end);
+    //TODO: When the mouse leave, should it continue drawing when the pointer is inside the canvas?
+    canvas.canvas.addEventListener('mouseleave', end);
+
+    canvas.canvas.addEventListener('touchcancel', end);
+
+    $window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
   }
 })();

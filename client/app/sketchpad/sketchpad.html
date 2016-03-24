@@ -1,4 +1,4 @@
-<div class="d" ng-init="vm.init()">
+<div class="d">
   <div class="mainContainer">
     <div id="canvasContainer" class="canvasContainer">
     </div>
@@ -33,14 +33,16 @@
           ng-click="vm.reset()">
           <md-icon md-svg-icon="note-plus-outline"></md-icon>
         </md-button>
-        <md-checkbox ng-model="vm.shape.Stroked"><div>Stroked</div></md-checkbox>
-        <md-checkbox ng-model="vm.shape.Filled"><div>Filled</div></md-checkbox>
+        <md-checkbox ng-model="vm.shape.stroked" ng-change="vm.checkShape()">
+          <div>Stroked</div>
+        </md-checkbox>
+        <md-checkbox ng-model="vm.shape.filled" ng-change="vm.checkShape()">
+          <div>Filled</div>
+        </md-checkbox>
         <div>Line Color:</div>
-        <input type="color" ng-model="vm.shape.LineColor"
-          ng-change="vm.checkShape()">
+        <input type="color" ng-model="vm.shape.lineColor">
         <div>Fill Color:</div>
-        <input type="color" ng-model="vm.shape.FillStyle"
-          ng-change="vm.checkShape()">
+        <input type="color" ng-model="vm.shape.fillColor">
       </div>
     </md-toolbar>
   </div>

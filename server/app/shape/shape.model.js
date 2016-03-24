@@ -34,7 +34,7 @@ class Shape extends EmbeddedDocument {
         };
         this.lineWidth = {
             type: Number,
-            default: 3
+            required: true
         };
         this.lineCap = {
             type: String,

@@ -51,7 +51,7 @@
       canvas.context.lineWidth = shape.lineWidth * canvas.getSize().scale;
       canvas.context.lineCap = shape.lineCap;
       canvas.context.strokeStyle = shape.lineColor;
-      canvas.context.fillStyle = shape.fillStyle;
+      canvas.context.fillStyle = shape.fillColor;
       switch (shape.shapeType){
         case TOOLS.PENCIL:
           pencil(points);
