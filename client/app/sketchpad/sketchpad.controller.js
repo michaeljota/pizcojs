@@ -8,6 +8,14 @@
   function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
     canvas, socket, RoomManager) {
     var vm = this;
+    var timerResize;
+
+    function delayedResize() {
+      if(timerResize) {
+        $window.clearTimeout(timerResize);
+      }
+      timerResize = $window.setTimeout(resizeCanvas, 100);
+    }
 
     function resizeCanvas() {
       var container = document.getElementById('canvasContainer');
@@ -140,7 +148,7 @@
 
     canvas.canvas.addEventListener('touchcancel', end);
 
-    $window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    $window.addEventListener('resize', delayedResize);
+    delayedResize();
   }
 })();
