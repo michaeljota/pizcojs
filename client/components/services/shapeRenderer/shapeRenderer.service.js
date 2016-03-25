@@ -25,9 +25,8 @@
 
     function rectangle(points){
       var i = points.length - 1;
-      var width, height;
-      width = points[i].x - points[0].x;
-      height = points[i].y - points[0].y;
+      var width = points[i].x - points[0].x;
+      var height = points[i].y - points[0].y;
       canvas.context.rect(points[0].x, points[0].y, width, height);
     };
 
