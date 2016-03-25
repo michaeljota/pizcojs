@@ -21,13 +21,17 @@ function draw(io, shape) {
   successHandler (io, collection+':draw', shape);
 }
 
+function isValidShape() {
+  return (_shape && _shape.points.length > 0);
+}
+
 function event (socket, io) {
   socket.on(collection+':create', function(shape) {
     _shape = Shape.create(shape);
   });
 
   socket.on(collection+':save', function(wbId) {
-    if (_shape.points.length <= 1) {
+    if(!isValidShape()) {
       return;
     }
     Whiteboard.loadOne({_id: wbId})
@@ -35,15 +39,18 @@ function event (socket, io) {
         if(!whiteboard) {
           return errorHandler (socket, new Error('Whiteboard not found'));
         }
+        //Clear the redos history.
+        whiteboard.redos = [];
         whiteboard.shapes.push(_shape);
         return whiteboard.save();
       })
       .then((whiteboard) => {
         successHandler (io, collection+':saved', _shape);
+        _shape = null;
       })
-      .catch(err => errorHandler (socket, err));
-  }, function (err) {
-    console.log(err);
+      .catch((err) => {
+        errorHandler (socket, err)
+      });
   });
 
   //TODO:
@@ -52,17 +59,6 @@ function event (socket, io) {
   socket.on(collection+':update', function() {});
 
   socket.on(collection+':delete', function() {});
-
-  socket.on(collection+':getall', function (wbId) {
-    Whiteboard.loadOne({_id: wbId})
-      .then((whiteboard) => {
-        if(!whiteboard) {
-          return errorHandler (socket, new Error('Whiteboard not found'));
-        }
-        successHandler (io, collection+':sendall', whiteboard.shapes)
-      })
-      .catch(err => errorHandler (socket, err));
-  });
 
   socket.on(collection+':addPoint', function(point) {
     var p = Point.create(point);

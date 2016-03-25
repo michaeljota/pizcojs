@@ -6,7 +6,7 @@
     .service('whiteboardRenderer', whiteboardRenderer);
 
   function whiteboardRenderer(shapeRenderer, canvas, socket) {
-    var _shapes = [];
+    var _whiteboard;
     var _intervalId;
 
     function clearCanvas() {
@@ -15,12 +15,9 @@
     }
 
     function drawShapes() {
-      if(_shapes && _shapes.length > 0) {
+      if(isShapesEmpty) {
         clearCanvas();
-        _shapes.forEach(function (shape) {
-          if (!shape.points || shape.points.length === 0) {
-            return;
-          }
+        _whiteboard.shapes.forEach(function (shape) {
           shapeRenderer.renderShape(shape);
         });
       }
@@ -35,22 +32,33 @@
     }
 
     function setWhiteboard(whiteboardId) {
-      socket.socket.emit('shapes:getall', whiteboardId);
+      socket.socket.emit('whiteboards:resync', whiteboardId);
+    }
+
+    function isShapesEmpty() {
+      return _whiteboard.shapes.length === 0;
+    }
+
+    function isRedosEmpty() {
+      return _whiteboard.redos.length === 0;
     }
 
     this.startRender = startRender;
     this.stopRender = stopRender;
     this.setWhiteboard = setWhiteboard;
     this.drawShapes = drawShapes;
+    this.isShapesEmpty = isShapesEmpty;
+    this.isRedosEmpty = isRedosEmpty;
 
     //#region Socket functions.
     function onShapesSaved(shape) {
-      _shapes.push(shape);
+      _whiteboard.shapes.push(shape);
       drawShapes();
     }
 
-    function onShapesSendAll(shapes) {
-      _shapes = shapes;
+    function onWhiteboardsResynced(whiteboard) {
+      _whiteboard = whiteboard;
+      console.log(_whiteboard);
       drawShapes();
     }
 
@@ -59,7 +67,7 @@
       shapeRenderer.renderShape(shape);
     }
 
-    socket.socket.on('shapes:sendall', onShapesSendAll);
+    socket.socket.on('whiteboards:resynced', onWhiteboardsResynced);
     socket.socket.on('shapes:saved', onShapesSaved);
     socket.socket.on('shapes:draw', onShapesDraw);
     //#endregion

@@ -101,11 +101,11 @@
     }
 
     function undo() {
-        // _syncer.undo();
+      socket.socket.emit('whiteboards:undo', RoomManager.getCurrentWhiteboardId());
     }
 
     function redo() {
-        // _syncer.redo ();
+      socket.socket.emit('whiteboards:redo', RoomManager.getCurrentWhiteboardId());
     }
 
     function checkShape() {
