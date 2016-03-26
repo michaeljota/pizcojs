@@ -33,10 +33,12 @@
           ng-click="vm.reset()">
           <md-icon md-svg-icon="note-plus-outline"></md-icon>
         </md-button>
-        <md-checkbox ng-model="vm.shape.stroked" ng-change="vm.checkShape()">
+        <md-checkbox ng-model="vm.shape.stroked"
+          ng-show="vm.isShapeFilleable()">
           <div>Stroked</div>
         </md-checkbox>
-        <md-checkbox ng-model="vm.shape.filled" ng-change="vm.checkShape()">
+        <md-checkbox ng-model="vm.shape.filled"
+          ng-show="vm.isShapeFilleable()">
           <div>Filled</div>
         </md-checkbox>
         <div>Line Color:</div>

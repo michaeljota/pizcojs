@@ -108,17 +108,16 @@
       socket.socket.emit('whiteboards:redo', RoomManager.getCurrentWhiteboardId());
     }
 
-    function checkShape() {
-      if(vm.shape.shapeType === TOOLS.PENCIL){
-        vm.shape.Filled = false;
-      }
-      if((vm.shape.shapeType === TOOLS.PENCIL || vm.shape.shapeType === TOOLS.LINE) && vm.shape.filled){
-        vm.shape.shapeType = TOOLS.RECTANGLE;
+    function setTool(tool) {
+      vm.shape.shapeType = tool;
+      if(tool === TOOLS.PENCIL || tool === TOOLS.LINE) {
+        vm.shape.filled = false;
+        vm.shape.stroked = true;
       }
     }
 
-    function setTool(tool) {
-      vm.shape.shapeType = tool;
+    function isShapeFilleable() {
+      return (vm.shape.shapeType !== TOOLS.PENCIL) && (vm.shape.shapeType !== TOOLS.LINE);
     }
 
     //#region Bindings
@@ -135,8 +134,8 @@
     vm.reset = reset;
     vm.undo = undo;
     vm.redo = redo;
-    vm.checkShape = checkShape;
     vm.setTool = setTool;
+    vm.isShapeFilleable = isShapeFilleable;
 
     canvas.canvas.addEventListener('touchstart', start, false);
     canvas.canvas.addEventListener('mousedown', start, false);
