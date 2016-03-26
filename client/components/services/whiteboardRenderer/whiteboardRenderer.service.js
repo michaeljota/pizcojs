@@ -36,11 +36,11 @@
     }
 
     function isShapesEmpty() {
-      return _whiteboard.shapes.length === 0;
+      return angular.isUndefined(_whiteboard) && _whiteboard.shapes.length === 0;
     }
 
     function isRedosEmpty() {
-      return _whiteboard.redos.length === 0;
+      return angular.isUndefined(_whiteboard) && _whiteboard.redos.length === 0;
     }
 
     this.startRender = startRender;
