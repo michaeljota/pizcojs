@@ -4,14 +4,9 @@
 
 'use strict';
 
-var config = require('./environment');
+const config = require('./environment');
 
-var Client = function(address){
-    this.address = address ? address :
-        process.env.DOMAIN;
-};
-
-var users = 0;
+let users = 0;
 
 // When the user connects.. perform this
 function onConnect(socket, io, address) {
