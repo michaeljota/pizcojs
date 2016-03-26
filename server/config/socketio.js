@@ -34,7 +34,7 @@ function onConnect(socket, io, address) {
 // When the user disconnects.. perform this
 function onDisconnect(socket, address) {
   users--;
-  console.info('[%s] DISCONNECTED. Now %s users online', user.address, users.length);
+  console.info('[%s] DISCONNECTED. Now %s users online', address, users);
 }
 
 module.exports = function (io) {
