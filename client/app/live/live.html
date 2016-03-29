@@ -1,7 +1,7 @@
 <div class="ctm-card" ng-repeat="card in vm.cards">
   <md-card class="md-card">
     <img ng-src="{{vm.getImage(card)}}" class="md-card-image"
-    alt="Enter {{::card.title}}" ng-dblclick="vm.enterRoom(card)">
+    alt="Enter {{::card.title}}" ng-click="vm.enterRoom(card)">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">{{::card.title}}</span>
@@ -18,7 +18,7 @@
 <div class="ctm-card">
   <md-card class="md-card">
     <img src="../assets/img/blank_square.svg" class="md-card-image"
-      alt="Create Room" ng-dblclick="vm.createRoom($event)">
+      alt="Create Room" ng-click="vm.createRoom($event)">
     <md-card-title>
       <md-card-title-text>
         <span class="md-headline">New</span>
