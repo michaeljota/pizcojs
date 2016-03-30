@@ -19,11 +19,11 @@ class Whiteboard extends Document {
   }
 
   postSave () {
-    _emit (Whiteboard.collectionName(), 'saved', this);
+    _emit(Whiteboard.collectionName(), 'saved', this);
   }
 
   postDelete () {
-    _emit (Whiteboard.collectionName(), 'deleted', this);
+    _emit(Whiteboard.collectionName(), 'deleted', this);
   }
 }
 

@@ -8,7 +8,7 @@
   function SketchpadRoute($stateProvider) {
     $stateProvider
       .state('app.sketchpad', {
-        url: '/sketchpad/:classroomId',
+        url: '/sketchpad/:roomId',
         parent: 'app',
         views: {
           'content@app': {

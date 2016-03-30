@@ -9,7 +9,7 @@ const config = require('./environment');
 let users = 0;
 
 // When the user connects.. perform this
-function onConnect(socket, io, address) {
+function onConnect(io, socket, address) {
   users++;
   // When the client emits 'info', this listens and executes
   socket.on('info', function (data) {
@@ -20,9 +20,9 @@ function onConnect(socket, io, address) {
 
   // Insert sockets below
   require ('../app/socket.js').register(io);
-  require ('../app/classroom/classroom.socket.js') (socket, io);
-  require ('../app/whiteboard/whiteboard.socket.js') (socket, io);
-  require ('../app/shape/shape.socket.js') (socket, io);
+  require ('../app/whiteboard/whiteboard.socket.js') (io, socket);
+  require ('../app/room/room.socket.js') (io, socket);
+  require ('../app/shape/shape.socket.js') (io, socket);
   //require('../api/thing/thing.socket').register(socket);
 }
 
@@ -51,7 +51,7 @@ module.exports = function (io) {
   io.on('connection', function (socket) {
     // Call onConnect.
     //Le pasamos el socket para que maneje las señales recibidas y el io para que responda a todos.
-    onConnect(socket, io, socket.handshake.address);
+    onConnect(io, socket, socket.handshake.address);
 
     // Call onDisconnect.
     socket.on('disconnect', function () {

@@ -18,7 +18,7 @@
     function enterRoom(room) {
       RoomManager.enter(room)
         .then (function(room) {
-          $state.go('app.sketchpad', {classroomId: room.classroom._id});
+          $state.go('app.sketchpad', {roomId: room._id});
         })
         .catch (function(err) {
           console.error(err);
@@ -55,12 +55,12 @@
           return;
         }
         RoomManager.create(room)
-        .then (function(room) {
-          $state.go('app.sketchpad', {classroomId: room.classroom._id});
-        })
-        .catch (function(err) {
-          console.error(err);
-        });
+          .then (function(room) {
+            $state.go('app.sketchpad', {roomId: room._id});
+          })
+          .catch (function(err) {
+            console.error(err);
+          });
       });
     };
 

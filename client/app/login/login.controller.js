@@ -5,7 +5,7 @@
     .module('pizcojs')
     .controller('LoginController', LoginController);
 
-  function LoginController(socket, $state, Auth) {
+  function LoginController($state, Auth) {
     var vm = this;
 
     vm.checkEnter = function (keyEvent) {

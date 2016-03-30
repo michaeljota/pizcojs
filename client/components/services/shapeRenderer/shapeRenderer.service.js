@@ -5,7 +5,7 @@
     .module('pizcojs')
     .service('shapeRenderer', ShapeRenderer);
 
-  function ShapeRenderer(socket, canvas, TOOLS) {
+  function ShapeRenderer(canvas, TOOLS) {
     var RendererError = Error;
 
     //#region Functions

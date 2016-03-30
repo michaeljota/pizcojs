@@ -1,7 +1,6 @@
 'use strict';
 
 const EmbeddedDocument = require('camo').EmbeddedDocument;
-const _emit = require('./../socket.js').emit;
 
 class Point extends EmbeddedDocument {
     constructor() {
