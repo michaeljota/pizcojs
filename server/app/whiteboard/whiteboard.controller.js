@@ -1,6 +1,5 @@
 'use strict';
 
-var Classroom = require('../classroom/classroom.model');
 var Whiteboard = require('./whiteboard.model');
 
 function errorHandler (res, err) {
@@ -9,28 +8,6 @@ function errorHandler (res, err) {
 
 function successHandler (res, obj) {
     res.status(200).jsonp(obj);
-}
-
-function findAll (req, res) {
-    Classroom.loadOne({_id: req.params.crId})
-        .then(classroom => successHandler (res, classroom.whiteboards))
-        .catch(err => errorHandler (res, err));
-}
-
-function add (req, res) {
-    var wb = Whiteboard.create();
-    wb.save()
-        .then(whiteboard => {
-            Classroom.loadOne({_id: req.params.crId})
-                .then(classroom => {
-                    classroom.whiteboards.push(wb);
-                    classroom.save()
-                        .then(classroom => successHandler (res, whiteboard))
-                        .catch(err => errorHandler (res, err))
-                })
-                .catch(err => errorHandler (res, err));
-        })
-        .catch(err => errorHandler (res, err));
 }
 
 function find (req, res) {
@@ -58,16 +35,14 @@ function destroy (req, res) {
 
 /**
  * Naming for endpoints.
- * GET      classroom/:crId/whiteboards    ->  findAll
- * POST     classroom/:crId/whiteboards    ->  create
+ * GET      room/:crId/whiteboards         ->  room.findAllWhiteboards
+ * POST     room/:crId/whiteboards         ->  room.createWhiteboard
  * GET      /whiteboards/:wbId             ->  find
  * POST     /whiteboards/:wbId             ->  update
  * PUT      /whiteboards/:wbId             ->  update
  * DELETE   /whiteboards/:wnId             ->  destroy
  */
 
-module.exports.findAll = findAll;
 module.exports.find = find;
-module.exports.add = add;
 module.exports.update = update;
 module.exports.destroy = destroy;
