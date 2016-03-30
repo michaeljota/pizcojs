@@ -37,18 +37,20 @@
           ng-change="vm.setColaborative()" ng-disabled="!vm.isOwner()">
           Colaborative
         </md-switch>
-        <md-checkbox ng-model="vm.shape.stroked"
+        <md-switch ng-model="vm.shape.stroked"
           ng-show="vm.isShapeFilleable()">
-          <div>Stroked</div>
-        </md-checkbox>
-        <md-checkbox ng-model="vm.shape.filled"
+          Stroked
+        </md-switch>
+        <md-switch ng-model="vm.shape.filled"
           ng-show="vm.isShapeFilleable()">
-          <div>Filled</div>
-        </md-checkbox>
-        <div>Line Color:</div>
-        <input type="color" ng-model="vm.shape.lineColor">
+          Filled
+        </md-switch>
+        <div>Line Color: </div>
+        <input color-picker tiny-picker="true" ng-model="vm.shape.lineColor"
+          size="7">
         <div>Fill Color:</div>
-        <input type="color" ng-model="vm.shape.fillColor">
+        <input color-picker tiny-picker="true" ng-model="vm.shape.fillColor"
+          size="7">
       </div>
     </md-toolbar>
   </div>

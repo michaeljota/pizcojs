@@ -11,7 +11,8 @@
       'ngMaterial',
       'ui.router',
       'btford.socket-io',
-      'ngLodash'
+      'ngLodash',
+      'colorpicker-dr'
       ]);
 
 })();
