@@ -7,7 +7,7 @@
 
   function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
     canvas, RoomManager, whiteboardRenderer, Auth, ShapeSocket,
-    WhiteboardSocket) {
+    WhiteboardSocket, RoomSocket) {
     var vm = this;
     var timerResize;
 
@@ -61,8 +61,10 @@
      * Starts the drawing setting a new shape.
      */
     function start () {
-      _drawing = true;
-      ShapeSocket.create(vm.shape);
+      if(isOwner() || RoomManager.isColaborative()){
+        _drawing = true;
+        ShapeSocket.create(vm.shape);
+      }
     }
 
     /**
@@ -118,9 +120,20 @@
       }
     }
 
+    function isOwner() {
+      var user = Auth.getCurrentUser();
+      return RoomManager.isOwner(user);
+    }
+
+    function setColaborative() {
+      RoomManager.setColaborative(vm.colaborative);
+    }
+
     function isShapeFilleable() {
       return (vm.shape.shapeType !== TOOLS.PENCIL) && (vm.shape.shapeType !== TOOLS.LINE);
     }
+
+    vm.colaborative = RoomManager.getCurrentRoom().colaborative;
 
     //#region Bindings
     vm.shape = {
@@ -137,6 +150,8 @@
     vm.undo = undo;
     vm.redo = redo;
     vm.setTool = setTool;
+    vm.isOwner = isOwner;
+    vm.setColaborative = setColaborative;
     vm.isShapeFilleable = isShapeFilleable;
 
     canvas.canvas.addEventListener('touchstart', start, false);
@@ -154,5 +169,9 @@
 
     $window.addEventListener('resize', delayedResize);
     delayedResize();
+
+    RoomSocket.onColaborative(function(room) {
+      vm.colaborative = room.colaborative;
+    });
   }
 })();

@@ -18,6 +18,14 @@
       socket.onEvent(name, 'entered', cb);
     }
 
+    function emitColaborative(data) {
+      socket.emitEvent(name, 'colaborative', data);
+    }
+
+    function onColaborative(cb) {
+      socket.onEvent(name, 'colaborative', cb);
+    }
+
     function syncUpdates(array) {
       socket.syncUpdates(name, array);
     }
@@ -25,6 +33,8 @@
     return {
       create,
       enter,
+      emitColaborative,
+      onColaborative,
       syncUpdates
     }
   }

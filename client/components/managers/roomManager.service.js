@@ -70,6 +70,28 @@
       return error(new Error('No current whiteboard'));
     }
 
+    function isColaborative() {
+      return getCurrentRoom() && getCurrentRoom().colaborative;
+    }
+
+    function isOwner(user) {
+      return user._id === getCurrentRoom().owner._id;
+    }
+
+    //#region Socket functions.
+
+    function setColaborative(colaborative, cb) {
+      let data = {
+        _id: getCurrentRoom()._id,
+        colaborative: colaborative
+      }
+      RoomSocket.emitColaborative(data);
+    }
+
+    RoomSocket.onColaborative(setCurrentRoom);
+
+    //#endregion
+
     return {
       create,
       enter,
@@ -77,6 +99,8 @@
       getCurrentRoom,
       getCurrentWhiteboard,
       setCurrentWhiteboard,
+      isColaborative,
+      setColaborative,
       isOwner
     }
   }

@@ -6,7 +6,20 @@ const Whiteboard = require('../whiteboard/whiteboard.model');
 const collection = Room.collectionName();
 
 function register(io, socket) {
+  socket.on(collection+':colaborative', onColaborative);
   socket.on(collection+':enter', onEnter);
+
+  function onColaborative(data) {
+    Room.loadOne({_id: data._id})
+      .then((room) => {
+        room.colaborative = data.colaborative;
+        return room.save();
+      })
+      .then((room) => {
+        emitEventToRoom(collection, 'colaborative', room);
+      })
+      .catch(emitError);
+  }
 
   function onEnter(room) {
     if(socket._room) {
