@@ -8,6 +8,7 @@ const collection = Room.collectionName();
 function register(io, socket) {
   socket.on(collection+':colaborative', onColaborative);
   socket.on(collection+':enter', onEnter);
+  socket.on(collection+':download', onDownload);
 
   function onColaborative(data) {
     Room.loadOne({_id: data._id})
@@ -27,6 +28,10 @@ function register(io, socket) {
     }
     socket.join(room._id);
     socket._room = room._id;
+  }
+
+  function onDownload() {
+    emitEventToRoom(collection, 'download');
   }
 
   function emitEventToRoom(collection, event, data) {

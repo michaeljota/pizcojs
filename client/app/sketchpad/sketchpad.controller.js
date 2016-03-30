@@ -100,7 +100,7 @@
     }
 
     function reset() {
-      downloadCanvas();
+      RoomSocket.emitDownload();
       RoomManager.addWhiteboard();
     }
 
@@ -173,5 +173,7 @@
     RoomSocket.onColaborative(function(room) {
       vm.colaborative = room.colaborative;
     });
+
+    RoomSocket.onDownload(downloadCanvas);
   }
 })();

@@ -30,12 +30,22 @@
       socket.syncUpdates(name, array);
     }
 
+    function emitDownload() {
+      socket.emitEvent(name, 'download');
+    }
+
+    function onDownload(cb) {
+      socket.onEvent(name, 'download', cb);
+    }
+
     return {
       create,
       enter,
       emitColaborative,
       onColaborative,
-      syncUpdates
+      syncUpdates,
+      emitDownload,
+      onDownload
     }
   }
 })();
