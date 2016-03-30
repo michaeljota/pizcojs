@@ -6,7 +6,8 @@
     .controller('SketchpadController', SketchpadController);
 
   function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
-    canvas, socket, RoomManager, whiteboardRenderer) {
+    canvas, RoomManager, whiteboardRenderer, Auth, ShapeSocket,
+    WhiteboardSocket) {
     var vm = this;
     var timerResize;
 
@@ -28,7 +29,7 @@
       }
       canvas.setSize(wid,hei);
       container.appendChild(canvas.canvas);
-      whiteboardRenderer.drawShapes();
+      WhiteboardSocket.emitResync(RoomManager.getCurrentWhiteboard()._id);
     }
 
     var _drawing;
@@ -61,7 +62,7 @@
      */
     function start () {
       _drawing = true;
-      socket.socket.emit('shapes:create', vm.shape);
+      ShapeSocket.create(vm.shape);
     }
 
     /**
@@ -72,7 +73,7 @@
     function move (event) {
       if (_drawing){
         event.preventDefault();
-        socket.socket.emit('shapes:addPoint', newPoint(event));
+        ShapeSocket.addPoint(newPoint(event));
       }
     }
 
@@ -82,14 +83,15 @@
     function end () {
       if(_drawing){
         _drawing = false;
-        socket.socket.emit('shapes:save', RoomManager.getCurrentWhiteboardId());
+        ShapeSocket.save(
+          RoomManager.getCurrentWhiteboard()._id
+        );
       }
     }
 
-
     function downloadCanvas() {
       var dataURL = canvas.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-      var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboardId()+'.png';
+      var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboard()._id+'.png';
       downloadLink.attr('href', dataURL);
       downloadLink.attr('download', fileName);
       downloadLink[0].click();
@@ -101,11 +103,11 @@
     }
 
     function undo() {
-      socket.socket.emit('whiteboards:undo', RoomManager.getCurrentWhiteboardId());
+      WhiteboardSocket.undo(RoomManager.getCurrentWhiteboard()._id);
     }
 
     function redo() {
-      socket.socket.emit('whiteboards:redo', RoomManager.getCurrentWhiteboardId());
+      WhiteboardSocket.redo(RoomManager.getCurrentWhiteboard()._id);
     }
 
     function setTool(tool) {

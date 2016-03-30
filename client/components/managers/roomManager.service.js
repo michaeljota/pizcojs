@@ -5,7 +5,12 @@
     .module('pizcojs')
     .factory('RoomManager', RoomManager);
 
-  function RoomManager($http, $window, Room, Classroom, whiteboardRenderer) {
+  function RoomManager($http, $window, $q, Room, RoomSocket,
+    WhiteboardSocket) {
+
+    function error(err) {
+      return $q.reject(err);
+    }
 
     var _currentRoom;
 
@@ -13,20 +18,21 @@
       setCurrentRoom(JSON.parse($window.sessionStorage.room));
     }
 
-    function setCurrentWhiteboardId(id) {
-      whiteboardRenderer.setWhiteboard(id);
+    function setCurrentWhiteboard(whiteboard) {
+      _currentRoom.currentWhiteboard = whiteboard;
     }
 
-    function getCurrentWhiteboardId() {
-      return _currentRoom.classroom.currentWhiteboard._id;
+    function getCurrentWhiteboard() {
+      return _currentRoom.currentWhiteboard;
     }
 
     function setCurrentRoom (room) {
       delete $window.sessionStorage.room;
       if(room) {
+        RoomSocket.enter(room);
         _currentRoom = room;
         $window.sessionStorage.room = JSON.stringify(_currentRoom);
-        setCurrentWhiteboardId(_currentRoom.classroom.currentWhiteboard._id);
+        WhiteboardSocket.emitResync(getCurrentWhiteboard()._id);
       }
     }
 
@@ -34,52 +40,44 @@
       return _currentRoom;
     }
 
-    function create (room, cb) {
-      cb = cb || angular.noop;
-      return Room.save(room,
-        function (room) {
-          setCurrentRoom(room);
-          return cb(room);
-        }, function (err) {
-          return cb(null, err);
-        }).$promise;
+    function create (room) {
+      return Room
+        .save(
+          room,
+          setCurrentRoom,
+          error
+        ).$promise;
     }
 
-    function enter (room, cb) {
-      cb = cb || angular.noop;
-      return Room.enter(room,
-        function (room) {
-          Classroom.get({id: room.classroom._id},
-            function(classroom) {
-              room.classroom = classroom;
-              setCurrentRoom(room);
-              return cb(room);
-            });
-        }, function (err) {
-          return cb(null, err);
-        }).$promise;
+    function enter (room) {
+      return Room
+        .enter(
+          room,
+          setCurrentRoom,
+          error
+        )
+        .$promise;
     }
 
-    function addWhiteboard(wb, cb) {
-      cb = cb || angular.noop;
+    function addWhiteboard(wb) {
       if(getCurrentRoom()) {
-        return Classroom.addWhiteboard(getCurrentRoom().classroom,
+        return Room.addWhiteboard(
+          getCurrentRoom(),
           function (whiteboard) {
-            _currentRoom.classroom.currentWhiteboard = whiteboard;
-            setCurrentWhiteboardId(_currentRoom.classroom.currentWhiteboard._id);
-            return cb(whiteboard);
-          }, function (err) {
-            return cb(null, err);
-          }).$promise;
+            setCurrentWhiteboard(whiteboard);
+          }, error).$promise;
       }
+      return error(new Error('No current whiteboard'));
     }
 
     return {
-      create: create,
-      enter: enter,
-      addWhiteboard: addWhiteboard,
-      getCurrentRoom: getCurrentRoom,
-      getCurrentWhiteboardId: getCurrentWhiteboardId
+      create,
+      enter,
+      addWhiteboard,
+      getCurrentRoom,
+      getCurrentWhiteboard,
+      setCurrentWhiteboard,
+      isOwner
     }
   }
 })();

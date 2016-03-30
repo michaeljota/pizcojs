@@ -3,41 +3,41 @@
 const Whiteboard = require('../whiteboard/whiteboard.model');
 const Shape = require('./shape.model');
 const Point = require('./shape.model').Point;
+
 const collection = Shape.collectionName();
-const pointCollection = Point.collectionName();
 
-var _shape;
+function register(io, socket) {
+  var _shape;
 
-function errorHandler (socket, err) {
-    socket.emit('server:error', err);
-    console.error(err);
-}
+  socket.on(collection+':create', onCreate);
+  socket.on(collection+':addPoint', onAddPoint);
+  socket.on(collection+':save', onSave);
 
-function successHandler (io, event, obj) {
-    io.emit(event, obj);
-}
+  function isValidShape() {
+    return (_shape && _shape.points.length > 0);
+  }
 
-function draw(io, shape) {
-  successHandler (io, collection+':draw', shape);
-}
-
-function isValidShape() {
-  return (_shape && _shape.points.length > 0);
-}
-
-function event (socket, io) {
-  socket.on(collection+':create', function(shape) {
+  function onCreate(shape) {
     _shape = Shape.create(shape);
-  });
+  }
 
-  socket.on(collection+':save', function(wbId) {
+  function onAddPoint(point) {
+    point.x = Math.round(point.x);
+    point.y = Math.round(point.y);
+    if(_shape){
+      _shape.points.push(Point.create(point));
+    }
+    emitEventToRoom(collection, 'draw', _shape);
+  }
+
+  function onSave(wbId) {
     if(!isValidShape()) {
       return;
     }
     Whiteboard.loadOne({_id: wbId})
       .then((whiteboard) => {
         if(!whiteboard) {
-          return errorHandler (socket, new Error('Whiteboard not found'));
+          return Promise.reject(new Error('Whiteboard not found'));
         }
         //Clear the redos history.
         whiteboard.redos = [];
@@ -45,27 +45,31 @@ function event (socket, io) {
         return whiteboard.save();
       })
       .then((whiteboard) => {
-        successHandler (io, collection+':saved', _shape);
+        emitEventToRoom('whiteboards', 'resynced', whiteboard);
         _shape = null;
       })
-      .catch((err) => {
-        errorHandler (socket, err)
-      });
-  });
+      .catch(emitError);
+  }
 
-  //TODO:
-  socket.on(collection+':read', function() {});
+  function emitEventToRoom(collection, event, data) {
+    io.sockets.in(socket._room).emit(collection+':'+event, data);
+  }
 
-  socket.on(collection+':update', function() {});
+  function emitEventToAll(collection, event, data) {
+    io.sockets.emit(collection+':'+event, data);
+  }
 
-  socket.on(collection+':delete', function() {});
+  function emitEventToSocket(collection, event, doc) {
+    socket.emit(collection+':'+event, data);
+  }
 
-  socket.on(collection+':addPoint', function(point) {
-    var p = Point.create(point);
-    _shape.points.push(p);
-    draw(io, _shape);
-  });
+  function onEvent(collection, event, cb) {
+    socket.on(collection+':'+event, cb);
+  }
 
+  function emitError(err) {
+    emitEventToSocket('server', 'err', err);
+  }
 }
 
-module.exports = event;
+module.exports = register;

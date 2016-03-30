@@ -5,8 +5,8 @@
     .module('pizcojs')
     .service('whiteboardRenderer', whiteboardRenderer);
 
-  function whiteboardRenderer(shapeRenderer, canvas, socket) {
-    var _whiteboard;
+  function whiteboardRenderer(shapeRenderer, canvas, RoomManager, ShapeSocket,
+    WhiteboardSocket) {
     var _intervalId;
 
     function clearCanvas() {
@@ -15,9 +15,9 @@
     }
 
     function drawShapes() {
-      if(isShapesEmpty) {
+      if(!isShapesEmpty()) {
         clearCanvas();
-        _whiteboard.shapes.forEach(function (shape) {
+        RoomManager.getCurrentWhiteboard().shapes.forEach(function (shape) {
           shapeRenderer.renderShape(shape);
         });
       }
@@ -31,45 +31,32 @@
       clearInterval(_intervalId);
     }
 
-    function setWhiteboard(whiteboardId) {
-      socket.socket.emit('whiteboards:resync', whiteboardId);
-    }
-
     function isShapesEmpty() {
-      return angular.isUndefined(_whiteboard) && _whiteboard.shapes.length === 0;
+      return RoomManager.getCurrentWhiteboard().shapes.length === 0;
     }
 
     function isRedosEmpty() {
-      return angular.isUndefined(_whiteboard) && _whiteboard.redos.length === 0;
+      return RoomManager.getCurrentWhiteboard().redos.length === 0;
     }
 
     this.startRender = startRender;
     this.stopRender = stopRender;
-    this.setWhiteboard = setWhiteboard;
     this.drawShapes = drawShapes;
     this.isShapesEmpty = isShapesEmpty;
     this.isRedosEmpty = isRedosEmpty;
 
-    //#region Socket functions.
-    function onShapesSaved(shape) {
-      _whiteboard.shapes.push(shape);
-      drawShapes();
-    }
-
-    function onWhiteboardsResynced(whiteboard) {
-      _whiteboard = whiteboard;
-      console.log(_whiteboard);
-      drawShapes();
-    }
-
-    function onShapesDraw(shape) {
+    function onDraw(shape) {
       drawShapes();
       shapeRenderer.renderShape(shape);
     }
 
-    socket.socket.on('whiteboards:resynced', onWhiteboardsResynced);
-    socket.socket.on('shapes:saved', onShapesSaved);
-    socket.socket.on('shapes:draw', onShapesDraw);
-    //#endregion
+    ShapeSocket.onDraw(onDraw);
+
+    function onWhiteboardsResynced(whiteboard) {
+      RoomManager.setCurrentWhiteboard(whiteboard);
+      drawShapes();
+    }
+
+    WhiteboardSocket.onResynced(onWhiteboardsResynced);
   }
 })();
