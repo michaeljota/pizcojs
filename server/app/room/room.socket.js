@@ -22,7 +22,7 @@ function register(io, socket) {
   }
 
   function onEnter(room) {
-    if(socket._room) {
+    if(socket._room && socket._room !== room._id) {
       socket.leave(socket._room);
     }
     socket.join(room._id);
@@ -30,7 +30,7 @@ function register(io, socket) {
   }
 
   function emitEventToRoom(collection, event, data) {
-    io.to(socket._room).emit(collection+':'+event, data);
+    io.sockets.in(socket._room).emit(collection+':'+event, data);
   }
 
   function emitEventToAll(collection, event, data) {
