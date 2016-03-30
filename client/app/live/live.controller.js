@@ -5,12 +5,12 @@
     .module('pizcojs')
     .controller('LiveController', LiveController);
 
-  function LiveController($mdDialog, $http, $state, socket, RoomManager) {
+  function LiveController($mdDialog, $http, $state, RoomSocket, RoomManager) {
     var vm = this;
 
     $http.get('/api/rooms').success(function(rooms) {
       vm.cards = rooms;
-      socket.syncUpdates('rooms', vm.cards);
+      RoomSocket.syncUpdates(vm.cards);
     });
 
     vm.enterRoom = enterRoom;
