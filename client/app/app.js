@@ -12,7 +12,8 @@
       'ui.router',
       'btford.socket-io',
       'ngLodash',
-      'colorpicker-dr'
+      'colorpicker-dr',
+      'angularMoment'
       ]);
 
 })();

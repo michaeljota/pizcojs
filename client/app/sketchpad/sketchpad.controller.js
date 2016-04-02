@@ -7,7 +7,7 @@
 
   function SketchpadController($http, $stateParams, $window, TOOLS, COLORS,
     canvas, RoomManager, whiteboardRenderer, Auth, ShapeSocket,
-    WhiteboardSocket, RoomSocket) {
+    WhiteboardSocket, RoomSocket, moment) {
     var vm = this;
     var timerResize;
 
@@ -93,7 +93,7 @@
 
     function downloadCanvas() {
       var dataURL = canvas.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-      var fileName = 'whiteboard-'+RoomManager.getCurrentWhiteboard()._id+'.png';
+      var fileName = 'Clase:'+RoomManager.getCurrentRoom().title+'('+moment().format("MMM Do YY")+')'+RoomManager.getCurrentWhiteboard()._id+'.png';
       downloadLink.attr('href', dataURL);
       downloadLink.attr('download', fileName);
       downloadLink[0].click();
