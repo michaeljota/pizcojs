@@ -8,7 +8,7 @@ const collection = Room.collectionName();
 function register(io, socket) {
   socket.on(collection+':colaborative', onColaborative);
   socket.on(collection+':enter', onEnter);
-  socket.on(collection+':download', onDownload);
+  socket.on(collection+':addWhiteboard', onAddWhiteboard);
 
   function onColaborative(data) {
     Room.loadOne({_id: data._id})
@@ -17,7 +17,7 @@ function register(io, socket) {
         return room.save();
       })
       .then((room) => {
-        emitEventToRoom(collection, 'colaborative', room);
+        emitEventToRoom(collection, 'reset', room);
       })
       .catch(emitError);
   }
@@ -30,8 +30,23 @@ function register(io, socket) {
     socket._room = room._id;
   }
 
-  function onDownload() {
-    emitEventToRoom(collection, 'download');
+  function onAddWhiteboard(roomId) {
+    let tempWhiteboard;
+    Whiteboard
+      .create()
+      .save()
+      .then((whiteboard) => {
+        tempWhiteboard = whiteboard;
+        return Room.loadOne({_id: roomId});
+      })
+      .then((room) => {
+        room.whiteboards.push(tempWhiteboard);
+        return room.save();
+      })
+      .then((room) => {
+        emitEventToRoom(collection, 'reset', room)
+        emitEventToRoom(collection, 'download');
+      })
   }
 
   function emitEventToRoom(collection, event, data) {

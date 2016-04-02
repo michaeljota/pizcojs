@@ -100,7 +100,6 @@
     }
 
     function reset() {
-      RoomSocket.emitDownload();
       RoomManager.addWhiteboard();
     }
 
@@ -170,7 +169,7 @@
     $window.addEventListener('resize', delayedResize);
     delayedResize();
 
-    RoomSocket.onColaborative(function(room) {
+    RoomSocket.onReset(function(room) {
       vm.colaborative = room.colaborative;
     });
 

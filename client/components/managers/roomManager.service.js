@@ -59,15 +59,10 @@
         .$promise;
     }
 
-    function addWhiteboard(wb) {
+    function addWhiteboard() {
       if(getCurrentRoom()) {
-        return Room.addWhiteboard(
-          getCurrentRoom(),
-          function (whiteboard) {
-            setCurrentWhiteboard(whiteboard);
-          }, error).$promise;
+        RoomSocket.addWhiteboard(getCurrentRoom()._id);
       }
-      return error(new Error('No current whiteboard'));
     }
 
     function isColaborative() {
@@ -81,14 +76,14 @@
     //#region Socket functions.
 
     function setColaborative(colaborative, cb) {
-      let data = {
+      var data = {
         _id: getCurrentRoom()._id,
         colaborative: colaborative
       }
       RoomSocket.emitColaborative(data);
     }
 
-    RoomSocket.onColaborative(setCurrentRoom);
+    RoomSocket.onReset(setCurrentRoom);
 
     //#endregion
 

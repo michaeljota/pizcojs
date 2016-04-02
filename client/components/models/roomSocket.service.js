@@ -22,16 +22,16 @@
       socket.emitEvent(name, 'colaborative', data);
     }
 
-    function onColaborative(cb) {
-      socket.onEvent(name, 'colaborative', cb);
+    function onReset(cb) {
+      socket.onEvent(name, 'reset', cb);
     }
 
     function syncUpdates(array) {
       socket.syncUpdates(name, array);
     }
 
-    function emitDownload() {
-      socket.emitEvent(name, 'download');
+    function addWhiteboard(roomId) {
+      socket.emitEvent(name, 'addWhiteboard', roomId);
     }
 
     function onDownload(cb) {
@@ -42,9 +42,9 @@
       create,
       enter,
       emitColaborative,
-      onColaborative,
+      onReset,
       syncUpdates,
-      emitDownload,
+      addWhiteboard,
       onDownload
     }
   }
