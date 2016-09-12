@@ -1,0 +1,27 @@
+<div ng-repeat="card in vm.cards" class="ctm-card">
+  <md-card class="md-card">
+    <img ng-src="{{card.img}}" class="md-card-image" alt="Enter {{card.title}}"
+      ng-dblclick="vm.playSketchpad(card)">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{card.title}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-actions layout="row" layout-align="end center">
+      <!--
+      <md-button class="md-icon-button" aria-label="Favorite" ng-click="setFaved(card)">
+          <md-icon ng-if="card.faved" md-svg-icon="heart"></md-icon>
+          <md-icon ng-if="!card.faved" md-svg-icon="heart-outline"></md-icon>
+      </md-button>
+      -->
+      <md-button class="md-icon-button" aria-label="Delete"
+        ng-click="vm.destroy(card)">
+        <md-icon md-svg-icon="delete"></md-icon>
+      </md-button>
+      <md-button class="md-icon-button" aria-label="Share"
+        ng-click="vm.showInfo(card, $event)">
+        <md-icon md-svg-icon="information-outline"></md-icon>
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</div>

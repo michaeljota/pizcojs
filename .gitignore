@@ -9,3 +9,12 @@ npm-debug.log
 
 #idea
 *.iml
+*.mp3
+*.d.ts
+*.db
+
+#VS Code
+.vscode
+
+#Typings
+typings

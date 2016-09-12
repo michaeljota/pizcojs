@@ -1,0 +1,28 @@
+<md-dialog aria-label="RoomInfo" flex="50" ng-cloak>
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <h2>Create new room</h2>
+      <md-content class="autoScroll">
+        <form name="createRoomForm">
+          <div layout="row" layout-align="center center">
+            <md-input-container class="md-icon-float md-block">
+              <label>Room Name</label>
+              <md-icon md-svg-icon="account-circle" class="name"></md-icon>
+              <input required name="roomName" ng-model="modal.room.title"
+                type="text" ng-keydown="modal.checkEnter($event)" md-autofocus>
+              <div ng-messages="createRoomForm.roomName.$error">
+                <div ng-message="required">This is required.</div>
+              </div>
+            </md-input-container>
+          </div>
+        </form>
+      </md-content>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row" layout-aling="center end">
+    <span flex></span>
+    <md-button ng-click="modal.close()">
+      Create
+    </md-button>
+  </md-dialog-actions>
+</md-dialog>

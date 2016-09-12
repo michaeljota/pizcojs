@@ -1,0 +1,34 @@
+<div class="ctm-card" ng-repeat="card in vm.cards">
+  <md-card class="md-card">
+    <img ng-src="{{vm.getImage(card)}}" class="md-card-image"
+    alt="Enter {{::card.title}}" ng-click="vm.enterRoom(card)">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{::card.title}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button class="md-icon-button" aria-label="Information"
+        ng-click="vm.showInfo(card,$event)">
+        <md-icon md-svg-icon="information-outline"></md-icon>
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</div>
+<div class="ctm-card">
+  <md-card class="md-card">
+    <img src="../assets/img/blank_square.svg" class="md-card-image"
+      alt="Create Room" ng-click="vm.createRoom($event)">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">New</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button class="md-icon-button" aria-label="Create"
+        ng-click="vm.createRoom()">
+        <md-icon md-svg-icon="plus-circle-outline"></md-icon>
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</div>

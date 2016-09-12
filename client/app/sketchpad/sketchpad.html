@@ -1,0 +1,57 @@
+<div class="d">
+  <div class="mainContainer">
+    <div id="canvasContainer" class="canvasContainer">
+    </div>
+    <md-divider></md-divider>
+    <md-toolbar>
+      <div class="md-toolbar-tools" layout="row" layout-align="center center">
+        <md-button class="md-icon-button" aria-label="Pencil"
+          ng-click="vm.setTool(vm.TOOLS.PENCIL)">
+          <md-icon md-svg-icon="pencil"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Line"
+          ng-click="vm.setTool(vm.TOOLS.LINE)">
+          <md-icon md-svg-icon="vector-line"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Rectangle"
+          ng-click="vm.setTool(vm.TOOLS.RECTANGLE)">
+          <md-icon md-svg-icon="vector-square"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Circle"
+          ng-click="vm.setTool(vm.TOOLS.CIRCLE)">
+          <md-icon md-svg-icon="vector-circle"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Undo"
+          ng-click="vm.undo()">
+          <md-icon md-svg-icon="undo-variant"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Redo"
+          ng-click="vm.redo()">
+          <md-icon md-svg-icon="redo-variant"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="Reset"
+          ng-click="vm.reset()">
+          <md-icon md-svg-icon="note-plus-outline"></md-icon>
+        </md-button>
+        <md-switch ng-model="vm.colaborative" aria-label="Colaborative"
+          ng-change="vm.setColaborative()" ng-disabled="!vm.isOwner()">
+          Colaborative
+        </md-switch>
+        <md-switch ng-model="vm.shape.stroked"
+          ng-show="vm.isShapeFilleable()">
+          Stroked
+        </md-switch>
+        <md-switch ng-model="vm.shape.filled"
+          ng-show="vm.isShapeFilleable()">
+          Filled
+        </md-switch>
+        <div>Line Color: </div>
+        <input color-picker tiny-picker="true" ng-model="vm.shape.lineColor"
+          size="7">
+        <div>Fill Color:</div>
+        <input color-picker tiny-picker="true" ng-model="vm.shape.fillColor"
+          size="7">
+      </div>
+    </md-toolbar>
+  </div>
+</div>

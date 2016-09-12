@@ -1,0 +1,18 @@
+<md-sidenav class="md-sidenav-left" md-component-id="left" md-whiteframe-z2
+  md-is-locked-open="$mdMedia('gt-md')" flex>
+  <md-toolbar>
+    <h1 class="md-toolbar-tools">UNERG</h1>
+  </md-toolbar>
+  <!--TODO: Meter el logo aquí y esas cosas -->
+  <md-content flex role="navigation">
+    <md-list class="side-menu">
+      <md-list-item ng-repeat="section in snVm.sections"
+        class="parent-list-item">
+        <md-button ui-sref-active="active" aria-label="{{::section.name}}"
+          ui-sref="{{snVm.getState(section)}}" ng-click="snVm.focusSection()">
+          {{::section.name}}
+        </md-button>
+      </md-list-item>
+    </md-list>
+  </md-content>
+</md-sidenav>

@@ -1,0 +1,17 @@
+@media (max-width: 379px) {
+    .ctm-card {
+        width: 100%;
+    }
+}
+@media (min-width: 380px) {
+    .ctm-card {
+        width: 50%; /* 1 items */
+        display: inline-flex;
+    }
+}
+@media (min-width: 600px) {
+    .ctm-card {
+        width: 33%;
+        display: inline-flex;
+    }
+}

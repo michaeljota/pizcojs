@@ -1,0 +1,112 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge user-scalable=no" >
+    <base href="/">
+    <title>PizcoJS</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(client) app/vendor.css -->
+      <!-- bower:css -->
+      <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+      <link rel="stylesheet" href="bower_components/angular-colorpicker-dr/angular-colorpicker-dr.css" />
+      <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,client}) app/app.css -->
+    <link rel="stylesheet" href="app/app.css">
+      <!-- injector:css -->
+      <link rel="stylesheet" href="app/app.css">
+      <link rel="stylesheet" href="app/live/live.css">
+      <link rel="stylesheet" href="app/login/login.css">
+      <link rel="stylesheet" href="app/sketchpad/sketchpad.css">
+      <link rel="stylesheet" href="components/sidenav/sidenav.css">
+      <link rel="stylesheet" href="components/toolbar/toolbar.css">
+      <!-- endinjector -->
+    <!-- endbuild -->
+  </head>
+  <body data-ng-app="pizcojs">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+    <!-- TODO: Improve this. -- If there is a how -- -->
+    <div ui-view=""></div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-XXXXX-X');
+      ga('send', 'pageview');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- build:js({client,node_modules}) app/vendor.js -->
+      <!-- bower:js -->
+      <script src="bower_components/angular/angular.js"></script>
+      <script src="bower_components/angular-animate/angular-animate.js"></script>
+      <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+      <script src="bower_components/angular-aria/angular-aria.js"></script>
+      <script src="bower_components/angular-resource/angular-resource.js"></script>
+      <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+      <script src="bower_components/angular-messages/angular-messages.js"></script>
+      <script src="bower_components/angular-material/angular-material.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
+      <script src="bower_components/ng-lodash/build/ng-lodash.js"></script>
+      <script src="bower_components/angular-socket-io/socket.js"></script>
+      <script src="bower_components/angular-colorpicker-dr/angular-colorpicker-dr.js"></script>
+      <script src="bower_components/angular-moment/angular-moment.js"></script>
+      <!-- endbower -->
+    <script src="socket.io-client/socket.io.js"></script>
+    <!-- endbuild -->
+
+
+        <!-- build:js(.tmp) app/app.js -->
+
+        <script src="app/app.js"></script>
+          <!-- injector:js -->
+          <script src="app/app.auth.js"></script>
+          <script src="app/app.config.js"></script>
+          <script src="app/app.constants.js"></script>
+          <script src="app/app.route.js"></script>
+          <script src="app/app.run.js"></script>
+          <script src="app/appInfo/appInfo.controller.js"></script>
+          <script src="app/live/live.controller.js"></script>
+          <script src="app/login/login.controller.js"></script>
+          <script src="app/login/login.route.js"></script>
+          <script src="app/main/main.route.js"></script>
+          <script src="app/roomCreation/roomCreation.controller.js"></script>
+          <script src="app/roomInfo/roomInfo.controller.js"></script>
+          <script src="app/saved/saved.controller.js"></script>
+          <script src="app/sketchpad/sketchpad.controller.js"></script>
+          <script src="app/sketchpad/sketchpad.route.js"></script>
+          <script src="components/auth/auth.service.js"></script>
+          <script src="components/auth/user.service.js"></script>
+          <script src="components/managers/roomManager.service.js"></script>
+          <script src="components/models/room.service.js"></script>
+          <script src="components/models/roomSocket.service.js"></script>
+          <script src="components/models/shapeSocket.service.js"></script>
+          <script src="components/models/whiteboardSocket.service.js"></script>
+          <script src="components/services/Syncer/Syncer.service.js"></script>
+          <script src="components/services/canvas/canvas.service.js"></script>
+          <script src="components/services/shape/Shape.service.js"></script>
+          <script src="components/services/shapeRenderer/shapeRenderer.service.js"></script>
+          <script src="components/services/socket/socket.service.js"></script>
+          <script src="components/services/whiteboardRenderer/whiteboardRenderer.service.js"></script>
+          <script src="components/sidenav/sidenav.controller.js"></script>
+          <script src="components/toolbar/toolbar.controller.js"></script>
+          <!-- endinjector -->
+        <!-- endbuild -->
+</body>
+</html>
