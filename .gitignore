@@ -12,3 +12,9 @@ npm-debug.log
 *.mp3
 *.d.ts
 *.db
+
+#VS Code
+.vscode
+
+#Typings
+typings
