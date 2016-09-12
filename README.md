@@ -14,6 +14,14 @@ Se libera bajo licencia MIT. Ver en LICENSE.md
 * Bower
 * Grunt
 
+## Lista de tareas
+
+* `npm start`: Inicia `grunt serve` desde el grunt local.
+* Tareas grunt (Debes tener instalado `grunt-cli` en global para usarlas o llamarlas con el `grunt-cli` dentro de `node_modules`):
+    * `grunt serve`: Sirve la página para desarrollo.
+    * `grunt test`: Realiza las pruebas. (Shame on me, esta app no tiene pruebas)
+    * `grunt build`: Construye la app para ser distribuida. En principio, creo que no funciona. :D. 
+
 ## Información Adicional
 
 Basado en [Angular-Fullstack Generator (v2)](https://github.com/angular-fullstack/generator-angular-fullstack/tree/legacy-2.x.x)
